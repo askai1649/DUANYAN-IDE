@@ -1063,6 +1063,21 @@ export default function QianluPanel({ onClose }: Props) {
     setIsProcessing(false);
   };
 
+
+  const handleKvQuantDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_kv_quant_demo', { text: input }); addMessage('user', '[KVQuant] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] KVQuant: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleKvQuantStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_kv_quant_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] KVQuant stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
   const handlePromptTmplCompare = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
@@ -1075,31 +1090,7 @@ export default function QianluPanel({ onClose }: Props) {
     setIsProcessing(false);
   };
 
-  const handleKvQuantDemo = async () => {
-    if (isProcessing || !input.trim()) return;
-    setIsProcessing(true);
-    try {
-      const result = await invoke('qianlu_kv_quant_demo', { text: input });
-      addMessage('user', '[KV-Quant] ' + input);
-      addMessage('qianlu', result);
-      setInput('');
-    } catch (e) {
-      addMessage('qianlu', '[error] KV-Quant: ' + String(e));
-    }
-    setIsProcessing(false);
-  };
 
-  const handleKvQuantStats = async () => {
-    if (isProcessing) return;
-    setIsProcessing(true);
-    try {
-      const result = await invoke('qianlu_kv_quant_stats');
-      addMessage('qianlu', result);
-    } catch (e) {
-      addMessage('qianlu', '[error] KV-Quant stats: ' + String(e));
-    }
-    setIsProcessing(false);
-  };
 
   const handleSeqPackDemo = async () => {
     if (isProcessing || !input.trim()) return;
@@ -1517,13 +1508,13 @@ export default function QianluPanel({ onClose }: Props) {
   const handleContBatchDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_cont_batch_demo', { text: input }); addMessage('user', '[ContBatch] ' + input); addMessage('qianlu', r); setInput(''); }
+    try { const r = await invoke('qianlu_dyn_batch_demo', { text: input }); addMessage('user', '[ContBatch] ' + input); addMessage('qianlu', r); setInput(''); }
     catch (e) { addMessage('qianlu', '[error] ContBatch: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleContBatchStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_cont_batch_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('qianlu', await invoke('qianlu_dyn_batch_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
 
@@ -2519,6 +2510,1235 @@ export default function QianluPanel({ onClose }: Props) {
     setIsProcessing(false);
   };
 
+  const handleOnlineLearnDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_online_learn_demo', { text: input }); addMessage('user', '[Online] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Online: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleOnlineLearnStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_online_learn_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Online stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleBanditDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_bandit_demo', { text: input }); addMessage('user', '[Bandit] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Bandit: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleBanditStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_bandit_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Bandit stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleRewardShapeDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_reward_shape_demo', { text: input }); addMessage('user', '[RewShape] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] RewShape: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleRewardShapeStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_reward_shape_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] RewShape stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handleActiveInfDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_active_inf_demo', { text: input }); addMessage('user', '[ActInf] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] ActiveInf: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleActiveInfStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_active_inf_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] ActiveInf stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleFedPersonalDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_fed_personal_demo', { text: input }); addMessage('user', '[FedPers] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] FedPers: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleFedPersonalStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_fed_personal_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] FedPers stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleModelCompDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_model_comp_demo', { text: input }); addMessage('user', '[ModComp] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] ModComp: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleModelCompStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_model_comp_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] ModComp stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handleBayesOptDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_bayes_opt_demo', { text: input }); addMessage('user', '[BayesOpt] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] BayesOpt: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleBayesOptStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_bayes_opt_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] BayesOpt stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleDomainAdaptDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_domain_adapt_demo', { text: input }); addMessage('user', '[DomAdapt] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] DomAdapt: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleDomainAdaptStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_domain_adapt_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] DomAdapt stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleSslDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_ssl_demo', { text: input }); addMessage('user', '[SSL] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] SSL: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleSslStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_ssl_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] SSL stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handleTransferDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_transfer_demo', { text: input }); addMessage('user', '[Transfer] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Transfer: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleTransferStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_transfer_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Transfer stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleFewShotDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_few_shot_demo', { text: input }); addMessage('user', '[FewShot] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] FewShot: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleFewShotStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_few_shot_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] FewShot stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleMetaRlDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_meta_rl_demo', { text: input }); addMessage('user', '[MetaRL] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] MetaRL: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleMetaRlStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_meta_rl_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] MetaRL stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handleZeroShotDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_zero_shot_demo', { text: input }); addMessage('user', '[ZeroShot] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] ZeroShot: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleZeroShotStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_zero_shot_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] ZeroShot stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleTaskAdaptDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_task_adapt_demo', { text: input }); addMessage('user', '[TaskAdapt] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] TaskAdapt: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleTaskAdaptStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_task_adapt_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] TaskAdapt stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleRepMixupDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_rep_mixup_demo', { text: input }); addMessage('user', '[Mixup] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Mixup: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleRepMixupStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_rep_mixup_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Mixup stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handleWeightShareDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_weight_share_demo', { text: input }); addMessage('user', '[WeightShare] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] WeightShare: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleWeightShareStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_weight_share_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] WeightShare stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleDisentangleDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_disentangle_demo', { text: input }); addMessage('user', '[Disentangle] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Disentangle: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleDisentangleStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_disentangle_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Disentangle stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleGradSurgeryDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_grad_surgery_demo', { text: input }); addMessage('user', '[GradSurgery] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] GradSurgery: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleGradSurgeryStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_grad_surgery_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] GradSurgery stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handleEvoStratDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_evo_strat_demo', { text: input }); addMessage('user', '[EvoStrat] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] EvoStrat: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleEvoStratStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_evo_strat_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] EvoStrat stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleHyperOptDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_hyper_opt_demo', { text: input }); addMessage('user', '[HyperOpt] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] HyperOpt: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleHyperOptStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_hyper_opt_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] HyperOpt stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleMultiAgentDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_multi_agent_demo', { text: input }); addMessage('user', '[MARL] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] MARL: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleMultiAgentStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_multi_agent_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] MARL stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handleImitationDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_imitation_demo', { text: input }); addMessage('user', '[Imitation] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Imitation: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleImitationStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_imitation_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Imitation stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleInverseRlDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_inverse_rl_demo', { text: input }); addMessage('user', '[InvRL] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] InvRL: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleInverseRlStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_inverse_rl_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] InvRL stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleNtkDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_ntk_demo', { text: input }); addMessage('user', '[NTK] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] NTK: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleNtkStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_ntk_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] NTK stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handleOtDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_ot_demo', { text: input }); addMessage('user', '[OT] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] OT: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleOtStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_ot_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] OT stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleScalingDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_scaling_demo', { text: input }); addMessage('user', '[Scaling] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Scaling: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleScalingStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_scaling_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Scaling stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleModelEditDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_model_edit_demo', { text: input }); addMessage('user', '[ModelEdit] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] ModelEdit: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleModelEditStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_model_edit_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] ModelEdit stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handleGrokDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_grok_demo', { text: input }); addMessage('user', '[Grok] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Grok: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleGrokStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_grok_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Grok stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleDoubleDescDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_double_desc_demo', { text: input }); addMessage('user', '[DoubleDesc] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] DoubleDesc: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleDoubleDescStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_double_desc_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] DoubleDesc stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleSsmDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_ssm_demo', { text: input }); addMessage('user', '[SSM] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] SSM: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleSsmStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_ssm_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] SSM stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handleToolUseDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_tool_use_demo', { text: input }); addMessage('user', '[ToolUse] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] ToolUse: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleToolUseStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_tool_use_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] ToolUse stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleSelfRefineDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_self_refine_demo', { text: input }); addMessage('user', '[SelfRefine] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] SelfRefine: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleSelfRefineStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_self_refine_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] SelfRefine stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleReasonChainDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_reason_chain_demo', { text: input }); addMessage('user', '[CoT] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] CoT: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleReasonChainStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_reason_chain_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] CoT stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handleRedTeamDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_red_team_demo', { text: input }); addMessage('user', '[RedTeam] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] RedTeam: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleRedTeamStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_red_team_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] RedTeam stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleSafetyDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_safety_demo', { text: input }); addMessage('user', '[Safety] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Safety: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleSafetyStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_safety_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Safety stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleJailbreakDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_jailbreak_demo', { text: input }); addMessage('user', '[Jailbreak] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Jailbreak: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleJailbreakStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_jailbreak_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Jailbreak stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handleRingAttnDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_ring_attn_demo', { text: input }); addMessage('user', '[RingAttn] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] RingAttn: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleRingAttnStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_ring_attn_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] RingAttn stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleArenaDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_arena_demo', { text: input }); addMessage('user', '[Arena] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Arena: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleArenaStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_arena_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Arena stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleSynthDataDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_synth_data_demo', { text: input }); addMessage('user', '[SynthData] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] SynthData: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleSynthDataStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_synth_data_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] SynthData stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handleOrpoDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_orpo_demo', { text: input }); addMessage('user', '[ORPO] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] ORPO: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleOrpoStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_orpo_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] ORPO stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleSimpoDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_simpo_demo', { text: input }); addMessage('user', '[SimPO] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] SimPO: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleSimpoStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_simpo_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] SimPO stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleInfiniAttnDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_infini_attn_demo', { text: input }); addMessage('user', '[InfiniAttn] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] InfiniAttn: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleInfiniAttnStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_infini_attn_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] InfiniAttn stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handleMedusaDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_medusa_demo', { text: input }); addMessage('user', '[Medusa] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Medusa: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleMedusaStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_medusa_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Medusa stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleEagleDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_eagle_demo', { text: input }); addMessage('user', '[EAGLE] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] EAGLE: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleEagleStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_eagle_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] EAGLE stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleChunkedDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_chunked_demo', { text: input }); addMessage('user', '[Chunked] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Chunked: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleChunkedStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_chunked_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Chunked stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handleDoraDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_dora_demo', { text: input }); addMessage('user', '[DoRA] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] DoRA: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleDoraStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_dora_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] DoRA stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleTopKDemo = async () => {
+  const handleKvQuantDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_kv_quant_demo', { text: input }); addMessage('user', '[KVQuant] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] KVQuant: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleKvQuantStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_kv_quant_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] KVQuant stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_top_k_demo', { text: input }); addMessage('user', '[TopK] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] TopK: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleTopKStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_top_k_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] TopK stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handleHyenaDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_hyena_demo', { text: input }); addMessage('user', '[Hyena] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Hyena: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleHyenaStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_hyena_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Hyena stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleRwkvDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_rwkv_demo', { text: input }); addMessage('user', '[RWKV] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] RWKV: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleRwkvStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_rwkv_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] RWKV stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handlePromptCompDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_prompt_comp_demo', { text: input }); addMessage('user', '[PCompress] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] PCompress: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handlePromptCompStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_prompt_comp_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] PCompress stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handleFlashMlaDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_flash_mla_demo', { text: input }); addMessage('user', '[FlashMLA] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] FlashMLA: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleFlashMlaStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_flash_mla_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] FlashMLA stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleAgentPlanDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_agent_plan_demo', { text: input }); addMessage('user', '[Agent] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Agent: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleAgentPlanStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_agent_plan_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Agent stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleSpecRejectDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_spec_reject_demo', { text: input }); addMessage('user', '[SpecRej] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] SpecRej: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleSpecRejectStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_spec_reject_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] SpecRej stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handlePagedKvDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_paged_kv_demo', { text: input }); addMessage('user', '[PagedKV] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] PagedKV: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handlePagedKvStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_paged_kv_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] PagedKV stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleAgentMemDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_agent_mem_demo', { text: input }); addMessage('user', '[AgMem] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] AgMem: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleAgentMemStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_agent_mem_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] AgMem stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleDynBatchDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_dyn_batch_demo', { text: input }); addMessage('user', '[Batch] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Batch: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleDynBatchStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_dyn_batch_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Batch stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handleVisEncDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_vis_enc_demo', { text: input }); addMessage('user', '[ViT] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] ViT: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleVisEncStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_vis_enc_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] ViT stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleTxt2ImgDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_txt2img_demo', { text: input }); addMessage('user', '[T2I] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] T2I: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleTxt2ImgStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_txt2img_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] T2I stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handlePromCacheDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_prom_cache_demo', { text: input }); addMessage('user', '[PCache] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] PCache: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handlePromCacheStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_prom_cache_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] PCache stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handleImgCapDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_img_cap_demo', { text: input }); addMessage('user', '[Cap] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Cap: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleImgCapStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_img_cap_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Cap stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleObjDetDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_obj_det_demo', { text: input }); addMessage('user', '[Det] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Det: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleObjDetStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_obj_det_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Det stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleSuperResDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_super_res_demo', { text: input }); addMessage('user', '[SR] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] SR: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleSuperResStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_super_res_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] SR stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handleStyleTransDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_style_trans_demo', { text: input }); addMessage('user', '[Style] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Style: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleStyleTransStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_style_trans_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Style stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleImgInpaintDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_img_inpaint_demo', { text: input }); addMessage('user', '[Inpaint] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Inpaint: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleImgInpaintStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_img_inpaint_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Inpaint stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleAudioEncDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_audio_enc_demo', { text: input }); addMessage('user', '[Audio] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Audio: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleAudioEncStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_audio_enc_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Audio stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handleImgSegDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_img_seg_demo', { text: input }); addMessage('user', '[Seg] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Seg: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleImgSegStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_img_seg_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Seg stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleDepthEstDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_depth_est_demo', { text: input }); addMessage('user', '[Depth] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Depth: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleDepthEstStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_depth_est_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Depth stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleOptFlowDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_opt_flow_demo', { text: input }); addMessage('user', '[Flow] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Flow: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleOptFlowStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_opt_flow_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Flow stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handlePoseEstDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_pose_est_demo', { text: input }); addMessage('user', '[Pose] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Pose: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handlePoseEstStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_pose_est_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Pose stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleSpeechRecogDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_speech_recog_demo', { text: input }); addMessage('user', '[ASR] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] ASR: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleSpeechRecogStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_speech_recog_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] ASR stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleMusicGenDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_music_gen_demo', { text: input }); addMessage('user', '[Music] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Music: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleMusicGenStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_music_gen_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Music stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handleCodeParserDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_code_parser_demo', { text: input }); addMessage('user', '[Parser] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Parser: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleCodeParserStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_code_parser_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Parser stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleCodeGenDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_code_gen_demo', { text: input }); addMessage('user', '[CodeGen] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] CodeGen: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleCodeGenStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_code_gen_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] CodeGen stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleCodeExecDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_code_exec_demo', { text: input }); addMessage('user', '[Exec] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Exec: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleCodeExecStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_code_exec_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Exec stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handleCodeDebugDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_code_debug_demo', { text: input }); addMessage('user', '[Debug] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Debug: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleCodeDebugStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_code_debug_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Debug stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleProgRepairDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_prog_repair_demo', { text: input }); addMessage('user', '[Repair] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Repair: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleProgRepairStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_prog_repair_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Repair stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleCodeReviewDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_code_review_demo', { text: input }); addMessage('user', '[Review] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Review: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleCodeReviewStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_code_review_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Review stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handleSyntaxHlDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_syntax_hl_demo', { text: input }); addMessage('user', '[HL] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] HL: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleSyntaxHlStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_syntax_hl_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] HL stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleCodeCompleteDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_code_complete_demo', { text: input }); addMessage('user', '[Complete] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Complete: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleCodeCompleteStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_code_complete_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Complete stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleCodeRefactorDemo = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_code_refactor_demo', { text: input }); addMessage('user', '[Refactor] ' + input); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Refactor: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleCodeRefactorStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_code_refactor_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Refactor stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+
+  const handlePipelineAnalyze = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_code_pipeline_analyze', { text: input }); addMessage('user', '[Pipeline-Analyze] ' + input.substring(0, 50)); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Pipeline: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handlePipelineFull = async () => {
+    if (isProcessing || !input.trim()) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_code_pipeline_full', { text: input }); addMessage('user', '[Pipeline-Full] ' + input.substring(0, 50)); addMessage('qianlu', r); setInput(''); }
+    catch (e) { addMessage('qianlu', '[error] Pipeline full: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handlePipelineStats = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    try { const r = await invoke('qianlu_code_pipeline_stats'); addMessage('qianlu', r); }
+    catch (e) { addMessage('qianlu', '[error] Pipeline stats: ' + String(e)); }
+    setIsProcessing(false);
+  };
+  const handleDataLoaderStats = async () => {
+    try { addMessage('qianlu', await invoke('qianlu_data_loader_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+  };
+  const handleDataPipelineStats = async () => {
+    try { addMessage('qianlu', await invoke('qianlu_data_pipeline_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+  };
+  const handleTokenizedDsStats = async () => {
+    try { addMessage('qianlu', await invoke('qianlu_tokenized_ds_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+  };
+  const handleDistTrainStats = async () => {
+    try { addMessage('qianlu', await invoke('qianlu_dist_train_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+  };
+  const handleMpStats = async () => {
+    try { addMessage('qianlu', await invoke('qianlu_mp_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+  };
+  const handleCkptStats = async () => {
+    try { addMessage('qianlu', await invoke('qianlu_ckpt_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+  };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -3021,6 +4241,233 @@ export default function QianluPanel({ onClose }: Props) {
             <button className="ql-tool-btn" onClick={handlePromptOptDemo} disabled={isProcessing}>PrmptOpt</button>
             <button className="ql-tool-btn" onClick={handlePromptOptStats} disabled={isProcessing}>PO-S</button>
           </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handleOnlineLearnDemo} disabled={isProcessing}>Online</button>
+            <button className="ql-tool-btn" onClick={handleOnlineLearnStats} disabled={isProcessing}>OL-S</button>
+            <button className="ql-tool-btn" onClick={handleBanditDemo} disabled={isProcessing}>Bandit</button>
+            <button className="ql-tool-btn" onClick={handleBanditStats} disabled={isProcessing}>BD-S</button>
+            <button className="ql-tool-btn" onClick={handleRewardShapeDemo} disabled={isProcessing}>RewShp</button>
+            <button className="ql-tool-btn" onClick={handleRewardShapeStats} disabled={isProcessing}>RS-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handleActiveInfDemo} disabled={isProcessing}>ActInf</button>
+            <button className="ql-tool-btn" onClick={handleActiveInfStats} disabled={isProcessing}>AI-S</button>
+            <button className="ql-tool-btn" onClick={handleFedPersonalDemo} disabled={isProcessing}>FedPers</button>
+            <button className="ql-tool-btn" onClick={handleFedPersonalStats} disabled={isProcessing}>FP-S</button>
+            <button className="ql-tool-btn" onClick={handleModelCompDemo} disabled={isProcessing}>ModComp</button>
+            <button className="ql-tool-btn" onClick={handleModelCompStats} disabled={isProcessing}>MC-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handleBayesOptDemo} disabled={isProcessing}>BayesOpt</button>
+            <button className="ql-tool-btn" onClick={handleBayesOptStats} disabled={isProcessing}>BO-S</button>
+            <button className="ql-tool-btn" onClick={handleDomainAdaptDemo} disabled={isProcessing}>DomAdpt</button>
+            <button className="ql-tool-btn" onClick={handleDomainAdaptStats} disabled={isProcessing}>DA-S</button>
+            <button className="ql-tool-btn" onClick={handleSslDemo} disabled={isProcessing}>SSL</button>
+            <button className="ql-tool-btn" onClick={handleSslStats} disabled={isProcessing}>SSL-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handleTransferDemo} disabled={isProcessing}>Transfer</button>
+            <button className="ql-tool-btn" onClick={handleTransferStats} disabled={isProcessing}>TL-S</button>
+            <button className="ql-tool-btn" onClick={handleFewShotDemo} disabled={isProcessing}>FewShot</button>
+            <button className="ql-tool-btn" onClick={handleFewShotStats} disabled={isProcessing}>FS-S</button>
+            <button className="ql-tool-btn" onClick={handleMetaRlDemo} disabled={isProcessing}>MetaRL</button>
+            <button className="ql-tool-btn" onClick={handleMetaRlStats} disabled={isProcessing}>MR-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handleZeroShotDemo} disabled={isProcessing}>ZeroShot</button>
+            <button className="ql-tool-btn" onClick={handleZeroShotStats} disabled={isProcessing}>ZS-S</button>
+            <button className="ql-tool-btn" onClick={handleTaskAdaptDemo} disabled={isProcessing}>TaskAdpt</button>
+            <button className="ql-tool-btn" onClick={handleTaskAdaptStats} disabled={isProcessing}>TA-S</button>
+            <button className="ql-tool-btn" onClick={handleRepMixupDemo} disabled={isProcessing}>Mixup</button>
+            <button className="ql-tool-btn" onClick={handleRepMixupStats} disabled={isProcessing}>MU-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handleWeightShareDemo} disabled={isProcessing}>WtShare</button>
+            <button className="ql-tool-btn" onClick={handleWeightShareStats} disabled={isProcessing}>WS-S</button>
+            <button className="ql-tool-btn" onClick={handleDisentangleDemo} disabled={isProcessing}>Disentgl</button>
+            <button className="ql-tool-btn" onClick={handleDisentangleStats} disabled={isProcessing}>DE-S</button>
+            <button className="ql-tool-btn" onClick={handleGradSurgeryDemo} disabled={isProcessing}>GradSurg</button>
+            <button className="ql-tool-btn" onClick={handleGradSurgeryStats} disabled={isProcessing}>GS-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handleEvoStratDemo} disabled={isProcessing}>EvoStrat</button>
+            <button className="ql-tool-btn" onClick={handleEvoStratStats} disabled={isProcessing}>ES-S</button>
+            <button className="ql-tool-btn" onClick={handleHyperOptDemo} disabled={isProcessing}>HyperOpt</button>
+            <button className="ql-tool-btn" onClick={handleHyperOptStats} disabled={isProcessing}>HO-S</button>
+            <button className="ql-tool-btn" onClick={handleMultiAgentDemo} disabled={isProcessing}>MARL</button>
+            <button className="ql-tool-btn" onClick={handleMultiAgentStats} disabled={isProcessing}>MA-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handleImitationDemo} disabled={isProcessing}>Imitate</button>
+            <button className="ql-tool-btn" onClick={handleImitationStats} disabled={isProcessing}>IL-S</button>
+            <button className="ql-tool-btn" onClick={handleInverseRlDemo} disabled={isProcessing}>InvRL</button>
+            <button className="ql-tool-btn" onClick={handleInverseRlStats} disabled={isProcessing}>IR-S</button>
+            <button className="ql-tool-btn" onClick={handleNtkDemo} disabled={isProcessing}>NTK</button>
+            <button className="ql-tool-btn" onClick={handleNtkStats} disabled={isProcessing}>NTK-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handleOtDemo} disabled={isProcessing}>OT</button>
+            <button className="ql-tool-btn" onClick={handleOtStats} disabled={isProcessing}>OT-S</button>
+            <button className="ql-tool-btn" onClick={handleScalingDemo} disabled={isProcessing}>Scaling</button>
+            <button className="ql-tool-btn" onClick={handleScalingStats} disabled={isProcessing}>SL-S</button>
+            <button className="ql-tool-btn" onClick={handleModelEditDemo} disabled={isProcessing}>ModEdit</button>
+            <button className="ql-tool-btn" onClick={handleModelEditStats} disabled={isProcessing}>ME-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handleGrokDemo} disabled={isProcessing}>Grok</button>
+            <button className="ql-tool-btn" onClick={handleGrokStats} disabled={isProcessing}>GR-S</button>
+            <button className="ql-tool-btn" onClick={handleDoubleDescDemo} disabled={isProcessing}>DblDesc</button>
+            <button className="ql-tool-btn" onClick={handleDoubleDescStats} disabled={isProcessing}>DD-S</button>
+            <button className="ql-tool-btn" onClick={handleSsmDemo} disabled={isProcessing}>SSM</button>
+            <button className="ql-tool-btn" onClick={handleSsmStats} disabled={isProcessing}>SSM-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handleToolUseDemo} disabled={isProcessing}>ToolUse</button>
+            <button className="ql-tool-btn" onClick={handleToolUseStats} disabled={isProcessing}>TU-S</button>
+            <button className="ql-tool-btn" onClick={handleSelfRefineDemo} disabled={isProcessing}>SelfRefn</button>
+            <button className="ql-tool-btn" onClick={handleSelfRefineStats} disabled={isProcessing}>SR-S</button>
+            <button className="ql-tool-btn" onClick={handleReasonChainDemo} disabled={isProcessing}>CoT</button>
+            <button className="ql-tool-btn" onClick={handleReasonChainStats} disabled={isProcessing}>CoT-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handleRedTeamDemo} disabled={isProcessing}>RedTeam</button>
+            <button className="ql-tool-btn" onClick={handleRedTeamStats} disabled={isProcessing}>RT-S</button>
+            <button className="ql-tool-btn" onClick={handleSafetyDemo} disabled={isProcessing}>Safety</button>
+            <button className="ql-tool-btn" onClick={handleSafetyStats} disabled={isProcessing}>SF-S</button>
+            <button className="ql-tool-btn" onClick={handleJailbreakDemo} disabled={isProcessing}>Jailbrk</button>
+            <button className="ql-tool-btn" onClick={handleJailbreakStats} disabled={isProcessing}>JB-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handleRingAttnDemo} disabled={isProcessing}>RingAttn</button>
+            <button className="ql-tool-btn" onClick={handleRingAttnStats} disabled={isProcessing}>RA-S</button>
+            <button className="ql-tool-btn" onClick={handleArenaDemo} disabled={isProcessing}>Arena</button>
+            <button className="ql-tool-btn" onClick={handleArenaStats} disabled={isProcessing}>AR-S</button>
+            <button className="ql-tool-btn" onClick={handleSynthDataDemo} disabled={isProcessing}>SynthData</button>
+            <button className="ql-tool-btn" onClick={handleSynthDataStats} disabled={isProcessing}>SD-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handleOrpoDemo} disabled={isProcessing}>ORPO</button>
+            <button className="ql-tool-btn" onClick={handleOrpoStats} disabled={isProcessing}>OR-S</button>
+            <button className="ql-tool-btn" onClick={handleSimpoDemo} disabled={isProcessing}>SimPO</button>
+            <button className="ql-tool-btn" onClick={handleSimpoStats} disabled={isProcessing}>SP-S</button>
+            <button className="ql-tool-btn" onClick={handleInfiniAttnDemo} disabled={isProcessing}>InfiniAt</button>
+            <button className="ql-tool-btn" onClick={handleInfiniAttnStats} disabled={isProcessing}>IA-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handleMedusaDemo} disabled={isProcessing}>Medusa</button>
+            <button className="ql-tool-btn" onClick={handleMedusaStats} disabled={isProcessing}>MD-S</button>
+            <button className="ql-tool-btn" onClick={handleEagleDemo} disabled={isProcessing}>EAGLE</button>
+            <button className="ql-tool-btn" onClick={handleEagleStats} disabled={isProcessing}>EG-S</button>
+            <button className="ql-tool-btn" onClick={handleChunkedDemo} disabled={isProcessing}>Chunked</button>
+            <button className="ql-tool-btn" onClick={handleChunkedStats} disabled={isProcessing}>CK-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handleDoraDemo} disabled={isProcessing}>DoRA</button>
+            <button className="ql-tool-btn" onClick={handleDoraStats} disabled={isProcessing}>DR-S</button>
+            <button className="ql-tool-btn" onClick={handleTopKDemo} disabled={isProcessing}>TopK</button>
+            <button className="ql-tool-btn" onClick={handleTopKStats} disabled={isProcessing}>TK-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handleHyenaDemo} disabled={isProcessing}>Hyena</button>
+            <button className="ql-tool-btn" onClick={handleHyenaStats} disabled={isProcessing}>HY-S</button>
+            <button className="ql-tool-btn" onClick={handleRwkvDemo} disabled={isProcessing}>RWKV</button>
+            <button className="ql-tool-btn" onClick={handleRwkvStats} disabled={isProcessing}>RW-S</button>
+            <button className="ql-tool-btn" onClick={handlePromptCompDemo} disabled={isProcessing}>PCompr</button>
+            <button className="ql-tool-btn" onClick={handlePromptCompStats} disabled={isProcessing}>PC-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handleFlashMlaDemo} disabled={isProcessing}>FlashMLA</button>
+            <button className="ql-tool-btn" onClick={handleFlashMlaStats} disabled={isProcessing}>FM-S</button>
+            <button className="ql-tool-btn" onClick={handleAgentPlanDemo} disabled={isProcessing}>Agent</button>
+            <button className="ql-tool-btn" onClick={handleAgentPlanStats} disabled={isProcessing}>AG-S</button>
+            <button className="ql-tool-btn" onClick={handleSpecRejectDemo} disabled={isProcessing}>SpecRej</button>
+            <button className="ql-tool-btn" onClick={handleSpecRejectStats} disabled={isProcessing}>SR-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handlePagedKvDemo} disabled={isProcessing}>PagedKV</button>
+            <button className="ql-tool-btn" onClick={handlePagedKvStats} disabled={isProcessing}>PK-S</button>
+            <button className="ql-tool-btn" onClick={handleAgentMemDemo} disabled={isProcessing}>AgMem</button>
+            <button className="ql-tool-btn" onClick={handleAgentMemStats} disabled={isProcessing}>AM-S</button>
+            <button className="ql-tool-btn" onClick={handleDynBatchDemo} disabled={isProcessing}>Batch</button>
+            <button className="ql-tool-btn" onClick={handleDynBatchStats} disabled={isProcessing}>CB-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handleVisEncDemo} disabled={isProcessing}>ViT</button>
+            <button className="ql-tool-btn" onClick={handleVisEncStats} disabled={isProcessing}>VE-S</button>
+            <button className="ql-tool-btn" onClick={handleTxt2ImgDemo} disabled={isProcessing}>T2I</button>
+            <button className="ql-tool-btn" onClick={handleTxt2ImgStats} disabled={isProcessing}>TI-S</button>
+            <button className="ql-tool-btn" onClick={handlePromCacheDemo} disabled={isProcessing}>PCache</button>
+            <button className="ql-tool-btn" onClick={handlePromCacheStats} disabled={isProcessing}>PC-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handleImgCapDemo} disabled={isProcessing}>ImgCap</button>
+            <button className="ql-tool-btn" onClick={handleImgCapStats} disabled={isProcessing}>IC-S</button>
+            <button className="ql-tool-btn" onClick={handleObjDetDemo} disabled={isProcessing}>ObjDet</button>
+            <button className="ql-tool-btn" onClick={handleObjDetStats} disabled={isProcessing}>OD-S</button>
+            <button className="ql-tool-btn" onClick={handleSuperResDemo} disabled={isProcessing}>SupRes</button>
+            <button className="ql-tool-btn" onClick={handleSuperResStats} disabled={isProcessing}>SR-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handleStyleTransDemo} disabled={isProcessing}>Style</button>
+            <button className="ql-tool-btn" onClick={handleStyleTransStats} disabled={isProcessing}>ST-S</button>
+            <button className="ql-tool-btn" onClick={handleImgInpaintDemo} disabled={isProcessing}>Inpaint</button>
+            <button className="ql-tool-btn" onClick={handleImgInpaintStats} disabled={isProcessing}>IP-S</button>
+            <button className="ql-tool-btn" onClick={handleAudioEncDemo} disabled={isProcessing}>Audio</button>
+            <button className="ql-tool-btn" onClick={handleAudioEncStats} disabled={isProcessing}>AE-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handleImgSegDemo} disabled={isProcessing}>Seg</button>
+            <button className="ql-tool-btn" onClick={handleImgSegStats} disabled={isProcessing}>SG-S</button>
+            <button className="ql-tool-btn" onClick={handleDepthEstDemo} disabled={isProcessing}>Depth</button>
+            <button className="ql-tool-btn" onClick={handleDepthEstStats} disabled={isProcessing}>DE-S</button>
+            <button className="ql-tool-btn" onClick={handleOptFlowDemo} disabled={isProcessing}>Flow</button>
+            <button className="ql-tool-btn" onClick={handleOptFlowStats} disabled={isProcessing}>OF-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handlePoseEstDemo} disabled={isProcessing}>Pose</button>
+            <button className="ql-tool-btn" onClick={handlePoseEstStats} disabled={isProcessing}>PE-S</button>
+            <button className="ql-tool-btn" onClick={handleSpeechRecogDemo} disabled={isProcessing}>ASR</button>
+            <button className="ql-tool-btn" onClick={handleSpeechRecogStats} disabled={isProcessing}>AR-S</button>
+            <button className="ql-tool-btn" onClick={handleMusicGenDemo} disabled={isProcessing}>Music</button>
+            <button className="ql-tool-btn" onClick={handleMusicGenStats} disabled={isProcessing}>MG-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handleCodeParserDemo} disabled={isProcessing}>Parse</button>
+            <button className="ql-tool-btn" onClick={handleCodeParserStats} disabled={isProcessing}>PR-S</button>
+            <button className="ql-tool-btn" onClick={handleCodeGenDemo} disabled={isProcessing}>CodeGen</button>
+            <button className="ql-tool-btn" onClick={handleCodeGenStats} disabled={isProcessing}>CG-S</button>
+            <button className="ql-tool-btn" onClick={handleCodeExecDemo} disabled={isProcessing}>Exec</button>
+            <button className="ql-tool-btn" onClick={handleCodeExecStats} disabled={isProcessing}>EX-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handleCodeDebugDemo} disabled={isProcessing}>Debug</button>
+            <button className="ql-tool-btn" onClick={handleCodeDebugStats} disabled={isProcessing}>DB-S</button>
+            <button className="ql-tool-btn" onClick={handleProgRepairDemo} disabled={isProcessing}>Repair</button>
+            <button className="ql-tool-btn" onClick={handleProgRepairStats} disabled={isProcessing}>RP-S</button>
+            <button className="ql-tool-btn" onClick={handleCodeReviewDemo} disabled={isProcessing}>Review</button>
+            <button className="ql-tool-btn" onClick={handleCodeReviewStats} disabled={isProcessing}>RV-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handleSyntaxHlDemo} disabled={isProcessing}>HL</button>
+            <button className="ql-tool-btn" onClick={handleSyntaxHlStats} disabled={isProcessing}>HL-S</button>
+            <button className="ql-tool-btn" onClick={handleCodeCompleteDemo} disabled={isProcessing}>Complete</button>
+            <button className="ql-tool-btn" onClick={handleCodeCompleteStats} disabled={isProcessing}>CC-S</button>
+            <button className="ql-tool-btn" onClick={handleCodeRefactorDemo} disabled={isProcessing}>Refactor</button>
+            <button className="ql-tool-btn" onClick={handleCodeRefactorStats} disabled={isProcessing}>RF-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handlePipelineAnalyze} disabled={isProcessing}>Pipeline</button>
+            <button className="ql-tool-btn" onClick={handlePipelineFull} disabled={isProcessing}>PL-Full</button>
+            <button className="ql-tool-btn" onClick={handlePipelineStats} disabled={isProcessing}>PL-S</button>
+          </div>
+          <div className="ql-toolbar-row">
+            <button className="ql-tool-btn" onClick={handleDataLoaderStats} disabled={isProcessing}>DL</button>
+            <button className="ql-tool-btn" onClick={handleDataPipelineStats} disabled={isProcessing}>DP</button>
+            <button className="ql-tool-btn" onClick={handleTokenizedDsStats} disabled={isProcessing}>TK</button>
+            <button className="ql-tool-btn" onClick={handleDistTrainStats} disabled={isProcessing}>DT</button>
+            <button className="ql-tool-btn" onClick={handleMpStats} disabled={isProcessing}>MP</button>
+            <button className="ql-tool-btn" onClick={handleCkptStats} disabled={isProcessing}>CK</button>
+          </div>
 
         </div>
       )}
@@ -3049,3 +4496,5 @@ export default function QianluPanel({ onClose }: Props) {
     </div>
   );
 }
+
+

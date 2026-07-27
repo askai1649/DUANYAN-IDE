@@ -42,7 +42,7 @@ export default function EditorPanel({ file, onChange }: Props) {
         onChange={(value) => onChange(file.path, value || "")}
         options={{
           fontSize: 14,
-          fontFamily: '"Cascadia Code", "Fira Code", Consolas, monospace',
+          fontFamily: '"Source Code Pro", "Cascadia Code", "Fira Code", "DejaVu Sans Mono", monospace',
           minimap: { enabled: true },
           scrollBeyondLastLine: false,
           automaticLayout: true,
