@@ -1,0 +1,1023 @@
+warning: file `C:\OPENSNAR\src\lib.rs` found to be present in multiple build targets:
+  * `lib` target `askcore`
+  * `bin` target `askcore`
+    Blocking waiting for file lock on package cache
+    Updating crates.io index
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on package cache
+ Downloading crates ...
+  Downloaded atomic-waker v1.1.2
+  Downloaded radium v0.7.0
+  Downloaded cpufeatures v0.3.0
+  Downloaded defmt-json-schema v0.1.0
+  Downloaded rand_pcg v0.10.2
+  Downloaded reed-solomon v0.2.1
+  Downloaded try-lock v0.2.5
+  Downloaded subtle v2.6.1
+  Downloaded strum v0.28.0
+  Downloaded strum v0.27.2
+  Downloaded untrusted v0.9.0
+  Downloaded sync_wrapper v1.0.2
+  Downloaded typed-arena v2.0.2
+  Downloaded serde_urlencoded v0.7.1
+  Downloaded shell-words v1.1.1
+  Downloaded utf8-zero v0.8.1
+  Downloaded supports-unicode v3.0.0
+  Downloaded supports-color v3.0.2
+  Downloaded serde_plain v1.0.2
+  Downloaded unit-prefix v0.5.2
+  Downloaded futures-task v0.3.32
+  Downloaded supports-hyperlinks v3.2.0
+  Downloaded futures-sink v0.3.32
+  Downloaded darling_macro v0.20.11
+  Downloaded want v0.3.1
+  Downloaded peg-runtime v0.8.6
+  Downloaded tower-layer v0.3.3
+  Downloaded tap v1.0.1
+  Downloaded slip-codec v0.4.0
+  Downloaded tower-service v0.3.3
+  Downloaded strum_macros v0.27.2
+  Downloaded wyz v0.5.1
+  Downloaded unicode-linebreak v0.1.5
+  Downloaded strum_macros v0.28.0
+  Downloaded shlex v2.0.1
+  Downloaded slab v0.4.12
+  Downloaded rustversion v1.0.22
+  Downloaded rand_core v0.10.1
+  Downloaded quinn-udp v0.5.15
+  Downloaded proc-macro-crate v3.5.0
+  Downloaded rustc-demangle v0.1.28
+warning: spurious network error (3 tries remaining): failed to get successful HTTP response from `https://static.crates.io/crates/parse_int/0.9.0/download` (199.232.114.137), got 500
+body:
+error sending request: Incomplete HTTP response to backend us-west-1
+  Downloaded http-body v1.0.1
+  Downloaded zeroize v1.9.0
+  Downloaded update-informer v1.3.0
+  Downloaded block-buffer v0.12.1
+  Downloaded tokio-rustls v0.26.4
+  Downloaded deku_derive v0.18.1
+  Downloaded sha2 v0.11.0
+  Downloaded cfg_aliases v0.2.2
+  Downloaded rustls-pki-types v1.15.1
+  Downloaded data-encoding-macro v0.1.20
+  Downloaded is_ci v1.2.0
+  Downloaded data-encoding-macro-internal v0.1.18
+  Downloaded twox-hash v2.1.3
+  Downloaded alterable_logger v1.0.1
+  Downloaded textwrap v0.16.2
+  Downloaded tempfile v3.27.0
+  Downloaded futures-macro v0.3.32
+  Downloaded lru-slab v0.1.2
+  Downloaded ryu v1.0.23
+  Downloaded hexfloat2 v0.1.3
+  Downloaded convert_case v0.10.0
+  Downloaded home v0.5.12
+  Downloaded toml_edit v0.25.12+spec-1.1.0
+  Downloaded quinn v0.11.11
+  Downloaded rustls-webpki v0.103.13
+  Downloaded futures-io v0.3.32
+  Downloaded ureq-proto v0.6.0
+  Downloaded defmt-parser v1.0.0
+  Downloaded rand v0.10.2
+  Downloaded data-encoding v2.11.0
+  Downloaded funty v2.0.0
+  Downloaded ctrlc v3.5.2
+  Downloaded lazy_static v1.5.0
+  Downloaded ruzstd v0.8.3
+  Downloaded parse_int v0.9.0
+  Downloaded document-features v0.2.12
+  Downloaded backtrace-ext v0.2.1
+  Downloaded crypto-common v0.2.2
+  Downloaded http-body-util v0.1.3
+  Downloaded etcetera v0.10.0
+  Downloaded directories v6.0.0
+  Downloaded futures-core v0.3.32
+  Downloaded tower v0.5.3
+  Downloaded find-msvc-tools v0.1.9
+  Downloaded colored v2.2.0
+  Downloaded env_filter v2.0.0
+  Downloaded miette-derive v7.6.0
+  Downloaded md-5 v0.10.6
+  Downloaded md-5 v0.11.0
+  Downloaded hyper-rustls v0.27.9
+  Downloaded console v0.16.4
+  Downloaded chacha20 v0.10.1
+  Downloaded crossterm_winapi v0.9.1
+  Downloaded csv-core v0.1.13
+  Downloaded bytemuck_derive v1.11.0
+  Downloaded ureq v3.3.0
+  Downloaded tower-http v0.6.11
+  Downloaded cookie_store v0.22.1
+  Downloaded reqwest v0.12.28
+  Downloaded num-integer v0.1.46
+  Downloaded fallible-iterator v0.3.0
+  Downloaded esp-idf-part v0.6.0
+  Downloaded defmt-macros v1.1.1
+  Downloaded defmt-decoder v1.1.0
+  Downloaded portable-atomic v1.14.0
+  Downloaded owo-colors v4.3.0
+  Downloaded digest v0.11.3
+  Downloaded dialoguer v0.12.0
+  Downloaded peg v0.8.6
+  Downloaded ipnet v2.12.0
+  Downloaded webpki-roots v1.0.9
+  Downloaded futures-channel v0.3.32
+  Downloaded darling v0.20.11
+  Downloaded hybrid-array v0.4.14
+  Downloaded peg-macros v0.8.6
+  Downloaded clap_derive v4.6.4
+  Downloaded quinn-proto v0.11.16
+  Downloaded clap_complete v4.6.8
+  Downloaded dissimilar v1.0.11
+  Downloaded defmt v1.1.1
+  Downloaded no_std_io2 v0.8.1
+  Downloaded memmap2 v0.9.11
+  Downloaded env_logger v0.11.11
+  Downloaded unicode-width v0.2.2
+  Downloaded const-oid v0.10.2
+  Downloaded unicode-width v0.1.14
+  Downloaded litrs v1.0.0
+  Downloaded httparse v1.10.1
+  Downloaded syn v3.0.3
+  Downloaded bytemuck v1.25.0
+  Downloaded rustls v0.23.43
+  Downloaded clap v4.6.4
+  Downloaded encode_unicode v1.0.0
+  Downloaded cpp_demangle v0.4.5
+  Downloaded darling_core v0.20.11
+  Downloaded indicatif v0.18.6
+  Downloaded cc v1.2.63
+  Downloaded deku v0.18.1
+  Downloaded arc-swap v1.9.2
+  Downloaded comfy-table v7.2.2
+  Downloaded backtrace v0.3.76
+  Downloaded cbor-edn v0.0.6
+  Downloaded minimal-lexical v0.2.1
+  Downloaded hyper-util v0.1.20
+  Downloaded nom v7.1.3
+  Downloaded num-bigint v0.4.8
+  Downloaded miette v7.6.0
+  Downloaded jiff-core v0.1.0
+  Downloaded crossterm v0.29.0
+  Downloaded futures-util v0.3.32
+  Downloaded hyper v1.10.1
+  Downloaded clap_builder v4.6.2
+  Downloaded winapi v0.3.9
+  Downloaded bitvec v1.1.1
+  Downloaded gimli v0.29.0
+  Downloaded object v0.36.7
+  Downloaded object v0.39.1
+  Downloaded ring v0.17.14
+  Downloaded jiff v0.2.35
+  Downloaded winapi-x86_64-pc-windows-gnu v0.4.0
+  Downloaded csv v1.4.0
+  Downloaded encoding_rs v0.8.35
+  Downloaded espflash v4.5.0
+    Blocking waiting for file lock on package cache
+    Blocking waiting for file lock on build directory
+    Checking serde_core v1.0.228
+    Checking windows-sys v0.61.2
+    Checking stable_deref_trait v1.2.1
+   Compiling unicode-segmentation v1.13.3
+    Checking yoke v0.8.3
+   Compiling getrandom v0.4.2
+   Compiling convert_case v0.10.0
+   Compiling uuid v1.23.3
+   Compiling derive_more-impl v2.1.1
+    Checking zerovec v0.11.6
+   Compiling toml v1.1.2+spec-1.1.0
+   Compiling derive_more v2.1.1
+    Checking serde v1.0.228
+    Checking log v0.4.32
+   Compiling cfb v0.7.3
+   Compiling selectors v0.36.1
+   Compiling schemars v0.8.22
+   Compiling infer v0.19.0
+    Checking tinystr v0.8.3
+    Checking potential_utf v0.1.5
+    Checking icu_locale_core v2.2.0
+    Checking zerotrie v0.2.4
+    Checking icu_collections v2.2.0
+   Compiling dom_query v0.27.0
+    Checking serde_json v1.0.150
+    Checking typenum v1.20.1
+    Checking icu_provider v2.2.0
+   Compiling time-macros v0.2.27
+   Compiling tauri-utils v2.9.2
+    Checking time-core v0.1.8
+   Compiling toml v0.9.12+spec-1.1.0
+    Checking icu_normalizer v2.2.0
+    Checking time v0.3.47
+    Checking icu_properties v2.2.0
+   Compiling embed-resource v3.0.9
+    Checking bitflags v2.13.0
+    Checking simd-adler32 v0.3.9
+    Checking adler2 v2.0.1
+    Checking scopeguard v1.2.0
+    Checking miniz_oxide v0.8.9
+    Checking idna_adapter v1.2.2
+   Compiling tauri-winres v0.3.6
+   Compiling cargo_toml v0.22.3
+    Checking crc32fast v1.5.0
+   Compiling generic-array v0.14.7
+    Checking flate2 v1.1.9
+    Checking idna v1.1.0
+    Checking lock_api v0.4.14
+    Checking windows-sys v0.59.0
+    Checking parking_lot v0.12.5
+    Checking url v2.5.8
+    Checking num-traits v0.2.19
+    Checking winapi-util v0.1.11
+    Checking dpi v0.1.2
+    Checking toml_datetime v1.1.1+spec-1.1.0
+    Checking serde_spanned v1.1.1
+    Checking twox-hash v2.1.3
+    Checking zeroize v1.9.0
+    Checking ruzstd v0.8.3
+    Checking erased-serde v0.4.10
+    Checking same-file v1.0.6
+   Compiling crypto-common v0.1.7
+   Compiling block-buffer v0.10.4
+    Checking jsonptr v0.6.3
+    Checking utf8parse v0.2.2
+    Checking once_cell_polyfill v1.70.2
+    Checking unicode-width v0.2.2
+    Checking anstyle v1.0.14
+   Compiling png v0.17.16
+    Checking dirs-sys v0.5.0
+    Checking anstyle-wincon v3.0.11
+    Checking json-patch v3.0.1
+    Checking serde-untagged v0.1.9
+   Compiling tauri-build v2.6.2
+   Compiling tauri-plugin v2.6.2
+    Checking anstyle-parse v1.0.0
+    Checking plist v1.9.0
+   Compiling digest v0.10.7
+    Checking urlpattern v0.3.0
+    Checking walkdir v2.5.0
+    Checking cookie v0.18.1
+    Checking rustls-pki-types v1.15.1
+    Checking hybrid-array v0.4.14
+    Checking anstyle-query v1.1.5
+    Checking serde_with v3.21.0
+   Compiling darling_core v0.20.11
+    Checking getrandom v0.2.17
+    Checking fallible-iterator v0.3.0
+    Checking is_terminal_polyfill v1.70.2
+    Checking untrusted v0.9.0
+    Checking colorchoice v1.0.5
+    Checking anstream v1.0.0
+   Compiling sha2 v0.10.9
+    Checking ring v0.17.14
+    Checking gimli v0.32.3
+   Compiling darling_macro v0.20.11
+    Checking winapi-x86_64-pc-windows-gnu v0.4.0
+   Compiling ico v0.5.0
+    Checking object v0.37.3
+    Checking cpp_demangle v0.4.5
+    Checking terminal_size v0.4.4
+   Compiling toml_edit v0.25.12+spec-1.1.0
+    Checking typed-arena v2.0.2
+   Compiling tauri v2.11.2
+   Compiling tauri-plugin-fs v2.5.1
+    Checking memmap2 v0.9.11
+    Checking rustc-demangle v0.1.28
+    Checking tap v1.0.1
+    Checking addr2line v0.25.1
+    Checking wyz v0.5.1
+   Compiling proc-macro-crate v3.5.0
+    Checking tauri-runtime v2.11.2
+   Compiling tauri-codegen v2.6.2
+    Checking winapi v0.3.9
+    Checking httparse v1.10.1
+   Compiling darling v0.20.11
+    Checking radium v0.7.0
+    Checking softbuffer v0.4.8
+    Checking rustls-webpki v0.103.13
+    Checking wry v0.55.1
+    Checking block-buffer v0.12.1
+    Checking crypto-common v0.2.2
+    Checking tao v0.35.3
+    Checking num-integer v0.1.46
+    Checking keyboard-types v0.7.0
+   Compiling syn v3.0.3
+    Checking const-oid v0.10.2
+   Compiling object v0.36.7
+    Checking peg-runtime v0.8.6
+    Checking encode_unicode v1.0.0
+    Checking data-encoding v2.11.0
+   Compiling litrs v1.0.0
+   Compiling portable-atomic v1.14.0
+    Checking clap_lex v1.1.0
+   Compiling owo-colors v4.3.0
+    Checking strsim v0.11.1
+    Checking subtle v2.6.1
+    Checking funty v2.0.0
+    Checking ryu v1.0.23
+    Checking rustls v0.23.43
+    Checking bitvec v1.1.1
+    Checking clap_builder v4.6.2
+   Compiling document-features v0.2.12
+   Compiling clap_derive v4.6.4
+    Checking data-encoding-macro v0.1.20
+    Checking console v0.16.4
+    Checking muda v0.19.2
+    Checking tauri-runtime-wry v2.11.2
+    Checking peg v0.8.6
+    Checking digest v0.11.3
+    Checking serialize-to-javascript v0.1.2
+    Checking crossterm_winapi v0.9.1
+    Checking num-bigint v0.4.8
+   Compiling tauri-macros v2.6.2
+   Compiling deku_derive v0.18.1
+    Checking ureq-proto v0.6.0
+    Checking backtrace v0.3.76
+   Compiling tauri-plugin-dialog v2.7.1
+    Checking webpki-roots v1.0.9
+    Checking arc-swap v1.9.2
+    Checking dirs v6.0.0
+    Checking window-vibrancy v0.6.0
+    Checking chrono v0.4.45
+    Checking home v0.5.12
+   Compiling strum_macros v0.27.2
+    Checking no_std_io2 v0.8.1
+    Checking csv-core v0.1.13
+    Checking encoding_rs v0.8.35
+    Checking jiff-core v0.1.0
+    Checking fastrand v2.4.1
+    Checking hexfloat2 v0.1.3
+    Checking is_ci v1.2.0
+    Checking lazy_static v1.5.0
+    Checking utf8-zero v0.8.1
+    Checking unicode-linebreak v0.1.5
+    Checking minimal-lexical v0.2.1
+    Checking hex v0.4.3
+   Compiling object v0.39.1
+    Checking cbor-edn v0.0.6
+    Checking nom v7.1.3
+    Checking textwrap v0.16.2
+    Checking strum v0.27.2
+    Checking ureq v3.3.0
+    Checking colored v2.2.0
+    Checking jiff v0.2.35
+    Checking supports-color v3.0.2
+    Checking tempfile v3.27.0
+    Checking csv v1.4.0
+    Checking deku v0.18.1
+    Checking crossterm v0.29.0
+    Checking etcetera v0.10.0
+    Checking alterable_logger v1.0.1
+    Checking backtrace-ext v0.2.1
+    Checking clap v4.6.4
+    Checking md-5 v0.10.6
+    Checking parse_int v0.9.0
+    Checking defmt-parser v1.0.0
+    Checking env_filter v2.0.0
+    Checking windows-sys v0.52.0
+    Checking defmt-json-schema v0.1.0
+    Checking serde_plain v1.0.2
+   Compiling strum_macros v0.28.0
+   Compiling bytemuck_derive v1.11.0
+   Compiling miette-derive v7.6.0
+    Checking unit-prefix v0.5.2
+    Checking cpufeatures v0.3.0
+    Checking unicode-width v0.1.14
+    Checking shell-words v1.1.1
+    Checking supports-unicode v3.0.0
+    Checking gimli v0.29.0
+    Checking supports-hyperlinks v3.2.0
+    Checking dissimilar v1.0.11
+    Checking strum v0.28.0
+    Checking miette v7.6.0
+    Checking dialoguer v0.12.0
+    Checking sha2 v0.11.0
+    Checking serialport v4.9.0
+    Checking indicatif v0.18.6
+    Checking defmt-decoder v1.1.0
+    Checking bytemuck v1.25.0
+    Checking esp-idf-part v0.6.0
+    Checking heapless v0.8.0
+    Checking env_logger v0.11.11
+    Checking clap_complete v4.6.8
+    Checking rfd v0.16.0
+    Checking update-informer v1.3.0
+    Checking comfy-table v7.2.2
+    Checking md-5 v0.11.0
+   Compiling duanyan-ide v1.2.0 (C:\OPENSNAR\DUANYAN-IDE\src-tauri)
+    Checking directories v6.0.0
+    Checking ctrlc v3.5.2
+    Checking hardyscript v1.5.0 (C:\OPENSNAR\HardyScript)
+    Checking reed-solomon v0.2.1
+    Checking slip-codec v0.4.0
+warning: unused import: `Duration`
+ --> C:\OPENSNAR\HardyScript\src\hardware_sim.rs:7:26
+  |
+7 | use std::time::{Instant, Duration};
+  |                          ^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `ArrowBody`
+ --> C:\OPENSNAR\HardyScript\src\async_transform.rs:6:65
+  |
+6 | use crate::parser::{Expr, Function, SourceStatement, Statement, ArrowBody};
+  |                                                                 ^^^^^^^^^
+
+warning: unused import: `ArrowBody`
+ --> C:\OPENSNAR\HardyScript\src\escape_analysis.rs:8:65
+  |
+8 | use crate::parser::{Expr, Function, Statement, SourceStatement, ArrowBody};
+  |                                                                 ^^^^^^^^^
+
+warning: unused imports: `BasicBlock` and `BlockKind`
+ --> C:\OPENSNAR\HardyScript\src\wcet.rs:6:36
+  |
+6 | use crate::cfg::{ControlFlowGraph, BasicBlock, BlockKind, build_cfg, estimate_loop_bound};
+  |                                    ^^^^^^^^^^  ^^^^^^^^^
+
+warning: unused import: `std::collections::HashMap`
+ --> C:\OPENSNAR\HardyScript\src\wcet.rs:9:5
+  |
+9 | use std::collections::HashMap;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused variable: `hw_call`
+   --> C:\OPENSNAR\HardyScript\src\compiler\mod.rs:689:21
+    |
+689 |         if let Some(hw_call) = self.try_compile_hw_call(name, args, rd)? {
+    |                     ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_hw_call`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `completed`
+   --> C:\OPENSNAR\HardyScript\src\engine.rs:357:17
+    |
+357 |             let completed = async_scheduler.poll_all();
+    |                 ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_completed`
+
+warning: value assigned to `result_source` is never read
+   --> C:\OPENSNAR\HardyScript\src\compat.rs:137:29
+    |
+137 |     let mut result_source = source.to_string();
+    |                             ^^^^^^^^^^^^^^^^^^
+    |
+    = help: maybe it is overwritten before being read?
+    = note: `#[warn(unused_assignments)]` (part of `#[warn(unused)]`) on by default
+
+warning: value assigned to `result` is never read
+   --> C:\OPENSNAR\HardyScript\src\compat.rs:207:22
+    |
+207 |     let mut result = source.to_string();
+    |                      ^^^^^^^^^^^^^^^^^^
+    |
+    = help: maybe it is overwritten before being read?
+
+warning: unreachable pattern
+    --> C:\OPENSNAR\HardyScript\src\c_codegen.rs:1113:13
+     |
+1113 |             _ => {} // 鍏朵粬骞冲彴鍚庣画瀹炵幇
+     |             ^ no value can reach this
+     |
+note: multiple earlier patterns match some of the same values
+    --> C:\OPENSNAR\HardyScript\src\c_codegen.rs:1113:13
+     |
+ 472 |             CTarget::Esp32 => {
+     |             -------------- matches some of the same values
+...
+ 747 |             CTarget::ArduinoAvr => {
+     |             ------------------- matches some of the same values
+...
+ 831 |             CTarget::ArduinoArm => {
+     |             ------------------- matches some of the same values
+...
+ 915 |             CTarget::Stm32 => {
+     |             -------------- matches some of the same values
+...
+1113 |             _ => {} // 鍏朵粬骞冲彴鍚庣画瀹炵幇
+     |             ^ ...and 1 other patterns collectively make this unreachable
+     = note: `#[warn(unreachable_patterns)]` (part of `#[warn(unused)]`) on by default
+
+warning: unreachable pattern
+    --> C:\OPENSNAR\HardyScript\src\c_codegen.rs:1573:33
+     |
+1573 | ...                   _ => {
+     |                       ^ no value can reach this
+     |
+note: multiple earlier patterns match some of the same values
+    --> C:\OPENSNAR\HardyScript\src\c_codegen.rs:1573:33
+     |
+1561 | ...                   CTarget::Esp32 => {
+     |                       -------------- matches some of the same values
+...
+1564 | ...                   CTarget::ArduinoAvr | CTarget::ArduinoArm => {
+     |                       ----------------------------------------- matches some of the same values
+...
+1567 | ...                   CTarget::Stm32 => {
+     |                       -------------- matches some of the same values
+...
+1570 | ...                   CTarget::RaspberryPi => {
+     |                       -------------------- matches some of the same values
+...
+1573 | ...                   _ => {
+     |                       ^ collectively making this unreachable
+
+warning: variable does not need to be mutable
+    --> C:\OPENSNAR\HardyScript\src\model.rs:1111:13
+     |
+1111 |         let mut pending_q: Option<(Vec<f32>, u32, u32)> = None;
+     |             ----^^^^^^^^^
+     |             |
+     |             help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: variable does not need to be mutable
+    --> C:\OPENSNAR\HardyScript\src\model.rs:1112:13
+     |
+1112 |         let mut pending_k: Option<(Vec<f32>, u32, u32)> = None;
+     |             ----^^^^^^^^^
+     |             |
+     |             help: remove this `mut`
+
+warning: variable does not need to be mutable
+    --> C:\OPENSNAR\HardyScript\src\model.rs:1113:13
+     |
+1113 |         let mut pending_v: Option<(Vec<f32>, u32, u32)> = None;
+     |             ----^^^^^^^^^
+     |             |
+     |             help: remove this `mut`
+
+warning: variable `qkv_merged` is assigned to, but never used
+    --> C:\OPENSNAR\HardyScript\src\model.rs:1110:13
+     |
+1110 |         let mut qkv_merged = false;
+     |             ^^^^^^^^^^^^^^
+     |
+     = note: consider using `_qkv_merged` instead
+
+warning: unused variable: `pending_q`
+    --> C:\OPENSNAR\HardyScript\src\model.rs:1111:13
+     |
+1111 |         let mut pending_q: Option<(Vec<f32>, u32, u32)> = None;
+     |             ^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_pending_q`
+
+warning: unused variable: `pending_k`
+    --> C:\OPENSNAR\HardyScript\src\model.rs:1112:13
+     |
+1112 |         let mut pending_k: Option<(Vec<f32>, u32, u32)> = None;
+     |             ^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_pending_k`
+
+warning: unused variable: `pending_v`
+    --> C:\OPENSNAR\HardyScript\src\model.rs:1113:13
+     |
+1113 |         let mut pending_v: Option<(Vec<f32>, u32, u32)> = None;
+     |             ^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_pending_v`
+
+warning: value assigned to `qkv_merged` is never read
+    --> C:\OPENSNAR\HardyScript\src\model.rs:1131:21
+     |
+1131 |                     qkv_merged = true;
+     |                     ^^^^^^^^^^^^^^^^^
+     |
+     = help: maybe it is overwritten before being read?
+
+warning: unused variable: `arch`
+    --> C:\OPENSNAR\HardyScript\src\model.rs:1243:39
+     |
+1243 | fn map_gguf_name_to_layer(name: &str, arch: &str) -> Option<(u32, LayerType)> {
+     |                                       ^^^^ help: if this is intentional, prefix it with an underscore: `_arch`
+
+warning: unused variable: `prefix`
+    --> C:\OPENSNAR\HardyScript\src\model.rs:1253:9
+     |
+1253 |     let prefix = format!("blk.{}.", layer_idx.unwrap_or(0));
+     |         ^^^^^^ help: if this is intentional, prefix it with an underscore: `_prefix`
+
+warning: variable `brace_depth` is assigned to, but never used
+   --> C:\OPENSNAR\HardyScript\src\lint.rs:413:13
+    |
+413 |         let mut brace_depth = 0i32;
+    |             ^^^^^^^^^^^^^^^
+    |
+    = note: consider using `_brace_depth` instead
+
+warning: value assigned to `brace_depth` is never read
+   --> C:\OPENSNAR\HardyScript\src\lint.rs:422:37
+    |
+422 |                 else if ch == '}' { brace_depth -= 1; after_return = false; }
+    |                                     ^^^^^^^^^^^^^^^^
+    |
+    = help: maybe it is overwritten before being read?
+
+warning: value assigned to `brace_depth` is never read
+   --> C:\OPENSNAR\HardyScript\src\lint.rs:421:32
+    |
+421 |                 if ch == '{' { brace_depth += 1; after_return = false; }
+    |                                ^^^^^^^^^^^^^^^^
+    |
+    = help: maybe it is overwritten before being read?
+
+warning: variable `total_bytes` is assigned to, but never used
+   --> C:\OPENSNAR\HardyScript\src\ci.rs:433:9
+    |
+433 |     let mut total_bytes = 0u64;
+    |         ^^^^^^^^^^^^^^^
+    |
+    = note: consider using `_total_bytes` instead
+
+warning: value assigned to `total_bytes` is never read
+   --> C:\OPENSNAR\HardyScript\src\ci.rs:475:9
+    |
+475 |         total_bytes += data.len() as u64;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: maybe it is overwritten before being read?
+
+warning: unused variable: `promises`
+   --> C:\OPENSNAR\HardyScript\src\async_transform.rs:320:28
+    |
+320 |         Expr::PromiseAll { promises } | Expr::PromiseRace { promises } => {
+    |                            ^^^^^^^^                         ^^^^^^^^
+    |
+help: try ignoring the field
+    |
+320 |         Expr::PromiseAll { promises: _ } | Expr::PromiseRace { promises: _ } => {
+    |                                    +++                                 +++
+
+warning: unused variable: `body`
+   --> C:\OPENSNAR\HardyScript\src\async_transform.rs:330:5
+    |
+330 |     body: &[SourceStatement],
+    |     ^^^^ help: if this is intentional, prefix it with an underscore: `_body`
+
+warning: unused variable: `values`
+   --> C:\OPENSNAR\HardyScript\src\escape_analysis.rs:275:33
+    |
+275 |         Expr::ObjectLit { keys, values } => {
+    |                                 ^^^^^^ help: try ignoring the field: `values: _`
+
+warning: constant `REG_A1` is never used
+  --> C:\OPENSNAR\HardyScript\src\compiler\mod.rs:45:7
+   |
+45 | const REG_A1: u8 = 4;     // 鍙傛暟 a1
+   |       ^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: constant `REG_A2` is never used
+  --> C:\OPENSNAR\HardyScript\src\compiler\mod.rs:46:7
+   |
+46 | const REG_A2: u8 = 5;     // 鍙傛暟 a2
+   |       ^^^^^^
+
+warning: constant `REG_A3` is never used
+  --> C:\OPENSNAR\HardyScript\src\compiler\mod.rs:47:7
+   |
+47 | const REG_A3: u8 = 6;     // 鍙傛暟 a3
+   |       ^^^^^^
+
+warning: methods `block_size` and `type_size` are never used
+   --> C:\OPENSNAR\HardyScript\src\model.rs:910:8
+    |
+897 | impl GgufType {
+    | ------------- methods in this implementation
+...
+910 |     fn block_size(&self) -> usize {
+    |        ^^^^^^^^^^
+...
+919 |     fn type_size(&self) -> usize {
+    |        ^^^^^^^^^
+
+warning: field `0` is never read
+   --> C:\OPENSNAR\HardyScript\src\model.rs:935:13
+    |
+935 |     Float32(f32),
+    |     ------- ^^^
+    |     |
+    |     field in this variant
+    |
+    = note: `GgufValue` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+935 -     Float32(f32),
+935 +     Float32(()),
+    |
+
+warning: field `0` is never read
+   --> C:\OPENSNAR\HardyScript\src\model.rs:938:10
+    |
+938 |     Bool(bool),
+    |     ---- ^^^^
+    |     |
+    |     field in this variant
+    |
+    = note: `GgufValue` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+938 -     Bool(bool),
+938 +     Bool(()),
+    |
+
+warning: field `0` is never read
+   --> C:\OPENSNAR\HardyScript\src\model.rs:939:11
+    |
+939 |     Array(Vec<GgufValue>),
+    |     ----- ^^^^^^^^^^^^^^
+    |     |
+    |     field in this variant
+    |
+    = note: `GgufValue` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+939 -     Array(Vec<GgufValue>),
+939 +     Array(()),
+    |
+
+warning: constant `GGUF_TYPE_UINT8` is never used
+   --> C:\OPENSNAR\HardyScript\src\model.rs:962:7
+    |
+962 | const GGUF_TYPE_UINT8: u32 = 0;
+    |       ^^^^^^^^^^^^^^^
+
+warning: constant `GGUF_TYPE_INT8` is never used
+   --> C:\OPENSNAR\HardyScript\src\model.rs:963:7
+    |
+963 | const GGUF_TYPE_INT8: u32 = 1;
+    |       ^^^^^^^^^^^^^^
+
+warning: constant `GGUF_TYPE_UINT16` is never used
+   --> C:\OPENSNAR\HardyScript\src\model.rs:964:7
+    |
+964 | const GGUF_TYPE_UINT16: u32 = 2;
+    |       ^^^^^^^^^^^^^^^^
+
+warning: constant `GGUF_TYPE_INT16` is never used
+   --> C:\OPENSNAR\HardyScript\src\model.rs:965:7
+    |
+965 | const GGUF_TYPE_INT16: u32 = 3;
+    |       ^^^^^^^^^^^^^^^
+
+warning: constant `GGUF_TYPE_FLOAT64` is never used
+   --> C:\OPENSNAR\HardyScript\src\model.rs:974:7
+    |
+974 | const GGUF_TYPE_FLOAT64: u32 = 12;
+    |       ^^^^^^^^^^^^^^^^^
+
+warning: `hardyscript` (lib) generated 41 warnings (run `cargo fix --lib -p hardyscript` to apply 18 suggestions)
+    Checking duanyan v2.0.0 (C:\OPENSNAR\DUANYAN)
+    Checking espflash v4.5.0
+warning: unused imports: `HardyExpr` and `HardyStmt`
+  --> C:\OPENSNAR\DUANYAN\src\e2e_pipeline.rs:18:50
+   |
+18 | use crate::ast_bridge::{AstBridge, HardyProgram, HardyStmt, HardyExpr};
+   |                                                  ^^^^^^^^^  ^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: `duanyan` (lib) generated 1 warning (run `cargo fix --lib -p duanyan` to apply 1 suggestion)
+error[E0407]: method `progress_update` is not a member of trait `espflash::flasher::ProgressCallbacks`
+  --> src\native_flasher.rs:66:5
+   |
+66 | /     fn progress_update(&mut self, current: usize, total: usize, message: &str) {
+67 | |         self.callback.on_progress(current, total, message);
+68 | |     }
+   | |_____^ not a member of trait `espflash::flasher::ProgressCallbacks`
+
+error[E0603]: trait `ProgressCallbacks` is private
+  --> src\native_flasher.rs:65:29
+   |
+65 | impl<'a> espflash::flasher::ProgressCallbacks for ProgressAdapter<'a> {
+   |                             ^^^^^^^^^^^^^^^^^ private trait
+   |
+note: the trait `ProgressCallbacks` is defined here
+  --> C:\Users\askai\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\espflash-4.5.0\src\flasher\mod.rs:29:46
+   |
+29 | use crate::target::{DefaultProgressCallback, ProgressCallbacks};
+   |                                              ^^^^^^^^^^^^^^^^^
+help: import `ProgressCallbacks` directly
+   |
+65 - impl<'a> espflash::flasher::ProgressCallbacks for ProgressAdapter<'a> {
+65 + impl<'a> espflash::target::flash_target::ProgressCallbacks for ProgressAdapter<'a> {
+   |
+
+warning: unnecessary parentheses around block return value
+    --> src\lib.rs:3074:43
+     |
+3074 |     let flash_overhead = if c_flash > 0 { ((hs_flash - c_flash) as f64 / c_flash as f64 * 100.0) } else { 0.0 };
+     |                                           ^                                                    ^
+     |
+     = note: `#[warn(unused_parens)]` (part of `#[warn(unused)]`) on by default
+help: remove these parentheses
+     |
+3074 -     let flash_overhead = if c_flash > 0 { ((hs_flash - c_flash) as f64 / c_flash as f64 * 100.0) } else { 0.0 };
+3074 +     let flash_overhead = if c_flash > 0 { (hs_flash - c_flash) as f64 / c_flash as f64 * 100.0 } else { 0.0 };
+     |
+
+warning: unnecessary parentheses around block return value
+    --> src\lib.rs:3075:39
+     |
+3075 |     let ram_overhead = if c_ram > 0 { ((hs_ram - c_ram) as f64 / c_ram as f64 * 100.0) } else { 0.0 };
+     |                                       ^                                              ^
+     |
+help: remove these parentheses
+     |
+3075 -     let ram_overhead = if c_ram > 0 { ((hs_ram - c_ram) as f64 / c_ram as f64 * 100.0) } else { 0.0 };
+3075 +     let ram_overhead = if c_ram > 0 { (hs_ram - c_ram) as f64 / c_ram as f64 * 100.0 } else { 0.0 };
+     |
+
+error[E0046]: not all trait items implemented, missing: `init`, `update`, `verifying`, `finish`
+  --> src\native_flasher.rs:65:1
+   |
+65 | impl<'a> espflash::flasher::ProgressCallbacks for ProgressAdapter<'a> {
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ missing `init`, `update`, `verifying`, `finish` in implementation
+   |
+   = help: implement the missing item: `fn init(&mut self, _: u32, _: usize) { todo!() }`
+   = help: implement the missing item: `fn update(&mut self, _: usize) { todo!() }`
+   = help: implement the missing item: `fn verifying(&mut self) { todo!() }`
+   = help: implement the missing item: `fn finish(&mut self, _: bool) { todo!() }`
+
+error[E0308]: mismatched types
+   --> src\native_flasher.rs:151:9
+    |
+150 |     let connection = Connection::new(
+    |                      --------------- arguments to this function are incorrect
+151 |         serial,
+    |         ^^^^^^ expected `COMPort`, found `Box<dyn SerialPort>`
+    |
+    = note: expected struct `COMPort`
+               found struct `Box<dyn SerialPort>`
+note: associated function defined here
+   --> C:\Users\askai\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\espflash-4.5.0\src\connection\mod.rs:242:12
+    |
+242 |     pub fn new(
+    |            ^^^
+
+error[E0277]: the trait bound `std::string::String: UpperHex` is not satisfied
+   --> src\native_flasher.rs:184:36
+    |
+184 |         .map(|b| format!("{:02X}", b))
+    |                           ------   ^ the trait `UpperHex` is not implemented for `std::string::String`
+    |                           |
+    |                           required by this formatting parameter
+    |
+    = help: the following other types implement trait `UpperHex`:
+              &T
+              &mut T
+              NonZero<T>
+              Saturating<T>
+              Wrapping<T>
+              bitvec::array::BitArray<A, O>
+              bitvec::boxed::BitBox<T, O>
+              bitvec::domain::Domain<'a, wyz::comu::Const, T, O>
+            and 81 others
+    = note: required for `&std::string::String` to implement `UpperHex`
+
+error[E0308]: mismatched types
+   --> src\native_flasher.rs:190:9
+    |
+189 |     let flash_size_str = match info.flash_size {
+    |                                --------------- this expression has type `FlashSize`
+190 |         Some(size) => format!("{:?}", size),
+    |         ^^^^^^^^^^ expected `FlashSize`, found `Option<_>`
+    |
+    = note: expected enum `FlashSize`
+               found enum `std::option::Option<_>`
+
+error[E0308]: mismatched types
+   --> src\native_flasher.rs:191:9
+    |
+189 |     let flash_size_str = match info.flash_size {
+    |                                --------------- this expression has type `FlashSize`
+190 |         Some(size) => format!("{:?}", size),
+191 |         None => "Unknown".to_string(),
+    |         ^^^^ expected `FlashSize`, found `Option<_>`
+    |
+    = note: expected enum `FlashSize`
+               found enum `std::option::Option<_>`
+
+error[E0369]: cannot divide `XtalFrequency` by `{integer}`
+   --> src\native_flasher.rs:195:61
+    |
+195 |     let xtal_str = format!("{} MHz", info.crystal_frequency / 1_000_000);
+    |                                      ---------------------- ^ --------- {integer}
+    |                                      |
+    |                                      XtalFrequency
+    |
+note: `XtalFrequency` does not implement `std::ops::Div<{integer}>`
+   --> C:\Users\askai\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\espflash-4.5.0\src\target\mod.rs:52:1
+    |
+ 52 | pub enum XtalFrequency {
+    | ^^^^^^^^^^^^^^^^^^^^^^ `XtalFrequency` is defined in another crate
+
+error[E0599]: no variant or associated item named `DIO` found for enum `FlashMode` in the current scope
+   --> src\native_flasher.rs:221:29
+    |
+221 |         "DIO" => FlashMode::DIO,
+    |                             ^^^ variant or associated item not found in `FlashMode`
+    |
+help: there is a variant with a similar name (notice the capitalization)
+    |
+221 -         "DIO" => FlashMode::DIO,
+221 +         "DIO" => FlashMode::Dio,
+    |
+
+error[E0599]: no variant or associated item named `QIO` found for enum `FlashMode` in the current scope
+   --> src\native_flasher.rs:222:29
+    |
+222 |         "QIO" => FlashMode::QIO,
+    |                             ^^^ variant or associated item not found in `FlashMode`
+    |
+help: there is a variant with a similar name (notice the capitalization)
+    |
+222 -         "QIO" => FlashMode::QIO,
+222 +         "QIO" => FlashMode::Qio,
+    |
+
+error[E0599]: no variant or associated item named `DOUT` found for enum `FlashMode` in the current scope
+   --> src\native_flasher.rs:223:30
+    |
+223 |         "DOUT" => FlashMode::DOUT,
+    |                              ^^^^ variant or associated item not found in `FlashMode`
+    |
+help: there is a variant with a similar name
+    |
+223 -         "DOUT" => FlashMode::DOUT,
+223 +         "DOUT" => FlashMode::Dout,
+    |
+
+error[E0599]: no variant or associated item named `QOUT` found for enum `FlashMode` in the current scope
+   --> src\native_flasher.rs:224:30
+    |
+224 |         "QOUT" => FlashMode::QOUT,
+    |                              ^^^^ variant or associated item not found in `FlashMode`
+    |
+help: there is a variant with a similar name
+    |
+224 -         "QOUT" => FlashMode::QOUT,
+224 +         "QOUT" => FlashMode::Qout,
+    |
+
+error[E0599]: no variant or associated item named `DIO` found for enum `FlashMode` in the current scope
+   --> src\native_flasher.rs:225:25
+    |
+225 |         _ => FlashMode::DIO, // 榛樿 DIO锛堜綘鐨勬澘瀛愬繀椤荤敤杩欎釜锛?    |                         ^^^ variant or associated item not found in `FlashMode`
+    |
+help: there is a variant with a similar name (notice the capitalization)
+    |
+225 -         _ => FlashMode::DIO, // 榛樿 DIO锛堜綘鐨勬澘瀛愬繀椤荤敤杩欎釜锛?225 +         _ => FlashMode::Dio, // 榛樿 DIO锛堜綘鐨勬澘瀛愬繀椤荤敤杩欎釜锛?    |
+
+error[E0639]: cannot create non-exhaustive struct using struct expression
+   --> src\native_flasher.rs:228:20
+    |
+228 |       let settings = FlashSettings {
+    |  ____________________^
+229 | |         mode: Some(mode),
+230 | |         size: Some(FlashSize::Flash16Mb),
+231 | |         frequency: Some(FlashFrequency::Flash40Mhz),
+232 | |     };
+    | |_____^
+
+error[E0599]: no variant or associated item named `Flash16Mb` found for enum `FlashSize` in the current scope
+   --> src\native_flasher.rs:230:31
+    |
+230 |         size: Some(FlashSize::Flash16Mb),
+    |                               ^^^^^^^^^ variant or associated item not found in `FlashSize`
+
+error[E0560]: struct `FlashSettings` has no field named `frequency`
+   --> src\native_flasher.rs:231:9
+    |
+231 |         frequency: Some(FlashFrequency::Flash40Mhz),
+    |         ^^^^^^^^^ `FlashSettings` does not have this field
+    |
+    = note: available fields are: `freq`
+
+error[E0599]: no variant or associated item named `Flash40Mhz` found for enum `FlashFrequency` in the current scope
+   --> src\native_flasher.rs:231:41
+    |
+231 |         frequency: Some(FlashFrequency::Flash40Mhz),
+    |                                         ^^^^^^^^^^ variant or associated item not found in `FlashFrequency`
+
+error[E0599]: no method named `set_flash_settings` found for struct `espflash::flasher::Flasher` in the current scope
+   --> src\native_flasher.rs:234:13
+    |
+234 |     flasher.set_flash_settings(settings);
+    |             ^^^^^^^^^^^^^^^^^^
+    |
+help: there is a method `set_flash_size` with a similar name
+    |
+234 -     flasher.set_flash_settings(settings);
+234 +     flasher.set_flash_size(settings);
+    |
+
+warning: unused variable: `target`
+    --> src\lib.rs:3058:34
+     |
+3058 | fn bench_compare(source: String, target: String) -> Result<BenchComparison, String> {
+     |                                  ^^^^^^ help: if this is intentional, prefix it with an underscore: `_target`
+     |
+     = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+Some errors have detailed explanations: E0046, E0277, E0308, E0369, E0407, E0560, E0599, E0603, E0639.
+For more information about an error, try `rustc --explain E0046`.
+warning: `duanyan-ide` (lib) generated 3 warnings
+error: could not compile `duanyan-ide` (lib) due to 18 previous errors; 3 warnings emitted

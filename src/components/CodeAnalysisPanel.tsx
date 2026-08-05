@@ -62,7 +62,7 @@ export default function CodeAnalysisPanel({ onClose }: Props) {
     debounceRef.current = setTimeout(async () => {
       try {
         const { invoke } = await import("@tauri-apps/api/core");
-        const r = await invoke<string>("qianlu_code_analyze_panel", { code: currentCode, lang: language });
+        const r = await invoke<string>("duanyan_code_analyze_panel", { code: currentCode, lang: language });
         setSections(parseReport(r));
       } catch (e) { /* silent */ }
     }, 300);
@@ -83,8 +83,8 @@ export default function CodeAnalysisPanel({ onClose }: Props) {
     setIsAnalyzing(true);
     try {
       const r = full
-        ? await invoke("qianlu_code_pipeline_full", { text: code })
-        : await invoke("qianlu_code_analyze_panel", { code, lang: language });
+        ? await invoke("duanyan_code_pipeline_full", { text: code })
+        : await invoke("duanyan_code_analyze_panel", { code, lang: language });
       setSections(parseReport(r));
     } catch (e) { console.error(e); }
     setIsAnalyzing(false);

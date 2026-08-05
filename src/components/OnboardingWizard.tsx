@@ -16,7 +16,7 @@ interface Props {
 }
 
 const STEPS = [
-  { title: "Welcome", desc: "Welcome to SNAR IDE v1.0" },
+  { title: "Welcome", desc: "Welcome to DUANYAN IDE v1.0" },
   { title: "Select Board", desc: "Choose your target board" },
   { title: "Write Code", desc: "Create your first project" },
   { title: "Build & Flash", desc: "Compile and deploy" },
@@ -61,7 +61,7 @@ export default function OnboardingWizard({ visible, onClose, onTargetChange, onP
       const baseDir = await open({ directory: true, multiple: false, title: "Select project directory" });
       if (!baseDir) return;
 
-      const projectDir = `${baseDir}/my-first-snar-project`;
+      const projectDir = `${baseDir}/my-first-hardy-project`;
       await invoke("template_create", { templateId: "blink", projectDir });
 
       const mainPath = `${projectDir}/main.js`;
@@ -73,7 +73,7 @@ export default function OnboardingWizard({ visible, onClose, onTargetChange, onP
   };
 
   const handleFinish = () => {
-    localStorage.setItem("snar-ide-onboarded", "true");
+    localStorage.setItem("duanyan-ide-onboarded", "true");
     onClose();
   };
 
@@ -96,9 +96,9 @@ export default function OnboardingWizard({ visible, onClose, onTargetChange, onP
         <div className="wizard-content">
           {step === 0 && (
             <div className="wizard-step">
-              <h2 className="wizard-step-title">Welcome to SNAR IDE</h2>
+              <h2 className="wizard-step-title">Welcome to DUANYAN IDE</h2>
               <p className="wizard-step-text">
-                SNAR IDE lets you write JavaScript to control hardware — from ESP32 to Arduino to custom FPGA boards.
+                DUANYAN IDE lets you write JavaScript to control hardware — from ESP32 to Arduino to custom FPGA boards.
               </p>
               <p className="wizard-step-text">
                 This quick wizard will help you set up your first project in under 5 minutes.
@@ -173,7 +173,7 @@ export default function OnboardingWizard({ visible, onClose, onTargetChange, onP
             <div className="wizard-step">
               <h2 className="wizard-step-title">You're All Set!</h2>
               <p className="wizard-step-text">
-                Your SNAR IDE is ready. Start coding and deploy to hardware!
+                Your DUANYAN IDE is ready. Start coding and deploy to hardware!
               </p>
               <div className="wizard-tips">
                 <div className="wizard-tip">Press Ctrl+J to open the QianLu AI assistant</div>

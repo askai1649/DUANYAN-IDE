@@ -22,7 +22,7 @@ const extColors: Record<string, string> = {
   js: "#f1e05a", ts: "#3178c6", jsx: "#f1e05a", tsx: "#3178c6",
   rs: "#dea584", py: "#3572a5", v: "#b2b7f8", sv: "#b2b7f8",
   json: "#cb8600", md: "#083fa1", css: "#563d7c", html: "#e34c26",
-  snar: "#f1e05a", toml: "#9c4221", txt: "#cccccc",
+  hardy: "#f1e05a", toml: "#9c4221", txt: "#cccccc",
 };
 
 function getFileColor(name: string): string {

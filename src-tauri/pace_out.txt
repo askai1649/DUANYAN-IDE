@@ -1,0 +1,44 @@
+=== DUANYAN Flash Test ===
+Port: COM6
+
+[MONITOR] COM6 @ 115200, 10 绉?..
+--- 涓插彛杈撳嚭 ---
+ck
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+tick
+--- 缁撴潫 ---
+
+鈿?鏈夎緭鍑轰絾鏈尮閰?DUANYAN-OK

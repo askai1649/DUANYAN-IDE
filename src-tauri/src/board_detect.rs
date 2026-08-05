@@ -1,4 +1,4 @@
-//! Board Detection Module for SNAR IDE
+//! Board Detection Module for DUANYAN IDE
 //!
 //! Phase G: USB device scanning, board info, and pin definitions.
 
@@ -23,8 +23,8 @@ pub struct BoardInfoDto {
     pub usb_vid: Option<u16>,
 }
 
-impl From<&snarjs::board::BoardInfo> for BoardInfoDto {
-    fn from(b: &snarjs::board::BoardInfo) -> Self {
+impl From<&hardyscript::board::BoardInfo> for BoardInfoDto {
+    fn from(b: &hardyscript::board::BoardInfo) -> Self {
         Self {
             name: b.name.clone(),
             description: b.description.clone(),
@@ -80,7 +80,7 @@ pub struct PinInfo {
 
 /// Get all known boards as DTOs
 pub fn get_all_boards() -> Vec<BoardInfoDto> {
-    snarjs::board::get_known_boards()
+    hardyscript::board::get_known_boards()
         .iter()
         .map(BoardInfoDto::from)
         .collect()
@@ -88,23 +88,74 @@ pub fn get_all_boards() -> Vec<BoardInfoDto> {
 
 /// Scan USB ports and try to identify connected boards
 pub fn scan_boards() -> Vec<DetectedBoard> {
-    let known = snarjs::board::get_known_boards();
-    let ports = snarjs::board::scan_serial_ports();
+    let known = hardyscript::board::get_known_boards();
 
-    ports
-        .into_iter()
-        .map(|p| {
-            // Try to match by port name or known VID/PID
-            // In stub mode, we can't get real VID/PID, so just list ports
-            DetectedBoard {
+    // Real detection via the `serialport` crate (enabled by the `bridge_serial` feature).
+    #[cfg(feature = "bridge_serial")]
+    {
+        match serialport::available_ports() {
+            Ok(ports) => ports
+                .into_iter()
+                .map(|p| {
+                    let (vid, pid, description) = match &p.port_type {
+                        serialport::SerialPortType::UsbPort(info) => {
+                            let desc = info.product.clone()
+                                .or_else(|| info.manufacturer.clone())
+                                .unwrap_or_else(|| "USB Serial Device".to_string());
+                            (Some(info.vid), Some(info.pid), desc)
+                        }
+                        serialport::SerialPortType::PciPort => (None, None, "PCI Serial Port".to_string()),
+                        serialport::SerialPortType::BluetoothPort => (None, None, "Bluetooth Serial Port".to_string()),
+                        serialport::SerialPortType::Unknown => (None, None, "Serial Port".to_string()),
+                    };
+
+                    // Match against known boards by VID/PID, falling back to description keywords.
+                    let board = known.iter().find(|b| {
+                        if let (Some(kv), Some(kp), Some(dv), Some(dp)) = (b.usb_vid, b.usb_pid, vid, pid) {
+                            if kv == dv && kp == dp {
+                                return true;
+                            }
+                        }
+                        // Keyword fallback based on the USB product string / port name.
+                        let hay = format!("{} {}", description, p.port_name).to_lowercase();
+                        let key = b.name.to_lowercase();
+                        if key.contains("esp32-s3") && (hay.contains("esp32-s3") || hay.contains("jtag") || vid == Some(0x303A)) {
+                            return true;
+                        }
+                        if key.contains("esp32") && (hay.contains("esp32") || hay.contains("cp210") || hay.contains("ch340") || hay.contains("uart")) {
+                            return true;
+                        }
+                        false
+                    }).map(BoardInfoDto::from);
+
+                    DetectedBoard {
+                        port: p.port_name,
+                        description,
+                        board,
+                        vid,
+                        pid,
+                    }
+                })
+                .collect(),
+            Err(_) => Vec::new(),
+        }
+    }
+
+    // Fallback when serialport is disabled: use the HardyScript stub scanner.
+    #[cfg(not(feature = "bridge_serial"))]
+    {
+        let _ = known;
+        hardyscript::board::scan_serial_ports()
+            .into_iter()
+            .map(|p| DetectedBoard {
                 port: p.name.clone(),
                 description: p.description.clone(),
                 board: None,
                 vid: None,
                 pid: None,
-            }
-        })
-        .collect::<Vec<_>>()
+            })
+            .collect()
+    }
 }
 
 /// Get pin definitions for a specific board

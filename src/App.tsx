@@ -4,7 +4,7 @@ import TabBar from "./components/TabBar";
 import EditorPanel from "./components/EditorPanel";
 import TerminalPanel from "./components/TerminalPanel";
 import StatusBar from "./components/StatusBar";
-import QianluPanel from "./components/QianluPanel";
+import DuanyanPanel from "./components/DuanyanPanel";
 import OpenSnarBridge from "./components/OpenSnarBridge";
 import BoardPanel from "./components/BoardPanel";
 import SerialMonitor from "./components/SerialMonitor";
@@ -17,6 +17,8 @@ import GitPanel from "./components/GitPanel";
 import DiffView from "./components/DiffView";
 import LintPanel from "./components/LintPanel";
 import TFCardManager from "./components/TFCardManager";
+import FlashPanel from "./components/FlashPanel";
+import DeterministicPanel from "./components/DeterministicPanel";
 
 export interface FileEntry {
   name: string;
@@ -40,7 +42,7 @@ function App() {
   const [projectDir, setProjectDir] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [maximized, setMaximized] = useState(false);
-  const [showQianlu, setShowQianlu] = useState(false);
+  const [showDuanyan, setShowDuanyan] = useState(false);
   const [showBridge, setShowBridge] = useState(false);
   const [showBoardPanel, setShowBoardPanel] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
@@ -48,7 +50,7 @@ function App() {
   const [showPinDiagram, setShowPinDiagram] = useState(false);
   const [showTFCard, setShowTFCard] = useState(false);
   const [selectedTarget, setSelectedTarget] = useState("COUNPRE64-FPGA");
-  const [terminalTab, setTerminalTab] = useState<"output" | "serial" | "bench" | "lint">("output");
+  const [terminalTab, setTerminalTab] = useState<"output" | "serial" | "bench" | "lint" | "flash" | "rt">("output");
   const [sidebarTab, setSidebarTab] = useState<"files" | "workspace" | "git" | "lint">("files");
   const [diffFile, setDiffFile] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState("就绪");
@@ -56,7 +58,7 @@ function App() {
   const [showTerminal, setShowTerminal] = useState(true);
   const [sidebarWidth, setSidebarWidth] = useState(240);
   const [terminalHeight, setTerminalHeight] = useState(150);
-  const [qianluWidth, setQianluWidth] = useState(380);
+  const [duanyanWidth, setDuanyanWidth] = useState(380);
 
   // Window control handlers
   const handleMinimize = async () => {
@@ -76,7 +78,7 @@ function App() {
 
   // Check if first launch
   useEffect(() => {
-    const onboarded = localStorage.getItem("snar-ide-onboarded");
+    const onboarded = localStorage.getItem("duanyan-ide-onboarded");
     if (!onboarded) {
       setShowWizard(true);
     }
@@ -93,7 +95,7 @@ function App() {
       js: "javascript", ts: "typescript", jsx: "javascript", tsx: "typescript",
       rs: "rust", py: "python", v: "verilog", sv: "systemverilog",
       json: "json", md: "markdown", css: "css", html: "html",
-      snar: "javascript",
+      hardy: "javascript",
     };
     const newFile: OpenFile = {
       path, name, content,
@@ -111,7 +113,7 @@ function App() {
       const selected = await open({
         multiple: false,
         filters: [
-          { name: "Code", extensions: ["js", "ts", "jsx", "tsx", "rs", "py", "v", "snar"] },
+          { name: "Code", extensions: ["js", "ts", "jsx", "tsx", "rs", "py", "v", "hardy"] },
           { name: "All", extensions: ["*"] },
         ],
       });
@@ -162,7 +164,7 @@ function App() {
     const file = openFiles.find(f => f.path === activeFile);
     if (!file) return;
     setStatusMessage("Running...");
-    setTerminalOutput(prev => [...prev, `> snar run ${file.name}`]);
+    setTerminalOutput(prev => [...prev, `> hardy run ${file.name}`]);
     try {
       const { invoke } = await import("@tauri-apps/api/core");
       const result = await invoke<string>("compile_and_run", { source: file.content });
@@ -173,7 +175,7 @@ function App() {
           : file.language === "javascript" ? "javascript"
           : file.language === "go" ? "go"
           : file.language === "java" ? "java" : "rust";
-        const analysis = await invoke<string>("qianlu_code_analyze_panel", { code: file.content, lang });
+        const analysis = await invoke<string>("duanyan_code_analyze_panel", { code: file.content, lang });
         const lines = analysis.split("\n").filter((l: string) => l.trim().length > 0);
         setTerminalOutput(prev => [...prev, "", "--- Code Analysis ---", ...lines, "--- End Analysis ---"]);
       } catch { /* analysis optional */ }
@@ -188,7 +190,7 @@ function App() {
     const file = openFiles.find(f => f.path === activeFile);
     if (!file) return;
     setStatusMessage("Building...");
-    setTerminalOutput(prev => [...prev, `> snar build ${file.name} --target ${selectedTarget}`]);
+    setTerminalOutput(prev => [...prev, `> hardy build ${file.name} --target ${selectedTarget}`]);
     try {
       const { invoke } = await import("@tauri-apps/api/core");
       const result = await invoke<string>("compile_source", { source: file.content });
@@ -205,12 +207,12 @@ function App() {
     const file = openFiles.find(f => f.path === activeFile);
     if (!file) return;
     setStatusMessage("Flashing...");
-    setTerminalOutput(prev => [...prev, `> snar flash ${file.name} --target ${selectedTarget}`]);
+    setTerminalOutput(prev => [...prev, `> hardy flash ${file.name} --target ${selectedTarget}`]);
     try {
       const { invoke } = await import("@tauri-apps/api/core");
       const projectDir = file.path.includes("\\") || file.path.includes("/")
         ? file.path.replace(/\\[^\\]*$/, "").replace(/\/[^/]*$/, "")
-        : ".snar-build";
+        : ".hardy-build";
       const stem = file.name.replace(/\.(js|ts)$/i, "");
       const targetMap: Record<string, string> = {
         "COUNPRE64-FPGA": "gowin",
@@ -246,7 +248,7 @@ function App() {
     const newFile: OpenFile = {
       path: `untitled-${id}.js`,
       name: `untitled-${id}.js`,
-      content: "// SNAR IDE - new JavaScript file\n// Press Ctrl+R to compile and run\n\nlet x = 42;\nconsole.log(x);\n",
+      content: "// DUANYAN IDE - new JavaScript file\n// Press Ctrl+R to compile and run\n\nlet x = 42;\nconsole.log(x);\n",
       language: "javascript",
       modified: true,
     };
@@ -294,13 +296,13 @@ function App() {
     document.body.style.userSelect = "none";
   }, [terminalHeight]);
 
-  // Qianlu panel resize drag
-  const handleQianluResizeStart = useCallback((e: React.MouseEvent) => {
+  // Duanyan panel resize drag
+  const handleDuanyanResizeStart = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     const startX = e.clientX;
-    const startW = qianluWidth;
+    const startW = duanyanWidth;
     const onMove = (ev: MouseEvent) => {
-      setQianluWidth(Math.max(200, Math.min(700, startW - (ev.clientX - startX))));
+      setDuanyanWidth(Math.max(200, Math.min(700, startW - (ev.clientX - startX))));
     };
     const onUp = () => {
       document.removeEventListener("mousemove", onMove);
@@ -312,7 +314,7 @@ function App() {
     document.addEventListener("mouseup", onUp);
     document.body.style.cursor = "col-resize";
     document.body.style.userSelect = "none";
-  }, [qianluWidth]);
+  }, [duanyanWidth]);
 
   // Keyboard shortcuts
   useEffect(() => {
@@ -337,7 +339,7 @@ function App() {
         handleNewFile();
       } else if ((e.ctrlKey || e.metaKey) && e.key === "j") {
         e.preventDefault();
-        setShowQianlu(prev => !prev);
+        setShowDuanyan(prev => !prev);
       } else if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === "B") {
         e.preventDefault();
         setShowBridge(prev => !prev);
@@ -360,7 +362,7 @@ function App() {
       {/* Custom Title Bar */}
       <div className="titlebar" data-tauri-drag-region>
         <div className="titlebar-left" data-tauri-drag-region>
-          <span className="brand">SNAR IDE</span>
+          <span className="brand">DUANYAN IDE</span>
           <button className="menu-btn" onClick={handleOpenFileViaDialog} title="Ctrl+O">File</button>
           <button className="menu-btn">Edit</button>
           <button className="menu-btn">View</button>
@@ -403,15 +405,15 @@ function App() {
               <line x1="1" y1="10" x2="15" y2="10" stroke="currentColor" strokeWidth="1.2" strokeDasharray={showTerminal ? "0" : "3 2"}/>
             </svg>
           </button>
-          {/* qianlu AI panel toggle */}
+          {/* duanyan AI panel toggle */}
           <button
-            className={"layout-btn" + (showQianlu ? " active" : "")}
-            onClick={() => setShowQianlu(prev => !prev)}
-            title="Toggle qianlu AI Panel (Ctrl+J)"
+            className={"layout-btn" + (showDuanyan ? " active" : "")}
+            onClick={() => setShowDuanyan(prev => !prev)}
+            title="Toggle duanyan AI Panel (Ctrl+J)"
           >
             <svg width="16" height="16" viewBox="0 0 16 16">
               <rect x="1" y="1" width="14" height="14" rx="1" fill="none" stroke="currentColor" strokeWidth="1.2"/>
-              <line x1="10" y1="1" x2="10" y2="15" stroke="currentColor" strokeWidth="1.2" strokeDasharray={showQianlu ? "0" : "3 2"}/>
+              <line x1="10" y1="1" x2="10" y2="15" stroke="currentColor" strokeWidth="1.2" strokeDasharray={showDuanyan ? "0" : "3 2"}/>
             </svg>
           </button>
 
@@ -542,6 +544,14 @@ function App() {
                   className={`terminal-tab ${terminalTab === "lint" ? "active" : ""}`}
                   onClick={() => setTerminalTab("lint")}
                 >Lint</button>
+                <button
+                  className={`terminal-tab ${terminalTab === "flash" ? "active" : ""}`}
+                  onClick={() => setTerminalTab("flash")}
+                >⚡ Flash</button>
+                <button
+                  className={`terminal-tab ${terminalTab === "rt" ? "active" : ""}`}
+                  onClick={() => setTerminalTab("rt")}
+                >确定性</button>
               </div>
               {terminalTab === "output" && (
                 <TerminalPanel output={terminalOutput} onClear={() => setTerminalOutput([])} />
@@ -565,15 +575,21 @@ function App() {
                   }}
                 />
               )}
+              {terminalTab === "flash" && (
+                <FlashPanel />
+              )}
+              {terminalTab === "rt" && (
+                <DeterministicPanel visible={true} source={currentFile?.content || ""} />
+              )}
             </div>
           )}
         </div>
-        {showQianlu && (
-          <div className="resize-handle resize-handle-v" onMouseDown={handleQianluResizeStart} />
+        {showDuanyan && (
+          <div className="resize-handle resize-handle-v" onMouseDown={handleDuanyanResizeStart} />
         )}
-        {showQianlu && (
-          <div className="qianlu-container" style={{ width: qianluWidth }}>
-            <QianluPanel onClose={() => setShowQianlu(false)} />
+        {showDuanyan && (
+          <div className="duanyan-container" style={{ width: duanyanWidth }}>
+            <DuanyanPanel onClose={() => setShowDuanyan(false)} />
           </div>
         )}
         {showBridge && (

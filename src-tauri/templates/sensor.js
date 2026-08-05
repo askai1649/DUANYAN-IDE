@@ -1,4 +1,4 @@
-// SNAR IDE Template: I2C Sensor Reading
+// DUANYAN IDE Template: I2C Sensor Reading
 // Read temperature and humidity from I2C sensor
 import { I2C, Timer } from "snar:hw";
 

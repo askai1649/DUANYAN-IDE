@@ -139,7 +139,7 @@ export default function GitPanel({ projectDir, onLog, onShowDiff }: Props) {
   const handleInstallHooks = async () => {
     try {
       await invoke("git_install_hooks", { dir: projectDir });
-      onLog("Pre-commit hook installed (runs snar lint on commit)");
+      onLog("Pre-commit hook installed (runs hardy lint on commit)");
     } catch (e) { onLog(`Hook install failed: ${e}`); }
   };
 

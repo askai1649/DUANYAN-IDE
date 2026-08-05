@@ -1,4 +1,4 @@
-// SNAR IDE Template: UART Serial Communication
+// DUANYAN IDE Template: UART Serial Communication
 // Send and receive data over UART
 import { UART } from "snar:hw";
 

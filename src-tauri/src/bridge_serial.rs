@@ -76,7 +76,8 @@ impl BridgeSerial {
     pub fn open(port: &str, baud: u32) -> Result<Self, String> {
         #[cfg(feature = "bridge_serial")]
         {
-            let port = serialport::new(port, baud)
+            let port_name = port.to_string();
+            let serial = serialport::new(port, baud)
                 .timeout(Duration::from_millis(100))
                 .data_bits(serialport::DataBits::Eight)
                 .parity(serialport::Parity::None)
@@ -85,8 +86,8 @@ impl BridgeSerial {
                 .map_err(|e| format!("Failed to open {}: {}", port, e))?;
 
             Ok(Self {
-                port: Some(port),
-                port_name: port.to_string(),
+                port: Some(serial),
+                port_name,
                 baud,
                 read_buf: Vec::with_capacity(4096),
                 seq: 0,

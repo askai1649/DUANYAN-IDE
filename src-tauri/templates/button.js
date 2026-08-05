@@ -1,4 +1,4 @@
-// SNAR IDE Template: Button Input
+// DUANYAN IDE Template: Button Input
 // Read button state with debounce
 import { GPIO, Timer } from "snar:hw";
 

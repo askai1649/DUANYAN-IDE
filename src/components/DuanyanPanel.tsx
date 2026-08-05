@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 
 export interface ChatMessage {
-  role: "user" | "qianlu" | "system";
+  role: "user" | "duanyan" | "system";
   content: string;
   timestamp: number;
 }
@@ -10,11 +10,11 @@ interface Props {
   onClose: () => void;
 }
 
-export default function QianluPanel({ onClose }: Props) {
+export default function DuanyanPanel({ onClose }: Props) {
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       role: "system",
-      content: "qianlu v2.8 [KV Cache + Grad Cache + Model Export]\n2-layer Transformer | 4 heads | 64d | Token Decoder | i8 Quant | Weight I/O\nType a prompt or use the toolbar.",
+      content: "duanyan v2.8 [KV Cache + Grad Cache + Model Export]\n2-layer Transformer | 4 heads | 64d | Token Decoder | i8 Quant | Weight I/O\nType a prompt or use the toolbar.",
       timestamp: Date.now(),
     },
   ]);
@@ -51,11 +51,11 @@ export default function QianluPanel({ onClose }: Props) {
     setInput("");
     setIsProcessing(true);
     try {
-      const result = await invoke("qianlu_inference", { prompt: text });
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_inference", { prompt: text });
+      addMessage("duanyan", result);
       setClock(c => c + 1);
     } catch (e) {
-      addMessage("qianlu", "[error] Inference failed: " + String(e));
+      addMessage("duanyan", "[error] Inference failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -65,10 +65,10 @@ export default function QianluPanel({ onClose }: Props) {
     setIsProcessing(true);
     addMessage("system", "Training " + trainEpochs + " epochs...");
     try {
-      const result = await invoke("qianlu_train", { epochs: trainEpochs });
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_train", { epochs: trainEpochs });
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] Training failed: " + String(e));
+      addMessage("duanyan", "[error] Training failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -78,10 +78,10 @@ export default function QianluPanel({ onClose }: Props) {
     setIsProcessing(true);
     addMessage("system", "Generating text from seed: '" + genSeed + "' (" + genLen + " chars)...");
     try {
-      const result = await invoke("qianlu_generate", { seed: genSeed, maxLen: genLen });
-      addMessage("qianlu", "Generated: " + result);
+      const result = await invoke("duanyan_generate", { seed: genSeed, maxLen: genLen });
+      addMessage("duanyan", "Generated: " + result);
     } catch (e) {
-      addMessage("qianlu", "[error] Generation failed: " + String(e));
+      addMessage("duanyan", "[error] Generation failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -90,10 +90,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke("qianlu_replay");
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_replay");
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] Replay failed: " + String(e));
+      addMessage("duanyan", "[error] Replay failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -102,10 +102,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke("qianlu_save_weights", { path: "C:\\OPENSNAR\\qianlu\\weights.bin" });
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_save_weights", { path: "C:\\OPENSNAR\\duanyan\\weights.bin" });
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] Save failed: " + String(e));
+      addMessage("duanyan", "[error] Save failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -114,10 +114,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke("qianlu_load_weights", { path: "C:\\OPENSNAR\\qianlu\\weights.bin" });
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_load_weights", { path: "C:\\OPENSNAR\\duanyan\\weights.bin" });
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] Load failed: " + String(e));
+      addMessage("duanyan", "[error] Load failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -126,10 +126,25 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke("qianlu_status");
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_status");
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] Status failed: " + String(e));
+      addMessage("duanyan", "[error] Status failed: " + String(e));
+    }
+    setIsProcessing(false);
+  };
+
+  const handleCodeGenerate = async () => {
+    if (isProcessing) return;
+    setIsProcessing(true);
+    addMessage("system", "DUANYAN generating HardyScript code for: '" + genSeed + "' (max " + genLen + " chars)...");
+    try {
+      const result = await invoke("duanyan_generate_code", { prompt: genSeed, maxLen: genLen, verify: true });
+      const data = result as unknown as { generated: string; compile_ok: boolean; compile_msg: string };
+      const status = data.compile_ok ? "✓ Compile OK" : "✗ Compile Failed";
+      addMessage("duanyan", "// Generated HardyScript Code\n" + data.generated + "\n\n// " + status + ": " + data.compile_msg);
+    } catch (e) {
+      addMessage("duanyan", "[error] Code generation failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -140,10 +155,10 @@ export default function QianluPanel({ onClose }: Props) {
     setIsProcessing(true);
     addMessage("system", "Decoder generating from: '" + genSeed + "' (max " + genLen + " tokens)...");
     try {
-      const result = await invoke("qianlu_generate_decoder", { seed: genSeed, maxLen: genLen });
-      addMessage("qianlu", "Decoder: " + result);
+      const result = await invoke("duanyan_generate_decoder", { seed: genSeed, maxLen: genLen });
+      addMessage("duanyan", "Decoder: " + result);
     } catch (e) {
-      addMessage("qianlu", "[error] Decoder failed: " + String(e));
+      addMessage("duanyan", "[error] Decoder failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -153,11 +168,11 @@ export default function QianluPanel({ onClose }: Props) {
     setIsProcessing(true);
     const newVal = !useBackprop;
     try {
-      const result = await invoke("qianlu_set_backprop", { enabled: newVal });
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_set_backprop", { enabled: newVal });
+      addMessage("duanyan", result);
       setUseBackprop(newVal);
     } catch (e) {
-      addMessage("qianlu", "[error] " + String(e));
+      addMessage("duanyan", "[error] " + String(e));
     }
     setIsProcessing(false);
   };
@@ -166,10 +181,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke("qianlu_quantize");
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_quantize");
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] Quantize failed: " + String(e));
+      addMessage("duanyan", "[error] Quantize failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -179,10 +194,10 @@ export default function QianluPanel({ onClose }: Props) {
     setIsProcessing(true);
     addMessage("system", "KV-Cached generation from: '" + genSeed + "' (max " + genLen + " tokens)...");
     try {
-      const result = await invoke("qianlu_generate_cached", { seed: genSeed, maxLen: genLen });
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_generate_cached", { seed: genSeed, maxLen: genLen });
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] Cached gen failed: " + String(e));
+      addMessage("duanyan", "[error] Cached gen failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -192,10 +207,10 @@ export default function QianluPanel({ onClose }: Props) {
     setIsProcessing(true);
     addMessage("system", "Cached training " + trainEpochs + " epochs...");
     try {
-      const result = await invoke("qianlu_train_cached", { epochs: trainEpochs });
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_train_cached", { epochs: trainEpochs });
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] Cached training failed: " + String(e));
+      addMessage("duanyan", "[error] Cached training failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -204,10 +219,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke("qianlu_export_arch");
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_export_arch");
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] Export failed: " + String(e));
+      addMessage("duanyan", "[error] Export failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -216,10 +231,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke("qianlu_export_json");
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_export_json");
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] JSON export failed: " + String(e));
+      addMessage("duanyan", "[error] JSON export failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -228,10 +243,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke("qianlu_quant_report");
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_quant_report");
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] Quant report failed: " + String(e));
+      addMessage("duanyan", "[error] Quant report failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -240,10 +255,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke("qianlu_f16_report");
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_f16_report");
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] F16 report failed: " + String(e));
+      addMessage("duanyan", "[error] F16 report failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -252,10 +267,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke("qianlu_rlhf_train");
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_rlhf_train");
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] RLHF training failed: " + String(e));
+      addMessage("duanyan", "[error] RLHF training failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -264,10 +279,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke("qianlu_distill_step");
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_distill_step");
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] Distillation failed: " + String(e));
+      addMessage("duanyan", "[error] Distillation failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -276,10 +291,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke("qianlu_lora_train");
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_lora_train");
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] LoRA training failed: " + String(e));
+      addMessage("duanyan", "[error] LoRA training failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -288,10 +303,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke("qianlu_lora_merge");
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_lora_merge");
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] LoRA merge failed: " + String(e));
+      addMessage("duanyan", "[error] LoRA merge failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -301,10 +316,10 @@ export default function QianluPanel({ onClose }: Props) {
     setIsProcessing(true);
     try {
       const text = genSeed || "hello world";
-      const result = await invoke("qianlu_moe_forward", { text });
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_moe_forward", { text });
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] MoE forward failed: " + String(e));
+      addMessage("duanyan", "[error] MoE forward failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -313,10 +328,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke("qianlu_moe_stats");
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_moe_stats");
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] MoE stats failed: " + String(e));
+      addMessage("duanyan", "[error] MoE stats failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -325,10 +340,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke("qianlu_onnx_export");
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_onnx_export");
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] ONNX export failed: " + String(e));
+      addMessage("duanyan", "[error] ONNX export failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -338,10 +353,10 @@ export default function QianluPanel({ onClose }: Props) {
     setIsProcessing(true);
     try {
       const text = genSeed || "hello world";
-      const result = await invoke("qianlu_sparse_attention", { text, pattern: "window" });
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_sparse_attention", { text, pattern: "window" });
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] Sparse attention failed: " + String(e));
+      addMessage("duanyan", "[error] Sparse attention failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -351,10 +366,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke("qianlu_flash_report");
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_flash_report");
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] Flash report failed: " + String(e));
+      addMessage("duanyan", "[error] Flash report failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -363,10 +378,10 @@ export default function QianluPanel({ onClose }: Props) {
     setIsProcessing(true);
     try {
       const text = genSeed || "hello world";
-      const result = await invoke("qianlu_flash_attention", { text, blockSize: 8 });
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_flash_attention", { text, blockSize: 8 });
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] Flash attention failed: " + String(e));
+      addMessage("duanyan", "[error] Flash attention failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -376,10 +391,10 @@ export default function QianluPanel({ onClose }: Props) {
     setIsProcessing(true);
     try {
       const text = genSeed || "hello";
-      const result = await invoke("qianlu_speculative_generate", { text, maxLen: 20 });
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_speculative_generate", { text, maxLen: 20 });
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] Speculative decoding failed: " + String(e));
+      addMessage("duanyan", "[error] Speculative decoding failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -388,10 +403,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke("qianlu_spec_stats");
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_spec_stats");
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] Spec stats failed: " + String(e));
+      addMessage("duanyan", "[error] Spec stats failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -401,10 +416,10 @@ export default function QianluPanel({ onClose }: Props) {
     setIsProcessing(true);
     try {
       const text = genSeed || "hello world";
-      const result = await invoke("qianlu_rope_attention", { text });
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_rope_attention", { text });
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] RoPE attention failed: " + String(e));
+      addMessage("duanyan", "[error] RoPE attention failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -413,10 +428,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke("qianlu_rope_report");
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_rope_report");
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] RoPE report failed: " + String(e));
+      addMessage("duanyan", "[error] RoPE report failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -425,10 +440,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke("qianlu_model_merge", { strategy: "slerp" });
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_model_merge", { strategy: "slerp" });
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] Model merge failed: " + String(e));
+      addMessage("duanyan", "[error] Model merge failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -438,10 +453,10 @@ export default function QianluPanel({ onClose }: Props) {
     setIsProcessing(true);
     try {
       const text = genSeed || "hello world";
-      const result = await invoke("qianlu_multimodal", { text });
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_multimodal", { text });
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] Multimodal failed: " + String(e));
+      addMessage("duanyan", "[error] Multimodal failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -450,10 +465,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke("qianlu_multimodal_stats");
-      addMessage("qianlu", result);
+      const result = await invoke("duanyan_multimodal_stats");
+      addMessage("duanyan", result);
     } catch (e) {
-      addMessage("qianlu", "[error] Multimodal stats failed: " + String(e));
+      addMessage("duanyan", "[error] Multimodal stats failed: " + String(e));
     }
     setIsProcessing(false);
   };
@@ -463,10 +478,10 @@ export default function QianluPanel({ onClose }: Props) {
     setIsProcessing(true);
     try {
       const text = genSeed || 'hello world';
-      const result = await invoke('qianlu_gqa_forward', { text });
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_gqa_forward', { text });
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] GQA failed: ' + String(e));
+      addMessage('duanyan', '[error] GQA failed: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -475,10 +490,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_gqa_report');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_gqa_report');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] GQA report failed: ' + String(e));
+      addMessage('duanyan', '[error] GQA report failed: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -488,10 +503,10 @@ export default function QianluPanel({ onClose }: Props) {
     setIsProcessing(true);
     try {
       const text = genSeed || 'hello world';
-      const result = await invoke('qianlu_act_cache_forward', { text });
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_act_cache_forward', { text });
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] ActCache failed: ' + String(e));
+      addMessage('duanyan', '[error] ActCache failed: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -500,10 +515,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_act_cache_stats');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_act_cache_stats');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] ActCache stats failed: ' + String(e));
+      addMessage('duanyan', '[error] ActCache stats failed: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -513,10 +528,10 @@ export default function QianluPanel({ onClose }: Props) {
     setIsProcessing(true);
     try {
       const text = genSeed || 'hello world';
-      const result = await invoke('qianlu_icl_query', { text });
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_icl_query', { text });
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] ICL failed: ' + String(e));
+      addMessage('duanyan', '[error] ICL failed: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -525,10 +540,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_icl_stats');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_icl_stats');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] ICL stats failed: ' + String(e));
+      addMessage('duanyan', '[error] ICL stats failed: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -537,12 +552,12 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_mod_forward', { text: input });
+      const result = await invoke('duanyan_mod_forward', { text: input });
       addMessage('user', input);
-      addMessage('qianlu', result);
+      addMessage('duanyan', result);
       setInput('');
     } catch (e) {
-      addMessage('qianlu', '[error] MoD forward: ' + String(e));
+      addMessage('duanyan', '[error] MoD forward: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -551,10 +566,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_mod_report');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_mod_report');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] MoD report: ' + String(e));
+      addMessage('duanyan', '[error] MoD report: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -563,12 +578,12 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_rag_index', { text: input });
+      const result = await invoke('duanyan_rag_index', { text: input });
       addMessage('user', '[RAG Index] ' + input);
-      addMessage('qianlu', result);
+      addMessage('duanyan', result);
       setInput('');
     } catch (e) {
-      addMessage('qianlu', '[error] RAG index: ' + String(e));
+      addMessage('duanyan', '[error] RAG index: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -577,12 +592,12 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_rag_query', { text: input });
+      const result = await invoke('duanyan_rag_query', { text: input });
       addMessage('user', '[RAG Query] ' + input);
-      addMessage('qianlu', result);
+      addMessage('duanyan', result);
       setInput('');
     } catch (e) {
-      addMessage('qianlu', '[error] RAG query: ' + String(e));
+      addMessage('duanyan', '[error] RAG query: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -591,12 +606,12 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_contrastive_train', { text: input });
+      const result = await invoke('duanyan_contrastive_train', { text: input });
       addMessage('user', '[Contrastive] ' + input);
-      addMessage('qianlu', result);
+      addMessage('duanyan', result);
       setInput('');
     } catch (e) {
-      addMessage('qianlu', '[error] Contrastive train: ' + String(e));
+      addMessage('duanyan', '[error] Contrastive train: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -605,10 +620,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_contrastive2_stats');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_contrastive2_stats');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] Contrastive stats: ' + String(e));
+      addMessage('duanyan', '[error] Contrastive stats: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -617,12 +632,12 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_rmsnorm_forward', { text: input });
+      const result = await invoke('duanyan_rmsnorm_forward', { text: input });
       addMessage('user', input);
-      addMessage('qianlu', result);
+      addMessage('duanyan', result);
       setInput('');
     } catch (e) {
-      addMessage('qianlu', '[error] RMSNorm: ' + String(e));
+      addMessage('duanyan', '[error] RMSNorm: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -631,10 +646,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_rmsnorm_report');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_rmsnorm_report');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] RMSNorm report: ' + String(e));
+      addMessage('duanyan', '[error] RMSNorm report: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -643,12 +658,12 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_swiglu_forward', { text: input });
+      const result = await invoke('duanyan_swiglu_forward', { text: input });
       addMessage('user', input);
-      addMessage('qianlu', result);
+      addMessage('duanyan', result);
       setInput('');
     } catch (e) {
-      addMessage('qianlu', '[error] SwiGLU: ' + String(e));
+      addMessage('duanyan', '[error] SwiGLU: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -657,10 +672,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_swiglu_report');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_swiglu_report');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] SwiGLU report: ' + String(e));
+      addMessage('duanyan', '[error] SwiGLU report: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -669,12 +684,12 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_beam_search_decode', { text: input });
+      const result = await invoke('duanyan_beam_search_decode', { text: input });
       addMessage('user', '[Beam] ' + input);
-      addMessage('qianlu', result);
+      addMessage('duanyan', result);
       setInput('');
     } catch (e) {
-      addMessage('qianlu', '[error] Beam Search: ' + String(e));
+      addMessage('duanyan', '[error] Beam Search: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -683,10 +698,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_beam_search_stats');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_beam_search_stats');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] Beam stats: ' + String(e));
+      addMessage('duanyan', '[error] Beam stats: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -695,12 +710,12 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_sample_text', { text: input });
+      const result = await invoke('duanyan_sample_text', { text: input });
       addMessage('user', '[Sample] ' + input);
-      addMessage('qianlu', result);
+      addMessage('duanyan', result);
       setInput('');
     } catch (e) {
-      addMessage('qianlu', '[error] Sampling: ' + String(e));
+      addMessage('duanyan', '[error] Sampling: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -709,10 +724,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_sampling_config');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_sampling_config');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] Config: ' + String(e));
+      addMessage('duanyan', '[error] Config: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -721,10 +736,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_lr_step');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_lr_step');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] LR step: ' + String(e));
+      addMessage('duanyan', '[error] LR step: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -733,10 +748,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_lr_curve');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_lr_curve');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] LR curve: ' + String(e));
+      addMessage('duanyan', '[error] LR curve: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -745,12 +760,12 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_alibi_forward', { text: input });
+      const result = await invoke('duanyan_alibi_forward', { text: input });
       addMessage('user', '[ALiBi] ' + input);
-      addMessage('qianlu', result);
+      addMessage('duanyan', result);
       setInput('');
     } catch (e) {
-      addMessage('qianlu', '[error] ALiBi: ' + String(e));
+      addMessage('duanyan', '[error] ALiBi: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -759,10 +774,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_alibi_report');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_alibi_report');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] ALiBi report: ' + String(e));
+      addMessage('duanyan', '[error] ALiBi report: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -771,10 +786,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_grad_clip_demo');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_grad_clip_demo');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] GradClip: ' + String(e));
+      addMessage('duanyan', '[error] GradClip: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -783,10 +798,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_grad_clip_stats');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_grad_clip_stats');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] GradClip stats: ' + String(e));
+      addMessage('duanyan', '[error] GradClip stats: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -795,10 +810,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_adam_simulate', { steps: 100 });
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_adam_simulate', { steps: 100 });
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] Adam: ' + String(e));
+      addMessage('duanyan', '[error] Adam: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -807,10 +822,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_adam_stats');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_adam_stats');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] Adam stats: ' + String(e));
+      addMessage('duanyan', '[error] Adam stats: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -819,12 +834,12 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_token_merge', { text: input });
+      const result = await invoke('duanyan_token_merge', { text: input });
       addMessage('user', '[ToMe] ' + input);
-      addMessage('qianlu', result);
+      addMessage('duanyan', result);
       setInput('');
     } catch (e) {
-      addMessage('qianlu', '[error] TokenMerge: ' + String(e));
+      addMessage('duanyan', '[error] TokenMerge: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -833,10 +848,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_token_merge_stats');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_token_merge_stats');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] ToMe stats: ' + String(e));
+      addMessage('duanyan', '[error] ToMe stats: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -845,12 +860,12 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_weight_tying_demo', { text: input });
+      const result = await invoke('duanyan_weight_tying_demo', { text: input });
       addMessage('user', '[WT] ' + input);
-      addMessage('qianlu', result);
+      addMessage('duanyan', result);
       setInput('');
     } catch (e) {
-      addMessage('qianlu', '[error] WeightTying: ' + String(e));
+      addMessage('duanyan', '[error] WeightTying: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -859,10 +874,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_weight_tying_stats');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_weight_tying_stats');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] WT stats: ' + String(e));
+      addMessage('duanyan', '[error] WT stats: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -871,12 +886,12 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_cross_attn_demo', { text: input });
+      const result = await invoke('duanyan_cross_attn_demo', { text: input });
       addMessage('user', '[CrossAttn] ' + input);
-      addMessage('qianlu', result);
+      addMessage('duanyan', result);
       setInput('');
     } catch (e) {
-      addMessage('qianlu', '[error] CrossAttn: ' + String(e));
+      addMessage('duanyan', '[error] CrossAttn: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -885,10 +900,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_cross_attn_stats');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_cross_attn_stats');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] CrossAttn stats: ' + String(e));
+      addMessage('duanyan', '[error] CrossAttn stats: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -897,12 +912,12 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_perplexity_eval', { text: input });
+      const result = await invoke('duanyan_perplexity_eval', { text: input });
       addMessage('user', '[PPL] ' + input);
-      addMessage('qianlu', result);
+      addMessage('duanyan', result);
       setInput('');
     } catch (e) {
-      addMessage('qianlu', '[error] Perplexity: ' + String(e));
+      addMessage('duanyan', '[error] Perplexity: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -911,10 +926,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_perplexity_report');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_perplexity_report');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] PPL report: ' + String(e));
+      addMessage('duanyan', '[error] PPL report: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -923,12 +938,12 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_rep_penalty_demo', { text: input });
+      const result = await invoke('duanyan_rep_penalty_demo', { text: input });
       addMessage('user', '[RepPenalty] ' + input);
-      addMessage('qianlu', result);
+      addMessage('duanyan', result);
       setInput('');
     } catch (e) {
-      addMessage('qianlu', '[error] RepPenalty: ' + String(e));
+      addMessage('duanyan', '[error] RepPenalty: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -937,10 +952,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_rep_penalty_stats');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_rep_penalty_stats');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] RepPenalty stats: ' + String(e));
+      addMessage('duanyan', '[error] RepPenalty stats: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -949,12 +964,12 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_layer_norm_demo', { text: input });
+      const result = await invoke('duanyan_layer_norm_demo', { text: input });
       addMessage('user', '[LayerNorm] ' + input);
-      addMessage('qianlu', result);
+      addMessage('duanyan', result);
       setInput('');
     } catch (e) {
-      addMessage('qianlu', '[error] LayerNorm: ' + String(e));
+      addMessage('duanyan', '[error] LayerNorm: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -963,10 +978,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_layer_norm_compare');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_layer_norm_compare');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] LayerNorm compare: ' + String(e));
+      addMessage('duanyan', '[error] LayerNorm compare: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -975,12 +990,12 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_streaming_attn_demo', { text: input });
+      const result = await invoke('duanyan_streaming_attn_demo', { text: input });
       addMessage('user', '[StreamAttn] ' + input);
-      addMessage('qianlu', result);
+      addMessage('duanyan', result);
       setInput('');
     } catch (e) {
-      addMessage('qianlu', '[error] StreamAttn: ' + String(e));
+      addMessage('duanyan', '[error] StreamAttn: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -989,10 +1004,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_streaming_attn_compare');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_streaming_attn_compare');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] StreamAttn compare: ' + String(e));
+      addMessage('duanyan', '[error] StreamAttn compare: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -1001,12 +1016,12 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_pos_interp_demo', { text: input });
+      const result = await invoke('duanyan_pos_interp_demo', { text: input });
       addMessage('user', '[PosInterp] ' + input);
-      addMessage('qianlu', result);
+      addMessage('duanyan', result);
       setInput('');
     } catch (e) {
-      addMessage('qianlu', '[error] PosInterp: ' + String(e));
+      addMessage('duanyan', '[error] PosInterp: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -1015,10 +1030,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_pos_interp_compare');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_pos_interp_compare');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] PosInterp compare: ' + String(e));
+      addMessage('duanyan', '[error] PosInterp compare: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -1027,12 +1042,12 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_grad_ckpt_demo', { text: input });
+      const result = await invoke('duanyan_grad_ckpt_demo', { text: input });
       addMessage('user', '[GradCkpt] ' + input);
-      addMessage('qianlu', result);
+      addMessage('duanyan', result);
       setInput('');
     } catch (e) {
-      addMessage('qianlu', '[error] GradCkpt: ' + String(e));
+      addMessage('duanyan', '[error] GradCkpt: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -1041,10 +1056,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_grad_ckpt_compare');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_grad_ckpt_compare');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] GradCkpt compare: ' + String(e));
+      addMessage('duanyan', '[error] GradCkpt compare: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -1053,12 +1068,12 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_prompt_tmpl_demo', { text: input });
+      const result = await invoke('duanyan_prompt_tmpl_demo', { text: input });
       addMessage('user', '[Prompt] ' + input);
-      addMessage('qianlu', result);
+      addMessage('duanyan', result);
       setInput('');
     } catch (e) {
-      addMessage('qianlu', '[error] Prompt: ' + String(e));
+      addMessage('duanyan', '[error] Prompt: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -1067,25 +1082,25 @@ export default function QianluPanel({ onClose }: Props) {
   const handleKvQuantDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_kv_quant_demo', { text: input }); addMessage('user', '[KVQuant] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] KVQuant: ' + String(e)); }
+    try { const r = await invoke('duanyan_kv_quant_demo', { text: input }); addMessage('user', '[KVQuant] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] KVQuant: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleKvQuantStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_kv_quant_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] KVQuant stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_kv_quant_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] KVQuant stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handlePromptTmplCompare = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_prompt_tmpl_compare', { text: input });
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_prompt_tmpl_compare', { text: input });
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] Prompt compare: ' + String(e));
+      addMessage('duanyan', '[error] Prompt compare: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -1096,12 +1111,12 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_seq_pack_demo', { text: input });
+      const result = await invoke('duanyan_seq_pack_demo', { text: input });
       addMessage('user', '[SeqPack] ' + input);
-      addMessage('qianlu', result);
+      addMessage('duanyan', result);
       setInput('');
     } catch (e) {
-      addMessage('qianlu', '[error] SeqPack: ' + String(e));
+      addMessage('duanyan', '[error] SeqPack: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -1110,10 +1125,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_seq_pack_compare');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_seq_pack_compare');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] SeqPack compare: ' + String(e));
+      addMessage('duanyan', '[error] SeqPack compare: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -1122,12 +1137,12 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_attn_vis_demo', { text: input });
+      const result = await invoke('duanyan_attn_vis_demo', { text: input });
       addMessage('user', '[AttnVis] ' + input);
-      addMessage('qianlu', result);
+      addMessage('duanyan', result);
       setInput('');
     } catch (e) {
-      addMessage('qianlu', '[error] AttnVis: ' + String(e));
+      addMessage('duanyan', '[error] AttnVis: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -1136,10 +1151,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_attn_vis_stats');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_attn_vis_stats');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] AttnVis stats: ' + String(e));
+      addMessage('duanyan', '[error] AttnVis stats: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -1148,12 +1163,12 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_mqa_demo', { text: input });
+      const result = await invoke('duanyan_mqa_demo', { text: input });
       addMessage('user', '[MQA] ' + input);
-      addMessage('qianlu', result);
+      addMessage('duanyan', result);
       setInput('');
     } catch (e) {
-      addMessage('qianlu', '[error] MQA: ' + String(e));
+      addMessage('duanyan', '[error] MQA: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -1162,10 +1177,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_mqa_stats');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_mqa_stats');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] MQA stats: ' + String(e));
+      addMessage('duanyan', '[error] MQA stats: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -1174,12 +1189,12 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_temp_anneal_demo', { text: input });
+      const result = await invoke('duanyan_temp_anneal_demo', { text: input });
       addMessage('user', '[TempAnneal] ' + input);
-      addMessage('qianlu', result);
+      addMessage('duanyan', result);
       setInput('');
     } catch (e) {
-      addMessage('qianlu', '[error] TempAnneal: ' + String(e));
+      addMessage('duanyan', '[error] TempAnneal: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -1188,10 +1203,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_temp_anneal_compare');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_temp_anneal_compare');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] TempAnneal compare: ' + String(e));
+      addMessage('duanyan', '[error] TempAnneal compare: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -1200,12 +1215,12 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_early_stop_demo', { text: input });
+      const result = await invoke('duanyan_early_stop_demo', { text: input });
       addMessage('user', '[EarlyStop] ' + input);
-      addMessage('qianlu', result);
+      addMessage('duanyan', result);
       setInput('');
     } catch (e) {
-      addMessage('qianlu', '[error] EarlyStop: ' + String(e));
+      addMessage('duanyan', '[error] EarlyStop: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -1214,10 +1229,10 @@ export default function QianluPanel({ onClose }: Props) {
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke('qianlu_early_stop_stats');
-      addMessage('qianlu', result);
+      const result = await invoke('duanyan_early_stop_stats');
+      addMessage('duanyan', result);
     } catch (e) {
-      addMessage('qianlu', '[error] EarlyStop stats: ' + String(e));
+      addMessage('duanyan', '[error] EarlyStop stats: ' + String(e));
     }
     setIsProcessing(false);
   };
@@ -1225,2490 +1240,2490 @@ export default function QianluPanel({ onClose }: Props) {
   const handleGradAccumDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_grad_accum_demo', { text: input }); addMessage('user', '[GradAccum] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] GradAccum: ' + String(e)); }
+    try { const r = await invoke('duanyan_grad_accum_demo', { text: input }); addMessage('user', '[GradAccum] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] GradAccum: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleGradAccumStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_grad_accum_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_grad_accum_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSwaDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_swa_demo', { text: input }); addMessage('user', '[SWA] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] SWA: ' + String(e)); }
+    try { const r = await invoke('duanyan_swa_demo', { text: input }); addMessage('user', '[SWA] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] SWA: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSwaCompare = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_swa_compare')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_swa_compare')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleTokenFreqDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_token_freq_demo', { text: input }); addMessage('user', '[TokFreq] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] TokFreq: ' + String(e)); }
+    try { const r = await invoke('duanyan_token_freq_demo', { text: input }); addMessage('user', '[TokFreq] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] TokFreq: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleTokenFreqStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_token_freq_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_token_freq_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleDropoutDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_dropout_demo', { text: input }); addMessage('user', '[Dropout] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Dropout: ' + String(e)); }
+    try { const r = await invoke('duanyan_dropout_demo', { text: input }); addMessage('user', '[Dropout] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Dropout: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleDropoutStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_dropout_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_dropout_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleWeightInitDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_weight_init_demo', { text: input }); addMessage('user', '[WInit] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] WInit: ' + String(e)); }
+    try { const r = await invoke('duanyan_weight_init_demo', { text: input }); addMessage('user', '[WInit] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] WInit: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleWeightInitStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_weight_init_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_weight_init_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleBatchNormDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_batch_norm_demo', { text: input }); addMessage('user', '[BatchNorm] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] BatchNorm: ' + String(e)); }
+    try { const r = await invoke('duanyan_batch_norm_demo', { text: input }); addMessage('user', '[BatchNorm] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] BatchNorm: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleBatchNormCompare = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_batch_norm_compare')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_batch_norm_compare')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleMixupDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_mixup_demo', { text: input }); addMessage('user', '[MixUp] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] MixUp: ' + String(e)); }
+    try { const r = await invoke('duanyan_mixup_demo', { text: input }); addMessage('user', '[MixUp] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] MixUp: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleMixupStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_mixup_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_mixup_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleFocalLossDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_focal_loss_demo', { text: input }); addMessage('user', '[FocalLoss] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] FocalLoss: ' + String(e)); }
+    try { const r = await invoke('duanyan_focal_loss_demo', { text: input }); addMessage('user', '[FocalLoss] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] FocalLoss: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleFocalLossStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_focal_loss_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_focal_loss_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleStochDepthDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_stoch_depth_demo', { text: input }); addMessage('user', '[StochDepth] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] StochDepth: ' + String(e)); }
+    try { const r = await invoke('duanyan_stoch_depth_demo', { text: input }); addMessage('user', '[StochDepth] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] StochDepth: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleStochDepthStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_stoch_depth_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_stoch_depth_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleLabelSmoothDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_label_smooth_demo', { text: input }); addMessage('user', '[LSmooth] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] LSmooth: ' + String(e)); }
+    try { const r = await invoke('duanyan_label_smooth_demo', { text: input }); addMessage('user', '[LSmooth] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] LSmooth: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleLabelSmoothStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_label_smooth_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_label_smooth_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handlePruningDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_pruning_demo', { text: input }); addMessage('user', '[Pruning] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Pruning: ' + String(e)); }
+    try { const r = await invoke('duanyan_pruning_demo', { text: input }); addMessage('user', '[Pruning] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Pruning: ' + String(e)); }
     setIsProcessing(false);
   };
   const handlePruningStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_pruning_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_pruning_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleGradNormDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_grad_norm_demo', { text: input }); addMessage('user', '[GradNorm] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] GradNorm: ' + String(e)); }
+    try { const r = await invoke('duanyan_grad_norm_demo', { text: input }); addMessage('user', '[GradNorm] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] GradNorm: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleGradNormStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_grad_norm_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_grad_norm_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleWarmupDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_warmup_demo', { text: input }); addMessage('user', '[Warmup] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Warmup: ' + String(e)); }
+    try { const r = await invoke('duanyan_warmup_demo', { text: input }); addMessage('user', '[Warmup] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Warmup: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleWarmupStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_warmup_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_warmup_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleEmaDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_ema_demo', { text: input }); addMessage('user', '[EMA] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] EMA: ' + String(e)); }
+    try { const r = await invoke('duanyan_ema_demo', { text: input }); addMessage('user', '[EMA] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] EMA: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleEmaStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_ema_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_ema_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSpectralNormDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_spectral_norm_demo', { text: input }); addMessage('user', '[SpecNorm] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] SpecNorm: ' + String(e)); }
+    try { const r = await invoke('duanyan_spectral_norm_demo', { text: input }); addMessage('user', '[SpecNorm] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] SpecNorm: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSpectralNormStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_spectral_norm_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_spectral_norm_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleNtkRopeDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_ntk_rope_demo', { text: input }); addMessage('user', '[NTK-RoPE] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] NTK-RoPE: ' + String(e)); }
+    try { const r = await invoke('duanyan_ntk_rope_demo', { text: input }); addMessage('user', '[NTK-RoPE] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] NTK-RoPE: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleNtkRopeStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_ntk_rope_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_ntk_rope_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleMultiTaskDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_multi_task_demo', { text: input }); addMessage('user', '[MTL] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] MTL: ' + String(e)); }
+    try { const r = await invoke('duanyan_multi_task_demo', { text: input }); addMessage('user', '[MTL] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] MTL: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleMultiTaskStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_multi_task_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_multi_task_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleWassersteinDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_wasserstein_demo', { text: input }); addMessage('user', '[Wasserstein] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Wasserstein: ' + String(e)); }
+    try { const r = await invoke('duanyan_wasserstein_demo', { text: input }); addMessage('user', '[Wasserstein] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Wasserstein: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleWassersteinStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_wasserstein_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_wasserstein_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleSelfConsistencyDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_self_consistency_demo', { text: input }); addMessage('user', '[SC-Dec] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] SC: ' + String(e)); }
+    try { const r = await invoke('duanyan_self_consistency_demo', { text: input }); addMessage('user', '[SC-Dec] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] SC: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSelfConsistencyStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_self_consistency_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_self_consistency_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleContrastiveDecodingDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_contrastive_decoding_demo', { text: input }); addMessage('user', '[CD] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] CD: ' + String(e)); }
+    try { const r = await invoke('duanyan_contrastive_decoding_demo', { text: input }); addMessage('user', '[CD] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] CD: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleContrastiveDecodingStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_contrastive_decoding_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_contrastive_decoding_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleTokenUnlearningDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_token_unlearning_demo', { text: input }); addMessage('user', '[Unlearn] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Unlearn: ' + String(e)); }
+    try { const r = await invoke('duanyan_token_unlearning_demo', { text: input }); addMessage('user', '[Unlearn] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Unlearn: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleTokenUnlearningStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_token_unlearning_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_token_unlearning_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handlePagedAttnDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_paged_attn_demo', { text: input }); addMessage('user', '[PagedAttn] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] PagedAttn: ' + String(e)); }
+    try { const r = await invoke('duanyan_paged_attn_demo', { text: input }); addMessage('user', '[PagedAttn] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] PagedAttn: ' + String(e)); }
     setIsProcessing(false);
   };
   const handlePagedAttnStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_paged_attn_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_paged_attn_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSpecRejectionDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_spec_rejection_demo', { text: input }); addMessage('user', '[SpecRej] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] SpecRej: ' + String(e)); }
+    try { const r = await invoke('duanyan_spec_rejection_demo', { text: input }); addMessage('user', '[SpecRej] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] SpecRej: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSpecRejectionStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_spec_rejection_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_spec_rejection_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleContBatchDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_dyn_batch_demo', { text: input }); addMessage('user', '[ContBatch] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] ContBatch: ' + String(e)); }
+    try { const r = await invoke('duanyan_dyn_batch_demo', { text: input }); addMessage('user', '[ContBatch] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] ContBatch: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleContBatchStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_dyn_batch_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_dyn_batch_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleGptqDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_gptq_demo', { text: input }); addMessage('user', '[GPTQ] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] GPTQ: ' + String(e)); }
+    try { const r = await invoke('duanyan_gptq_demo', { text: input }); addMessage('user', '[GPTQ] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] GPTQ: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleGptqStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_gptq_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_gptq_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleBleuDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_bleu_demo', { text: input }); addMessage('user', '[BLEU] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] BLEU: ' + String(e)); }
+    try { const r = await invoke('duanyan_bleu_demo', { text: input }); addMessage('user', '[BLEU] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] BLEU: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleBleuStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_bleu_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_bleu_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleCotDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_cot_demo', { text: input }); addMessage('user', '[CoT] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] CoT: ' + String(e)); }
+    try { const r = await invoke('duanyan_cot_demo', { text: input }); addMessage('user', '[CoT] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] CoT: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleCotStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_cot_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_cot_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleInstNormDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_inst_norm_demo', { text: input }); addMessage('user', '[InstNorm] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] InstNorm: ' + String(e)); }
+    try { const r = await invoke('duanyan_inst_norm_demo', { text: input }); addMessage('user', '[InstNorm] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] InstNorm: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleInstNormStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_inst_norm_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_inst_norm_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleRougeDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_rouge_demo', { text: input }); addMessage('user', '[ROUGE] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] ROUGE: ' + String(e)); }
+    try { const r = await invoke('duanyan_rouge_demo', { text: input }); addMessage('user', '[ROUGE] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] ROUGE: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleRougeStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_rouge_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_rouge_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleTotDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_tot_demo', { text: input }); addMessage('user', '[ToT] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] ToT: ' + String(e)); }
+    try { const r = await invoke('duanyan_tot_demo', { text: input }); addMessage('user', '[ToT] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] ToT: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleTotStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_tot_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_tot_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleKtoDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_kto_demo', { text: input }); addMessage('user', '[KTO] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] KTO: ' + String(e)); }
+    try { const r = await invoke('duanyan_kto_demo', { text: input }); addMessage('user', '[KTO] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] KTO: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleKtoStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_kto_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_kto_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleModRouterDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_mod_router_demo', { text: input }); addMessage('user', '[MoD] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] MoD: ' + String(e)); }
+    try { const r = await invoke('duanyan_mod_router_demo', { text: input }); addMessage('user', '[MoD] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] MoD: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleModRouterStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_mod_router_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_mod_router_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSparseMoEDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_sparse_moe_demo', { text: input }); addMessage('user', '[SMoE] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] SMoE: ' + String(e)); }
+    try { const r = await invoke('duanyan_sparse_moe_demo', { text: input }); addMessage('user', '[SMoE] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] SMoE: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSparseMoEStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_sparse_moe_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_sparse_moe_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleBpeDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_bpe_demo', { text: input }); addMessage('user', '[BPE] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] BPE: ' + String(e)); }
+    try { const r = await invoke('duanyan_bpe_demo', { text: input }); addMessage('user', '[BPE] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] BPE: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleBpeStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_bpe_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_bpe_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleDistDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_dist_demo', { text: input }); addMessage('user', '[Dist] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Dist: ' + String(e)); }
+    try { const r = await invoke('duanyan_dist_demo', { text: input }); addMessage('user', '[Dist] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Dist: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleDistStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_dist_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_dist_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleRaftDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_raft_demo', { text: input }); addMessage('user', '[RAFT] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] RAFT: ' + String(e)); }
+    try { const r = await invoke('duanyan_raft_demo', { text: input }); addMessage('user', '[RAFT] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] RAFT: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleRaftStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_raft_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_raft_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleGroupNormDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_group_norm_demo', { text: input }); addMessage('user', '[GroupNorm] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] GroupNorm: ' + String(e)); }
+    try { const r = await invoke('duanyan_group_norm_demo', { text: input }); addMessage('user', '[GroupNorm] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] GroupNorm: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleGroupNormStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_group_norm_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_group_norm_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleKVEvictDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_kv_eviction_demo', { text: input }); addMessage('user', '[KVEvict] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] KVEvict: ' + String(e)); }
+    try { const r = await invoke('duanyan_kv_eviction_demo', { text: input }); addMessage('user', '[KVEvict] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] KVEvict: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleKVEvictStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_kv_eviction_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_kv_eviction_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleBenchDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_bench_demo', { text: input }); addMessage('user', '[Benchmark] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Benchmark: ' + String(e)); }
+    try { const r = await invoke('duanyan_bench_demo', { text: input }); addMessage('user', '[Benchmark] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Benchmark: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleBenchStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_bench_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_bench_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleDataAugDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_data_aug_demo', { text: input }); addMessage('user', '[DataAug] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] DataAug: ' + String(e)); }
+    try { const r = await invoke('duanyan_data_aug_demo', { text: input }); addMessage('user', '[DataAug] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] DataAug: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleDataAugStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_data_aug_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_data_aug_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleCurriculumDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_curriculum_demo', { text: input }); addMessage('user', '[Curriculum] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Curriculum: ' + String(e)); }
+    try { const r = await invoke('duanyan_curriculum_demo', { text: input }); addMessage('user', '[Curriculum] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Curriculum: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleCurriculumStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_curriculum_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_curriculum_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleWatermarkDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_watermark_demo', { text: input }); addMessage('user', '[Watermark] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Watermark: ' + String(e)); }
+    try { const r = await invoke('duanyan_watermark_demo', { text: input }); addMessage('user', '[Watermark] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Watermark: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleWatermarkStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_watermark_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_watermark_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleRewardDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_reward_demo', { text: input }); addMessage('user', '[Reward] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Reward: ' + String(e)); }
+    try { const r = await invoke('duanyan_reward_demo', { text: input }); addMessage('user', '[Reward] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Reward: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleRewardStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_reward_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_reward_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleAdvTrainDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_adv_train_demo', { text: input }); addMessage('user', '[AdvTrain] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] AdvTrain: ' + String(e)); }
+    try { const r = await invoke('duanyan_adv_train_demo', { text: input }); addMessage('user', '[AdvTrain] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] AdvTrain: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleAdvTrainStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_adv_train_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_adv_train_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleNASDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_nas_demo', { text: input }); addMessage('user', '[NAS] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] NAS: ' + String(e)); }
+    try { const r = await invoke('duanyan_nas_demo', { text: input }); addMessage('user', '[NAS] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] NAS: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleNASStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_nas_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_nas_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleFedDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_federated_demo', { text: input }); addMessage('user', '[Federated] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Federated: ' + String(e)); }
+    try { const r = await invoke('duanyan_federated_demo', { text: input }); addMessage('user', '[Federated] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Federated: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleFedStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_federated_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_federated_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleKGDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_kg_demo', { text: input }); addMessage('user', '[KG] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] KG: ' + String(e)); }
+    try { const r = await invoke('duanyan_kg_demo', { text: input }); addMessage('user', '[KG] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] KG: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleKGStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_kg_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_kg_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handlePromptTuneDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_prompt_tune_demo', { text: input }); addMessage('user', '[PromptTune] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] PromptTune: ' + String(e)); }
+    try { const r = await invoke('duanyan_prompt_tune_demo', { text: input }); addMessage('user', '[PromptTune] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] PromptTune: ' + String(e)); }
     setIsProcessing(false);
   };
   const handlePromptTuneStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_prompt_tune_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_prompt_tune_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleConstitutDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_constitut_demo', { text: input }); addMessage('user', '[Constitutional] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Constitutional: ' + String(e)); }
+    try { const r = await invoke('duanyan_constitut_demo', { text: input }); addMessage('user', '[Constitutional] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Constitutional: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleConstitutStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_constitut_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_constitut_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleActiveLearnDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_active_learn_demo', { text: input }); addMessage('user', '[ActiveLearn] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] ActiveLearn: ' + String(e)); }
+    try { const r = await invoke('duanyan_active_learn_demo', { text: input }); addMessage('user', '[ActiveLearn] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] ActiveLearn: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleActiveLearnStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_active_learn_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_active_learn_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleMMFusionDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_mm_fusion_demo', { text: input }); addMessage('user', '[MMFusion] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] MMFusion: ' + String(e)); }
+    try { const r = await invoke('duanyan_mm_fusion_demo', { text: input }); addMessage('user', '[MMFusion] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] MMFusion: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleMMFusionStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_mm_fusion_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_mm_fusion_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleMetaLearnDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_meta_learn_demo', { text: input }); addMessage('user', '[MetaLearn] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] MetaLearn: ' + String(e)); }
+    try { const r = await invoke('duanyan_meta_learn_demo', { text: input }); addMessage('user', '[MetaLearn] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] MetaLearn: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleMetaLearnStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_meta_learn_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_meta_learn_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleContinualDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_continual_demo', { text: input }); addMessage('user', '[Continual] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Continual: ' + String(e)); }
+    try { const r = await invoke('duanyan_continual_demo', { text: input }); addMessage('user', '[Continual] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Continual: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleContinualStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_continual_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_continual_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSparseGateDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_sparse_gate_demo', { text: input }); addMessage('user', '[SparseGate] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] SparseGate: ' + String(e)); }
+    try { const r = await invoke('duanyan_sparse_gate_demo', { text: input }); addMessage('user', '[SparseGate] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] SparseGate: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSparseGateStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_sparse_gate_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_sparse_gate_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleInstTuneDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_inst_tune_demo', { text: input }); addMessage('user', '[InstTune] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] InstTune: ' + String(e)); }
+    try { const r = await invoke('duanyan_inst_tune_demo', { text: input }); addMessage('user', '[InstTune] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] InstTune: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleInstTuneStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_inst_tune_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_inst_tune_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleCovDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_cov_demo', { text: input }); addMessage('user', '[CoVerif] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] CoVerif: ' + String(e)); }
+    try { const r = await invoke('duanyan_cov_demo', { text: input }); addMessage('user', '[CoVerif] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] CoVerif: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleCovStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_cov_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_cov_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleCompressDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_compress_demo', { text: input }); addMessage('user', '[Compress] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Compress: ' + String(e)); }
+    try { const r = await invoke('duanyan_compress_demo', { text: input }); addMessage('user', '[Compress] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Compress: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleCompressStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_compress_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_compress_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleSelfPlayDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_self_play_demo', { text: input }); addMessage('user', '[SelfPlay] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] SelfPlay: ' + String(e)); }
+    try { const r = await invoke('duanyan_self_play_demo', { text: input }); addMessage('user', '[SelfPlay] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] SelfPlay: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSelfPlayStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_self_play_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_self_play_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleIPODemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_ipo_demo', { text: input }); addMessage('user', '[IPO] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] IPO: ' + String(e)); }
+    try { const r = await invoke('duanyan_ipo_demo', { text: input }); addMessage('user', '[IPO] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] IPO: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleIPOStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_ipo_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_ipo_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleEnsembleDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_ensemble_demo', { text: input }); addMessage('user', '[Ensemble] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Ensemble: ' + String(e)); }
+    try { const r = await invoke('duanyan_ensemble_demo', { text: input }); addMessage('user', '[Ensemble] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Ensemble: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleEnsembleStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_ensemble_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_ensemble_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleContrastive2Demo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_contrastive2_demo', { text: input }); addMessage('user', '[Contrastive] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Contrastive: ' + String(e)); }
+    try { const r = await invoke('duanyan_contrastive2_demo', { text: input }); addMessage('user', '[Contrastive] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Contrastive: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleRagPipelineDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_rag_pipeline_demo', { text: input }); addMessage('user', '[RAG] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] RAG: ' + String(e)); }
+    try { const r = await invoke('duanyan_rag_pipeline_demo', { text: input }); addMessage('user', '[RAG] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] RAG: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleRagPipelineStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_rag_pipeline_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_rag_pipeline_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
   const handleLoraAdapterDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_lora_adapter_demo', { text: input }); addMessage('user', '[LoRA] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] LoRA: ' + String(e)); }
+    try { const r = await invoke('duanyan_lora_adapter_demo', { text: input }); addMessage('user', '[LoRA] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] LoRA: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleLoraAdapterStats = async () => {
     if (isProcessing) return; setIsProcessing(true);
-    try { addMessage('qianlu', await invoke('qianlu_lora_adapter_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_lora_adapter_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleGnnDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_gnn_demo', { text: input }); addMessage('user', '[GNN] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] GNN: ' + String(e)); }
+    try { const r = await invoke('duanyan_gnn_demo', { text: input }); addMessage('user', '[GNN] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] GNN: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleGnnStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_gnn_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] GNN stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_gnn_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] GNN stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleDiffusionDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_diffusion_demo', { text: input }); addMessage('user', '[Diffusion] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Diffusion: ' + String(e)); }
+    try { const r = await invoke('duanyan_diffusion_demo', { text: input }); addMessage('user', '[Diffusion] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Diffusion: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleDiffusionStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_diffusion_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Diffusion stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_diffusion_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Diffusion stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleCausalDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_causal_demo', { text: input }); addMessage('user', '[Causal] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Causal: ' + String(e)); }
+    try { const r = await invoke('duanyan_causal_demo', { text: input }); addMessage('user', '[Causal] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Causal: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleCausalStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_causal_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Causal stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_causal_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Causal stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleVaeDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_vae_demo', { text: input }); addMessage('user', '[VAE] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] VAE: ' + String(e)); }
+    try { const r = await invoke('duanyan_vae_demo', { text: input }); addMessage('user', '[VAE] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] VAE: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleVaeStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_vae_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] VAE stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_vae_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] VAE stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleBnnDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_bnn_demo', { text: input }); addMessage('user', '[BNN] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] BNN: ' + String(e)); }
+    try { const r = await invoke('duanyan_bnn_demo', { text: input }); addMessage('user', '[BNN] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] BNN: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleBnnStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_bnn_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] BNN stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_bnn_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] BNN stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleNodeDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_node_demo', { text: input }); addMessage('user', '[Neural ODE] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Neural ODE: ' + String(e)); }
+    try { const r = await invoke('duanyan_node_demo', { text: input }); addMessage('user', '[Neural ODE] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Neural ODE: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleNodeStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_node_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Neural ODE stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_node_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Neural ODE stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleReservoirDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_reservoir_demo', { text: input }); addMessage('user', '[Reservoir] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Reservoir: ' + String(e)); }
+    try { const r = await invoke('duanyan_reservoir_demo', { text: input }); addMessage('user', '[Reservoir] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Reservoir: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleReservoirStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_reservoir_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Reservoir stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_reservoir_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Reservoir stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleCapsuleDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_capsule_demo', { text: input }); addMessage('user', '[Capsule] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Capsule: ' + String(e)); }
+    try { const r = await invoke('duanyan_capsule_demo', { text: input }); addMessage('user', '[Capsule] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Capsule: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleCapsuleStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_capsule_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Capsule stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_capsule_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Capsule stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleEbmDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_ebm_demo', { text: input }); addMessage('user', '[EBM] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] EBM: ' + String(e)); }
+    try { const r = await invoke('duanyan_ebm_demo', { text: input }); addMessage('user', '[EBM] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] EBM: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleEbmStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_ebm_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] EBM stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_ebm_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] EBM stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleHypernetDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_hypernet_demo', { text: input }); addMessage('user', '[Hypernet] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Hypernet: ' + String(e)); }
+    try { const r = await invoke('duanyan_hypernet_demo', { text: input }); addMessage('user', '[Hypernet] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Hypernet: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleHypernetStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_hypernet_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Hypernet stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_hypernet_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Hypernet stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleFlowDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_flow_demo', { text: input }); addMessage('user', '[Flow] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Flow: ' + String(e)); }
+    try { const r = await invoke('duanyan_flow_demo', { text: input }); addMessage('user', '[Flow] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Flow: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleFlowStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_flow_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Flow stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_flow_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Flow stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSnnDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_snn_demo', { text: input }); addMessage('user', '[SNN] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] SNN: ' + String(e)); }
+    try { const r = await invoke('duanyan_snn_demo', { text: input }); addMessage('user', '[SNN] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] SNN: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSnnStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_snn_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] SNN stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_snn_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] SNN stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleWorldModelDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_world_model_demo', { text: input }); addMessage('user', '[WorldModel] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] WorldModel: ' + String(e)); }
+    try { const r = await invoke('duanyan_world_model_demo', { text: input }); addMessage('user', '[WorldModel] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] WorldModel: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleWorldModelStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_world_model_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] WorldModel stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_world_model_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] WorldModel stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleNeuroSymDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_neuro_sym_demo', { text: input }); addMessage('user', '[NeuroSym] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] NeuroSym: ' + String(e)); }
+    try { const r = await invoke('duanyan_neuro_sym_demo', { text: input }); addMessage('user', '[NeuroSym] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] NeuroSym: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleNeuroSymStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_neuro_sym_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] NeuroSym stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_neuro_sym_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] NeuroSym stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSparseAeDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_sparse_ae_demo', { text: input }); addMessage('user', '[SparseAE] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] SparseAE: ' + String(e)); }
+    try { const r = await invoke('duanyan_sparse_ae_demo', { text: input }); addMessage('user', '[SparseAE] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] SparseAE: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSparseAeStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_sparse_ae_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] SparseAE stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_sparse_ae_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] SparseAE stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleMemNetDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_mem_net_demo', { text: input }); addMessage('user', '[MemNet] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] MemNet: ' + String(e)); }
+    try { const r = await invoke('duanyan_mem_net_demo', { text: input }); addMessage('user', '[MemNet] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] MemNet: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleMemNetStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_mem_net_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] MemNet stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_mem_net_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] MemNet stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleCbmDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_cbm_demo', { text: input }); addMessage('user', '[CBM] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] CBM: ' + String(e)); }
+    try { const r = await invoke('duanyan_cbm_demo', { text: input }); addMessage('user', '[CBM] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] CBM: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleCbmStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_cbm_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] CBM stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_cbm_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] CBM stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleHrrDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_hrr_demo', { text: input }); addMessage('user', '[HRR] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] HRR: ' + String(e)); }
+    try { const r = await invoke('duanyan_hrr_demo', { text: input }); addMessage('user', '[HRR] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] HRR: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleHrrStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_hrr_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] HRR stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_hrr_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] HRR stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleLsmDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_lsm_demo', { text: input }); addMessage('user', '[LSM] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] LSM: ' + String(e)); }
+    try { const r = await invoke('duanyan_lsm_demo', { text: input }); addMessage('user', '[LSM] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] LSM: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleLsmStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_lsm_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] LSM stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_lsm_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] LSM stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleNpsDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_nps_demo', { text: input }); addMessage('user', '[NPS] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] NPS: ' + String(e)); }
+    try { const r = await invoke('duanyan_nps_demo', { text: input }); addMessage('user', '[NPS] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] NPS: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleNpsStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_nps_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] NPS stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_nps_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] NPS stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleNeuroCoreDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_neuro_core_demo', { text: input }); addMessage('user', '[NeuroCore] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] NeuroCore: ' + String(e)); }
+    try { const r = await invoke('duanyan_neuro_core_demo', { text: input }); addMessage('user', '[NeuroCore] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] NeuroCore: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleNeuroCoreStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_neuro_core_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] NeuroCore stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_neuro_core_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] NeuroCore stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleModelMergeDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_ckpt_merge_demo', { text: input }); addMessage('user', '[Merge] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Merge: ' + String(e)); }
+    try { const r = await invoke('duanyan_ckpt_merge_demo', { text: input }); addMessage('user', '[Merge] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Merge: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleModelMergeStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_ckpt_merge_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Merge stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_ckpt_merge_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Merge stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleTtcDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_ttc_demo', { text: input }); addMessage('user', '[TTC] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] TTC: ' + String(e)); }
+    try { const r = await invoke('duanyan_ttc_demo', { text: input }); addMessage('user', '[TTC] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] TTC: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleTtcStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_ttc_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] TTC stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_ttc_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] TTC stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleKdDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_kd_demo', { text: input }); addMessage('user', '[KD] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] KD: ' + String(e)); }
+    try { const r = await invoke('duanyan_kd_demo', { text: input }); addMessage('user', '[KD] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] KD: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleKdStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_kd_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] KD stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_kd_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] KD stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleSpecDecodeDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_draft_verify_demo', { text: input }); addMessage('user', '[SpecDec] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] SpecDec: ' + String(e)); }
+    try { const r = await invoke('duanyan_draft_verify_demo', { text: input }); addMessage('user', '[SpecDec] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] SpecDec: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSpecDecodeStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_draft_verify_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] SpecDec stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_draft_verify_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] SpecDec stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleActPatchDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_act_patch_demo', { text: input }); addMessage('user', '[ActPatch] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] ActPatch: ' + String(e)); }
+    try { const r = await invoke('duanyan_act_patch_demo', { text: input }); addMessage('user', '[ActPatch] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] ActPatch: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleActPatchStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_act_patch_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] ActPatch stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_act_patch_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] ActPatch stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSerDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_ser_demo', { text: input }); addMessage('user', '[SER] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] SER: ' + String(e)); }
+    try { const r = await invoke('duanyan_ser_demo', { text: input }); addMessage('user', '[SER] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] SER: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSerStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_ser_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] SER stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_ser_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] SER stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleMechInterpDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_mech_interp_demo', { text: input }); addMessage('user', '[MechInterp] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] MechInterp: ' + String(e)); }
+    try { const r = await invoke('duanyan_mech_interp_demo', { text: input }); addMessage('user', '[MechInterp] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] MechInterp: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleMechInterpStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_mech_interp_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] MechInterp stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_mech_interp_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] MechInterp stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSymRegDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_sym_reg_demo', { text: input }); addMessage('user', '[SymReg] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] SymReg: ' + String(e)); }
+    try { const r = await invoke('duanyan_sym_reg_demo', { text: input }); addMessage('user', '[SymReg] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] SymReg: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSymRegStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_sym_reg_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] SymReg stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_sym_reg_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] SymReg stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleReasonTraceDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_reason_trace_demo', { text: input }); addMessage('user', '[ReasonTrace] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] ReasonTrace: ' + String(e)); }
+    try { const r = await invoke('duanyan_reason_trace_demo', { text: input }); addMessage('user', '[ReasonTrace] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] ReasonTrace: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleReasonTraceStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_reason_trace_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] ReasonTrace stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_reason_trace_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] ReasonTrace stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleDpoDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_dpo_demo', { text: input }); addMessage('user', '[DPO] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] DPO: ' + String(e)); }
+    try { const r = await invoke('duanyan_dpo_demo', { text: input }); addMessage('user', '[DPO] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] DPO: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleDpoStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_dpo_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] DPO stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_dpo_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] DPO stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleUqDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_uq_demo', { text: input }); addMessage('user', '[UQ] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] UQ: ' + String(e)); }
+    try { const r = await invoke('duanyan_uq_demo', { text: input }); addMessage('user', '[UQ] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] UQ: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleUqStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_uq_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] UQ stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_uq_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] UQ stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleDataValDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_data_val_demo', { text: input }); addMessage('user', '[DataVal] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] DataVal: ' + String(e)); }
+    try { const r = await invoke('duanyan_data_val_demo', { text: input }); addMessage('user', '[DataVal] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] DataVal: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleDataValStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_data_val_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] DataVal stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_data_val_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] DataVal stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleMooDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_moo_demo', { text: input }); addMessage('user', '[MOO] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] MOO: ' + String(e)); }
+    try { const r = await invoke('duanyan_moo_demo', { text: input }); addMessage('user', '[MOO] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] MOO: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleMooStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_moo_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] MOO stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_moo_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] MOO stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleTaskVecDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_task_vec_demo', { text: input }); addMessage('user', '[TaskVec] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] TaskVec: ' + String(e)); }
+    try { const r = await invoke('duanyan_task_vec_demo', { text: input }); addMessage('user', '[TaskVec] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] TaskVec: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleTaskVecStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_task_vec_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] TaskVec stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_task_vec_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] TaskVec stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handlePromptOptDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_prompt_opt_demo', { text: input }); addMessage('user', '[PromptOpt] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] PromptOpt: ' + String(e)); }
+    try { const r = await invoke('duanyan_prompt_opt_demo', { text: input }); addMessage('user', '[PromptOpt] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] PromptOpt: ' + String(e)); }
     setIsProcessing(false);
   };
   const handlePromptOptStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_prompt_opt_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] PromptOpt stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_prompt_opt_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] PromptOpt stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleOnlineLearnDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_online_learn_demo', { text: input }); addMessage('user', '[Online] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Online: ' + String(e)); }
+    try { const r = await invoke('duanyan_online_learn_demo', { text: input }); addMessage('user', '[Online] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Online: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleOnlineLearnStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_online_learn_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Online stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_online_learn_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Online stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleBanditDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_bandit_demo', { text: input }); addMessage('user', '[Bandit] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Bandit: ' + String(e)); }
+    try { const r = await invoke('duanyan_bandit_demo', { text: input }); addMessage('user', '[Bandit] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Bandit: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleBanditStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_bandit_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Bandit stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_bandit_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Bandit stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleRewardShapeDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_reward_shape_demo', { text: input }); addMessage('user', '[RewShape] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] RewShape: ' + String(e)); }
+    try { const r = await invoke('duanyan_reward_shape_demo', { text: input }); addMessage('user', '[RewShape] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] RewShape: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleRewardShapeStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_reward_shape_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] RewShape stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_reward_shape_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] RewShape stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleActiveInfDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_active_inf_demo', { text: input }); addMessage('user', '[ActInf] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] ActiveInf: ' + String(e)); }
+    try { const r = await invoke('duanyan_active_inf_demo', { text: input }); addMessage('user', '[ActInf] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] ActiveInf: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleActiveInfStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_active_inf_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] ActiveInf stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_active_inf_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] ActiveInf stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleFedPersonalDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_fed_personal_demo', { text: input }); addMessage('user', '[FedPers] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] FedPers: ' + String(e)); }
+    try { const r = await invoke('duanyan_fed_personal_demo', { text: input }); addMessage('user', '[FedPers] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] FedPers: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleFedPersonalStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_fed_personal_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] FedPers stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_fed_personal_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] FedPers stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleModelCompDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_model_comp_demo', { text: input }); addMessage('user', '[ModComp] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] ModComp: ' + String(e)); }
+    try { const r = await invoke('duanyan_model_comp_demo', { text: input }); addMessage('user', '[ModComp] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] ModComp: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleModelCompStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_model_comp_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] ModComp stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_model_comp_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] ModComp stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleBayesOptDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_bayes_opt_demo', { text: input }); addMessage('user', '[BayesOpt] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] BayesOpt: ' + String(e)); }
+    try { const r = await invoke('duanyan_bayes_opt_demo', { text: input }); addMessage('user', '[BayesOpt] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] BayesOpt: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleBayesOptStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_bayes_opt_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] BayesOpt stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_bayes_opt_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] BayesOpt stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleDomainAdaptDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_domain_adapt_demo', { text: input }); addMessage('user', '[DomAdapt] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] DomAdapt: ' + String(e)); }
+    try { const r = await invoke('duanyan_domain_adapt_demo', { text: input }); addMessage('user', '[DomAdapt] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] DomAdapt: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleDomainAdaptStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_domain_adapt_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] DomAdapt stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_domain_adapt_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] DomAdapt stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSslDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_ssl_demo', { text: input }); addMessage('user', '[SSL] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] SSL: ' + String(e)); }
+    try { const r = await invoke('duanyan_ssl_demo', { text: input }); addMessage('user', '[SSL] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] SSL: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSslStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_ssl_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] SSL stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_ssl_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] SSL stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleTransferDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_transfer_demo', { text: input }); addMessage('user', '[Transfer] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Transfer: ' + String(e)); }
+    try { const r = await invoke('duanyan_transfer_demo', { text: input }); addMessage('user', '[Transfer] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Transfer: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleTransferStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_transfer_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Transfer stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_transfer_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Transfer stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleFewShotDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_few_shot_demo', { text: input }); addMessage('user', '[FewShot] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] FewShot: ' + String(e)); }
+    try { const r = await invoke('duanyan_few_shot_demo', { text: input }); addMessage('user', '[FewShot] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] FewShot: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleFewShotStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_few_shot_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] FewShot stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_few_shot_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] FewShot stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleMetaRlDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_meta_rl_demo', { text: input }); addMessage('user', '[MetaRL] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] MetaRL: ' + String(e)); }
+    try { const r = await invoke('duanyan_meta_rl_demo', { text: input }); addMessage('user', '[MetaRL] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] MetaRL: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleMetaRlStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_meta_rl_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] MetaRL stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_meta_rl_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] MetaRL stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleZeroShotDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_zero_shot_demo', { text: input }); addMessage('user', '[ZeroShot] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] ZeroShot: ' + String(e)); }
+    try { const r = await invoke('duanyan_zero_shot_demo', { text: input }); addMessage('user', '[ZeroShot] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] ZeroShot: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleZeroShotStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_zero_shot_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] ZeroShot stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_zero_shot_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] ZeroShot stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleTaskAdaptDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_task_adapt_demo', { text: input }); addMessage('user', '[TaskAdapt] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] TaskAdapt: ' + String(e)); }
+    try { const r = await invoke('duanyan_task_adapt_demo', { text: input }); addMessage('user', '[TaskAdapt] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] TaskAdapt: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleTaskAdaptStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_task_adapt_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] TaskAdapt stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_task_adapt_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] TaskAdapt stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleRepMixupDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_rep_mixup_demo', { text: input }); addMessage('user', '[Mixup] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Mixup: ' + String(e)); }
+    try { const r = await invoke('duanyan_rep_mixup_demo', { text: input }); addMessage('user', '[Mixup] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Mixup: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleRepMixupStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_rep_mixup_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Mixup stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_rep_mixup_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Mixup stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleWeightShareDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_weight_share_demo', { text: input }); addMessage('user', '[WeightShare] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] WeightShare: ' + String(e)); }
+    try { const r = await invoke('duanyan_weight_share_demo', { text: input }); addMessage('user', '[WeightShare] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] WeightShare: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleWeightShareStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_weight_share_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] WeightShare stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_weight_share_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] WeightShare stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleDisentangleDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_disentangle_demo', { text: input }); addMessage('user', '[Disentangle] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Disentangle: ' + String(e)); }
+    try { const r = await invoke('duanyan_disentangle_demo', { text: input }); addMessage('user', '[Disentangle] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Disentangle: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleDisentangleStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_disentangle_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Disentangle stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_disentangle_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Disentangle stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleGradSurgeryDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_grad_surgery_demo', { text: input }); addMessage('user', '[GradSurgery] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] GradSurgery: ' + String(e)); }
+    try { const r = await invoke('duanyan_grad_surgery_demo', { text: input }); addMessage('user', '[GradSurgery] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] GradSurgery: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleGradSurgeryStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_grad_surgery_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] GradSurgery stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_grad_surgery_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] GradSurgery stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleEvoStratDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_evo_strat_demo', { text: input }); addMessage('user', '[EvoStrat] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] EvoStrat: ' + String(e)); }
+    try { const r = await invoke('duanyan_evo_strat_demo', { text: input }); addMessage('user', '[EvoStrat] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] EvoStrat: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleEvoStratStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_evo_strat_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] EvoStrat stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_evo_strat_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] EvoStrat stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleHyperOptDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_hyper_opt_demo', { text: input }); addMessage('user', '[HyperOpt] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] HyperOpt: ' + String(e)); }
+    try { const r = await invoke('duanyan_hyper_opt_demo', { text: input }); addMessage('user', '[HyperOpt] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] HyperOpt: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleHyperOptStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_hyper_opt_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] HyperOpt stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_hyper_opt_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] HyperOpt stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleMultiAgentDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_multi_agent_demo', { text: input }); addMessage('user', '[MARL] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] MARL: ' + String(e)); }
+    try { const r = await invoke('duanyan_multi_agent_demo', { text: input }); addMessage('user', '[MARL] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] MARL: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleMultiAgentStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_multi_agent_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] MARL stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_multi_agent_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] MARL stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleImitationDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_imitation_demo', { text: input }); addMessage('user', '[Imitation] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Imitation: ' + String(e)); }
+    try { const r = await invoke('duanyan_imitation_demo', { text: input }); addMessage('user', '[Imitation] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Imitation: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleImitationStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_imitation_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Imitation stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_imitation_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Imitation stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleInverseRlDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_inverse_rl_demo', { text: input }); addMessage('user', '[InvRL] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] InvRL: ' + String(e)); }
+    try { const r = await invoke('duanyan_inverse_rl_demo', { text: input }); addMessage('user', '[InvRL] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] InvRL: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleInverseRlStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_inverse_rl_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] InvRL stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_inverse_rl_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] InvRL stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleNtkDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_ntk_demo', { text: input }); addMessage('user', '[NTK] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] NTK: ' + String(e)); }
+    try { const r = await invoke('duanyan_ntk_demo', { text: input }); addMessage('user', '[NTK] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] NTK: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleNtkStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_ntk_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] NTK stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_ntk_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] NTK stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleOtDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_ot_demo', { text: input }); addMessage('user', '[OT] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] OT: ' + String(e)); }
+    try { const r = await invoke('duanyan_ot_demo', { text: input }); addMessage('user', '[OT] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] OT: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleOtStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_ot_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] OT stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_ot_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] OT stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleScalingDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_scaling_demo', { text: input }); addMessage('user', '[Scaling] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Scaling: ' + String(e)); }
+    try { const r = await invoke('duanyan_scaling_demo', { text: input }); addMessage('user', '[Scaling] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Scaling: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleScalingStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_scaling_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Scaling stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_scaling_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Scaling stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleModelEditDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_model_edit_demo', { text: input }); addMessage('user', '[ModelEdit] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] ModelEdit: ' + String(e)); }
+    try { const r = await invoke('duanyan_model_edit_demo', { text: input }); addMessage('user', '[ModelEdit] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] ModelEdit: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleModelEditStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_model_edit_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] ModelEdit stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_model_edit_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] ModelEdit stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleGrokDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_grok_demo', { text: input }); addMessage('user', '[Grok] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Grok: ' + String(e)); }
+    try { const r = await invoke('duanyan_grok_demo', { text: input }); addMessage('user', '[Grok] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Grok: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleGrokStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_grok_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Grok stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_grok_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Grok stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleDoubleDescDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_double_desc_demo', { text: input }); addMessage('user', '[DoubleDesc] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] DoubleDesc: ' + String(e)); }
+    try { const r = await invoke('duanyan_double_desc_demo', { text: input }); addMessage('user', '[DoubleDesc] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] DoubleDesc: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleDoubleDescStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_double_desc_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] DoubleDesc stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_double_desc_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] DoubleDesc stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSsmDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_ssm_demo', { text: input }); addMessage('user', '[SSM] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] SSM: ' + String(e)); }
+    try { const r = await invoke('duanyan_ssm_demo', { text: input }); addMessage('user', '[SSM] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] SSM: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSsmStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_ssm_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] SSM stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_ssm_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] SSM stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleToolUseDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_tool_use_demo', { text: input }); addMessage('user', '[ToolUse] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] ToolUse: ' + String(e)); }
+    try { const r = await invoke('duanyan_tool_use_demo', { text: input }); addMessage('user', '[ToolUse] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] ToolUse: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleToolUseStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_tool_use_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] ToolUse stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_tool_use_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] ToolUse stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSelfRefineDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_self_refine_demo', { text: input }); addMessage('user', '[SelfRefine] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] SelfRefine: ' + String(e)); }
+    try { const r = await invoke('duanyan_self_refine_demo', { text: input }); addMessage('user', '[SelfRefine] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] SelfRefine: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSelfRefineStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_self_refine_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] SelfRefine stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_self_refine_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] SelfRefine stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleReasonChainDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_reason_chain_demo', { text: input }); addMessage('user', '[CoT] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] CoT: ' + String(e)); }
+    try { const r = await invoke('duanyan_reason_chain_demo', { text: input }); addMessage('user', '[CoT] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] CoT: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleReasonChainStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_reason_chain_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] CoT stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_reason_chain_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] CoT stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleRedTeamDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_red_team_demo', { text: input }); addMessage('user', '[RedTeam] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] RedTeam: ' + String(e)); }
+    try { const r = await invoke('duanyan_red_team_demo', { text: input }); addMessage('user', '[RedTeam] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] RedTeam: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleRedTeamStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_red_team_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] RedTeam stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_red_team_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] RedTeam stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSafetyDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_safety_demo', { text: input }); addMessage('user', '[Safety] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Safety: ' + String(e)); }
+    try { const r = await invoke('duanyan_safety_demo', { text: input }); addMessage('user', '[Safety] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Safety: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSafetyStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_safety_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Safety stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_safety_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Safety stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleJailbreakDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_jailbreak_demo', { text: input }); addMessage('user', '[Jailbreak] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Jailbreak: ' + String(e)); }
+    try { const r = await invoke('duanyan_jailbreak_demo', { text: input }); addMessage('user', '[Jailbreak] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Jailbreak: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleJailbreakStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_jailbreak_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Jailbreak stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_jailbreak_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Jailbreak stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleRingAttnDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_ring_attn_demo', { text: input }); addMessage('user', '[RingAttn] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] RingAttn: ' + String(e)); }
+    try { const r = await invoke('duanyan_ring_attn_demo', { text: input }); addMessage('user', '[RingAttn] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] RingAttn: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleRingAttnStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_ring_attn_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] RingAttn stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_ring_attn_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] RingAttn stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleArenaDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_arena_demo', { text: input }); addMessage('user', '[Arena] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Arena: ' + String(e)); }
+    try { const r = await invoke('duanyan_arena_demo', { text: input }); addMessage('user', '[Arena] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Arena: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleArenaStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_arena_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Arena stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_arena_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Arena stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSynthDataDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_synth_data_demo', { text: input }); addMessage('user', '[SynthData] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] SynthData: ' + String(e)); }
+    try { const r = await invoke('duanyan_synth_data_demo', { text: input }); addMessage('user', '[SynthData] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] SynthData: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSynthDataStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_synth_data_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] SynthData stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_synth_data_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] SynthData stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleOrpoDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_orpo_demo', { text: input }); addMessage('user', '[ORPO] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] ORPO: ' + String(e)); }
+    try { const r = await invoke('duanyan_orpo_demo', { text: input }); addMessage('user', '[ORPO] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] ORPO: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleOrpoStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_orpo_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] ORPO stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_orpo_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] ORPO stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSimpoDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_simpo_demo', { text: input }); addMessage('user', '[SimPO] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] SimPO: ' + String(e)); }
+    try { const r = await invoke('duanyan_simpo_demo', { text: input }); addMessage('user', '[SimPO] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] SimPO: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSimpoStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_simpo_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] SimPO stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_simpo_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] SimPO stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleInfiniAttnDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_infini_attn_demo', { text: input }); addMessage('user', '[InfiniAttn] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] InfiniAttn: ' + String(e)); }
+    try { const r = await invoke('duanyan_infini_attn_demo', { text: input }); addMessage('user', '[InfiniAttn] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] InfiniAttn: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleInfiniAttnStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_infini_attn_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] InfiniAttn stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_infini_attn_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] InfiniAttn stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleMedusaDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_medusa_demo', { text: input }); addMessage('user', '[Medusa] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Medusa: ' + String(e)); }
+    try { const r = await invoke('duanyan_medusa_demo', { text: input }); addMessage('user', '[Medusa] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Medusa: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleMedusaStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_medusa_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Medusa stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_medusa_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Medusa stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleEagleDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_eagle_demo', { text: input }); addMessage('user', '[EAGLE] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] EAGLE: ' + String(e)); }
+    try { const r = await invoke('duanyan_eagle_demo', { text: input }); addMessage('user', '[EAGLE] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] EAGLE: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleEagleStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_eagle_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] EAGLE stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_eagle_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] EAGLE stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleChunkedDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_chunked_demo', { text: input }); addMessage('user', '[Chunked] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Chunked: ' + String(e)); }
+    try { const r = await invoke('duanyan_chunked_demo', { text: input }); addMessage('user', '[Chunked] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Chunked: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleChunkedStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_chunked_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Chunked stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_chunked_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Chunked stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleDoraDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_dora_demo', { text: input }); addMessage('user', '[DoRA] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] DoRA: ' + String(e)); }
+    try { const r = await invoke('duanyan_dora_demo', { text: input }); addMessage('user', '[DoRA] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] DoRA: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleDoraStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_dora_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] DoRA stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_dora_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] DoRA stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleTopKDemo = async () => {
   const handleKvQuantDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_kv_quant_demo', { text: input }); addMessage('user', '[KVQuant] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] KVQuant: ' + String(e)); }
+    try { const r = await invoke('duanyan_kv_quant_demo', { text: input }); addMessage('user', '[KVQuant] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] KVQuant: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleKvQuantStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_kv_quant_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] KVQuant stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_kv_quant_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] KVQuant stats: ' + String(e)); }
     setIsProcessing(false);
   };
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_top_k_demo', { text: input }); addMessage('user', '[TopK] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] TopK: ' + String(e)); }
+    try { const r = await invoke('duanyan_top_k_demo', { text: input }); addMessage('user', '[TopK] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] TopK: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleTopKStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_top_k_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] TopK stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_top_k_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] TopK stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleHyenaDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_hyena_demo', { text: input }); addMessage('user', '[Hyena] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Hyena: ' + String(e)); }
+    try { const r = await invoke('duanyan_hyena_demo', { text: input }); addMessage('user', '[Hyena] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Hyena: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleHyenaStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_hyena_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Hyena stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_hyena_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Hyena stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleRwkvDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_rwkv_demo', { text: input }); addMessage('user', '[RWKV] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] RWKV: ' + String(e)); }
+    try { const r = await invoke('duanyan_rwkv_demo', { text: input }); addMessage('user', '[RWKV] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] RWKV: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleRwkvStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_rwkv_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] RWKV stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_rwkv_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] RWKV stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handlePromptCompDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_prompt_comp_demo', { text: input }); addMessage('user', '[PCompress] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] PCompress: ' + String(e)); }
+    try { const r = await invoke('duanyan_prompt_comp_demo', { text: input }); addMessage('user', '[PCompress] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] PCompress: ' + String(e)); }
     setIsProcessing(false);
   };
   const handlePromptCompStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_prompt_comp_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] PCompress stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_prompt_comp_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] PCompress stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleFlashMlaDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_flash_mla_demo', { text: input }); addMessage('user', '[FlashMLA] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] FlashMLA: ' + String(e)); }
+    try { const r = await invoke('duanyan_flash_mla_demo', { text: input }); addMessage('user', '[FlashMLA] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] FlashMLA: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleFlashMlaStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_flash_mla_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] FlashMLA stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_flash_mla_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] FlashMLA stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleAgentPlanDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_agent_plan_demo', { text: input }); addMessage('user', '[Agent] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Agent: ' + String(e)); }
+    try { const r = await invoke('duanyan_agent_plan_demo', { text: input }); addMessage('user', '[Agent] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Agent: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleAgentPlanStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_agent_plan_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Agent stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_agent_plan_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Agent stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSpecRejectDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_spec_reject_demo', { text: input }); addMessage('user', '[SpecRej] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] SpecRej: ' + String(e)); }
+    try { const r = await invoke('duanyan_spec_reject_demo', { text: input }); addMessage('user', '[SpecRej] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] SpecRej: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSpecRejectStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_spec_reject_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] SpecRej stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_spec_reject_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] SpecRej stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handlePagedKvDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_paged_kv_demo', { text: input }); addMessage('user', '[PagedKV] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] PagedKV: ' + String(e)); }
+    try { const r = await invoke('duanyan_paged_kv_demo', { text: input }); addMessage('user', '[PagedKV] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] PagedKV: ' + String(e)); }
     setIsProcessing(false);
   };
   const handlePagedKvStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_paged_kv_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] PagedKV stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_paged_kv_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] PagedKV stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleAgentMemDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_agent_mem_demo', { text: input }); addMessage('user', '[AgMem] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] AgMem: ' + String(e)); }
+    try { const r = await invoke('duanyan_agent_mem_demo', { text: input }); addMessage('user', '[AgMem] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] AgMem: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleAgentMemStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_agent_mem_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] AgMem stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_agent_mem_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] AgMem stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleDynBatchDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_dyn_batch_demo', { text: input }); addMessage('user', '[Batch] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Batch: ' + String(e)); }
+    try { const r = await invoke('duanyan_dyn_batch_demo', { text: input }); addMessage('user', '[Batch] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Batch: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleDynBatchStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_dyn_batch_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Batch stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_dyn_batch_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Batch stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleVisEncDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_vis_enc_demo', { text: input }); addMessage('user', '[ViT] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] ViT: ' + String(e)); }
+    try { const r = await invoke('duanyan_vis_enc_demo', { text: input }); addMessage('user', '[ViT] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] ViT: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleVisEncStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_vis_enc_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] ViT stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_vis_enc_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] ViT stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleTxt2ImgDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_txt2img_demo', { text: input }); addMessage('user', '[T2I] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] T2I: ' + String(e)); }
+    try { const r = await invoke('duanyan_txt2img_demo', { text: input }); addMessage('user', '[T2I] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] T2I: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleTxt2ImgStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_txt2img_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] T2I stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_txt2img_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] T2I stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handlePromCacheDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_prom_cache_demo', { text: input }); addMessage('user', '[PCache] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] PCache: ' + String(e)); }
+    try { const r = await invoke('duanyan_prom_cache_demo', { text: input }); addMessage('user', '[PCache] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] PCache: ' + String(e)); }
     setIsProcessing(false);
   };
   const handlePromCacheStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_prom_cache_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] PCache stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_prom_cache_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] PCache stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleImgCapDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_img_cap_demo', { text: input }); addMessage('user', '[Cap] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Cap: ' + String(e)); }
+    try { const r = await invoke('duanyan_img_cap_demo', { text: input }); addMessage('user', '[Cap] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Cap: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleImgCapStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_img_cap_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Cap stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_img_cap_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Cap stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleObjDetDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_obj_det_demo', { text: input }); addMessage('user', '[Det] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Det: ' + String(e)); }
+    try { const r = await invoke('duanyan_obj_det_demo', { text: input }); addMessage('user', '[Det] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Det: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleObjDetStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_obj_det_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Det stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_obj_det_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Det stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSuperResDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_super_res_demo', { text: input }); addMessage('user', '[SR] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] SR: ' + String(e)); }
+    try { const r = await invoke('duanyan_super_res_demo', { text: input }); addMessage('user', '[SR] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] SR: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSuperResStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_super_res_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] SR stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_super_res_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] SR stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleStyleTransDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_style_trans_demo', { text: input }); addMessage('user', '[Style] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Style: ' + String(e)); }
+    try { const r = await invoke('duanyan_style_trans_demo', { text: input }); addMessage('user', '[Style] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Style: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleStyleTransStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_style_trans_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Style stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_style_trans_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Style stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleImgInpaintDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_img_inpaint_demo', { text: input }); addMessage('user', '[Inpaint] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Inpaint: ' + String(e)); }
+    try { const r = await invoke('duanyan_img_inpaint_demo', { text: input }); addMessage('user', '[Inpaint] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Inpaint: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleImgInpaintStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_img_inpaint_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Inpaint stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_img_inpaint_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Inpaint stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleAudioEncDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_audio_enc_demo', { text: input }); addMessage('user', '[Audio] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Audio: ' + String(e)); }
+    try { const r = await invoke('duanyan_audio_enc_demo', { text: input }); addMessage('user', '[Audio] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Audio: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleAudioEncStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_audio_enc_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Audio stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_audio_enc_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Audio stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleImgSegDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_img_seg_demo', { text: input }); addMessage('user', '[Seg] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Seg: ' + String(e)); }
+    try { const r = await invoke('duanyan_img_seg_demo', { text: input }); addMessage('user', '[Seg] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Seg: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleImgSegStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_img_seg_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Seg stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_img_seg_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Seg stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleDepthEstDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_depth_est_demo', { text: input }); addMessage('user', '[Depth] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Depth: ' + String(e)); }
+    try { const r = await invoke('duanyan_depth_est_demo', { text: input }); addMessage('user', '[Depth] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Depth: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleDepthEstStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_depth_est_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Depth stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_depth_est_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Depth stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleOptFlowDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_opt_flow_demo', { text: input }); addMessage('user', '[Flow] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Flow: ' + String(e)); }
+    try { const r = await invoke('duanyan_opt_flow_demo', { text: input }); addMessage('user', '[Flow] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Flow: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleOptFlowStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_opt_flow_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Flow stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_opt_flow_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Flow stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handlePoseEstDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_pose_est_demo', { text: input }); addMessage('user', '[Pose] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Pose: ' + String(e)); }
+    try { const r = await invoke('duanyan_pose_est_demo', { text: input }); addMessage('user', '[Pose] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Pose: ' + String(e)); }
     setIsProcessing(false);
   };
   const handlePoseEstStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_pose_est_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Pose stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_pose_est_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Pose stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSpeechRecogDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_speech_recog_demo', { text: input }); addMessage('user', '[ASR] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] ASR: ' + String(e)); }
+    try { const r = await invoke('duanyan_speech_recog_demo', { text: input }); addMessage('user', '[ASR] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] ASR: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSpeechRecogStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_speech_recog_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] ASR stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_speech_recog_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] ASR stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleMusicGenDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_music_gen_demo', { text: input }); addMessage('user', '[Music] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Music: ' + String(e)); }
+    try { const r = await invoke('duanyan_music_gen_demo', { text: input }); addMessage('user', '[Music] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Music: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleMusicGenStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_music_gen_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Music stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_music_gen_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Music stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleCodeParserDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_code_parser_demo', { text: input }); addMessage('user', '[Parser] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Parser: ' + String(e)); }
+    try { const r = await invoke('duanyan_code_parser_demo', { text: input }); addMessage('user', '[Parser] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Parser: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleCodeParserStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_code_parser_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Parser stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_code_parser_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Parser stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleCodeGenDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_code_gen_demo', { text: input }); addMessage('user', '[CodeGen] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] CodeGen: ' + String(e)); }
+    try { const r = await invoke('duanyan_code_gen_demo', { text: input }); addMessage('user', '[CodeGen] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] CodeGen: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleCodeGenStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_code_gen_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] CodeGen stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_code_gen_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] CodeGen stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleCodeExecDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_code_exec_demo', { text: input }); addMessage('user', '[Exec] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Exec: ' + String(e)); }
+    try { const r = await invoke('duanyan_code_exec_demo', { text: input }); addMessage('user', '[Exec] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Exec: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleCodeExecStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_code_exec_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Exec stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_code_exec_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Exec stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleCodeDebugDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_code_debug_demo', { text: input }); addMessage('user', '[Debug] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Debug: ' + String(e)); }
+    try { const r = await invoke('duanyan_code_debug_demo', { text: input }); addMessage('user', '[Debug] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Debug: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleCodeDebugStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_code_debug_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Debug stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_code_debug_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Debug stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleProgRepairDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_prog_repair_demo', { text: input }); addMessage('user', '[Repair] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Repair: ' + String(e)); }
+    try { const r = await invoke('duanyan_prog_repair_demo', { text: input }); addMessage('user', '[Repair] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Repair: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleProgRepairStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_prog_repair_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Repair stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_prog_repair_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Repair stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleCodeReviewDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_code_review_demo', { text: input }); addMessage('user', '[Review] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Review: ' + String(e)); }
+    try { const r = await invoke('duanyan_code_review_demo', { text: input }); addMessage('user', '[Review] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Review: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleCodeReviewStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_code_review_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Review stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_code_review_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Review stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handleSyntaxHlDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_syntax_hl_demo', { text: input }); addMessage('user', '[HL] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] HL: ' + String(e)); }
+    try { const r = await invoke('duanyan_syntax_hl_demo', { text: input }); addMessage('user', '[HL] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] HL: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleSyntaxHlStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_syntax_hl_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] HL stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_syntax_hl_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] HL stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleCodeCompleteDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_code_complete_demo', { text: input }); addMessage('user', '[Complete] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Complete: ' + String(e)); }
+    try { const r = await invoke('duanyan_code_complete_demo', { text: input }); addMessage('user', '[Complete] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Complete: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleCodeCompleteStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_code_complete_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Complete stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_code_complete_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Complete stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleCodeRefactorDemo = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_code_refactor_demo', { text: input }); addMessage('user', '[Refactor] ' + input); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Refactor: ' + String(e)); }
+    try { const r = await invoke('duanyan_code_refactor_demo', { text: input }); addMessage('user', '[Refactor] ' + input); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Refactor: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleCodeRefactorStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_code_refactor_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Refactor stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_code_refactor_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Refactor stats: ' + String(e)); }
     setIsProcessing(false);
   };
 
   const handlePipelineAnalyze = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_code_pipeline_analyze', { text: input }); addMessage('user', '[Pipeline-Analyze] ' + input.substring(0, 50)); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Pipeline: ' + String(e)); }
+    try { const r = await invoke('duanyan_code_pipeline_analyze', { text: input }); addMessage('user', '[Pipeline-Analyze] ' + input.substring(0, 50)); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Pipeline: ' + String(e)); }
     setIsProcessing(false);
   };
   const handlePipelineFull = async () => {
     if (isProcessing || !input.trim()) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_code_pipeline_full', { text: input }); addMessage('user', '[Pipeline-Full] ' + input.substring(0, 50)); addMessage('qianlu', r); setInput(''); }
-    catch (e) { addMessage('qianlu', '[error] Pipeline full: ' + String(e)); }
+    try { const r = await invoke('duanyan_code_pipeline_full', { text: input }); addMessage('user', '[Pipeline-Full] ' + input.substring(0, 50)); addMessage('duanyan', r); setInput(''); }
+    catch (e) { addMessage('duanyan', '[error] Pipeline full: ' + String(e)); }
     setIsProcessing(false);
   };
   const handlePipelineStats = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    try { const r = await invoke('qianlu_code_pipeline_stats'); addMessage('qianlu', r); }
-    catch (e) { addMessage('qianlu', '[error] Pipeline stats: ' + String(e)); }
+    try { const r = await invoke('duanyan_code_pipeline_stats'); addMessage('duanyan', r); }
+    catch (e) { addMessage('duanyan', '[error] Pipeline stats: ' + String(e)); }
     setIsProcessing(false);
   };
   const handleDataLoaderStats = async () => {
-    try { addMessage('qianlu', await invoke('qianlu_data_loader_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_data_loader_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
   };
   const handleDataPipelineStats = async () => {
-    try { addMessage('qianlu', await invoke('qianlu_data_pipeline_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_data_pipeline_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
   };
   const handleTokenizedDsStats = async () => {
-    try { addMessage('qianlu', await invoke('qianlu_tokenized_ds_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_tokenized_ds_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
   };
   const handleDistTrainStats = async () => {
-    try { addMessage('qianlu', await invoke('qianlu_dist_train_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_dist_train_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
   };
   const handleMpStats = async () => {
-    try { addMessage('qianlu', await invoke('qianlu_mp_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_mp_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
   };
   const handleCkptStats = async () => {
-    try { addMessage('qianlu', await invoke('qianlu_ckpt_stats')); } catch (e) { addMessage('qianlu', '[error] ' + String(e)); }
+    try { addMessage('duanyan', await invoke('duanyan_ckpt_stats')); } catch (e) { addMessage('duanyan', '[error] ' + String(e)); }
   };
 
 
@@ -3762,18 +3777,18 @@ export default function QianluPanel({ onClose }: Props) {
   };
 
   return (
-    <div className="qianlu-panel">
-      <div className="qianlu-header">
-        <div className="qianlu-header-left">
-          <span className="qianlu-brand">qianlu</span>
-          <span className="qianlu-version">v5.0</span>
-          <span className={"qianlu-status-dot " + (isProcessing ? "thinking" : "idle")}></span>
-          <span className="qianlu-status-text">{isProcessing ? "busy" : "ready"}</span>
+    <div className="duanyan-panel">
+      <div className="duanyan-header">
+        <div className="duanyan-header-left">
+          <span className="duanyan-brand">duanyan</span>
+          <span className="duanyan-version">v5.0</span>
+          <span className={"duanyan-status-dot " + (isProcessing ? "thinking" : "idle")}></span>
+          <span className="duanyan-status-text">{isProcessing ? "busy" : "ready"}</span>
         </div>
-        <div className="qianlu-header-right">
-          <button className={"qianlu-header-btn" + (showToolbar ? " active" : "")} onClick={() => setShowToolbar(p => !p)} title="Toggle toolbar">Tools</button>
-          <button className="qianlu-header-btn" onClick={handleClear} title="Clear">Clear</button>
-          <button className="qianlu-header-btn" onClick={onClose} title="Close">
+        <div className="duanyan-header-right">
+          <button className={"duanyan-header-btn" + (showToolbar ? " active" : "")} onClick={() => setShowToolbar(p => !p)} title="Toggle toolbar">Tools</button>
+          <button className="duanyan-header-btn" onClick={handleClear} title="Clear">Clear</button>
+          <button className="duanyan-header-btn" onClick={onClose} title="Close">
             <svg width="10" height="10" viewBox="0 0 10 10">
               <line x1="0" y1="0" x2="10" y2="10" stroke="currentColor" strokeWidth="1.2"/>
               <line x1="10" y1="0" x2="0" y2="10" stroke="currentColor" strokeWidth="1.2"/>
@@ -3782,94 +3797,94 @@ export default function QianluPanel({ onClose }: Props) {
         </div>
       </div>
 
-      <div className="qianlu-stats">
-        <div className="qianlu-stat">
+      <div className="duanyan-stats">
+        <div className="duanyan-stat">
           <span className="stat-label">Model</span>
           <span className="stat-value">Transformer</span>
         </div>
-        <div className="qianlu-stat">
+        <div className="duanyan-stat">
           <span className="stat-label">Heads</span>
           <span className="stat-value">4</span>
         </div>
-        <div className="qianlu-stat">
+        <div className="duanyan-stat">
           <span className="stat-label">Layers</span>
           <span className="stat-value">2</span>
         </div>
-        <div className="qianlu-stat">
+        <div className="duanyan-stat">
           <span className="stat-label">Decoder</span>
           <span className="stat-value">Yes</span>
         </div>
-        <div className="qianlu-stat">
+        <div className="duanyan-stat">
           <span className="stat-label">Mode</span>
           <span className="stat-value">{useBackprop ? "BP" : "CLS"}</span>
         </div>
-        <div className="qianlu-stat">
+        <div className="duanyan-stat">
           <span className="stat-label">Clock</span>
           <span className="stat-value">{clock}</span>
         </div>
       </div>
 
       {showToolbar && (
-        <div className="qianlu-toolbar">
-          <div className="qianlu-toolbar-row">
+        <div className="duanyan-toolbar">
+          <div className="duanyan-toolbar-row">
             <button className="ql-tool-btn" onClick={handleTrain} disabled={isProcessing}>Train</button>
             <input type="number" className="ql-tool-input" value={trainEpochs} onChange={e => setTrainEpochs(Number(e.target.value) || 10)} min={1} max={100} title="Epochs" />
             <button className="ql-tool-btn" onClick={handleReplay} disabled={isProcessing}>Replay</button>
             <button className="ql-tool-btn" onClick={handleStatus} disabled={isProcessing}>Status</button>
           </div>
-          <div className="qianlu-toolbar-row">
+          <div className="duanyan-toolbar-row">
             <button className="ql-tool-btn" onClick={handleGenerate} disabled={isProcessing}>Generate</button>
             <input className="ql-tool-input ql-seed-input" value={genSeed} onChange={e => setGenSeed(e.target.value)} placeholder="seed" />
             <input type="number" className="ql-tool-input" value={genLen} onChange={e => setGenLen(Number(e.target.value) || 50)} min={10} max={200} title="Max length" />
           </div>
-          <div className="qianlu-toolbar-row">
+          <div className="duanyan-toolbar-row">
             <button className="ql-tool-btn" onClick={handleGenerateDecoder} disabled={isProcessing}>Decoder</button>
             <input className="ql-tool-input ql-seed-input" value={genSeed} onChange={e => setGenSeed(e.target.value)} placeholder="seed" />
             <input type="number" className="ql-tool-input" value={genLen} onChange={e => setGenLen(Number(e.target.value) || 50)} min={10} max={200} title="Max tokens" />
           </div>
-          <div className="qianlu-toolbar-row">
+          <div className="duanyan-toolbar-row">
             <button className="ql-tool-btn" onClick={handleGenerateCached} disabled={isProcessing}>KV-Gen</button>
             <button className="ql-tool-btn" onClick={handleTrainCached} disabled={isProcessing}>CacheTrain</button>
             <input className="ql-tool-input ql-seed-input" value={genSeed} onChange={e => setGenSeed(e.target.value)} placeholder="seed" />
           </div>
-          <div className="qianlu-toolbar-row">
+          <div className="duanyan-toolbar-row">
             <button className="ql-tool-btn" onClick={handleSaveWeights} disabled={isProcessing}>Save W</button>
             <button className="ql-tool-btn" onClick={handleLoadWeights} disabled={isProcessing}>Load W</button>
             <button className={"ql-tool-btn" + (useBackprop ? " active" : "")} onClick={handleToggleBackprop} disabled={isProcessing}>Backprop</button>
             <button className="ql-tool-btn" onClick={handleQuantize} disabled={isProcessing}>Quantize</button>
           </div>
-          <div className="qianlu-toolbar-row">
+          <div className="duanyan-toolbar-row">
             <button className="ql-tool-btn" onClick={handleExportArch} disabled={isProcessing}>Arch</button>
             <button className="ql-tool-btn" onClick={handleExportJson} disabled={isProcessing}>JSON</button>
             <button className="ql-tool-btn" onClick={handleQuantReport} disabled={isProcessing}>Q-Report</button>
           </div>
-          <div className="qianlu-toolbar-row">
+          <div className="duanyan-toolbar-row">
             <button className="ql-tool-btn" onClick={handleF16Report} disabled={isProcessing}>F16</button>
             <button className="ql-tool-btn" onClick={handleRlhfTrain} disabled={isProcessing}>RLHF</button>
             <button className="ql-tool-btn" onClick={handleDistillStep} disabled={isProcessing}>Distill</button>
           </div>
-          <div className="qianlu-toolbar-row">
+          <div className="duanyan-toolbar-row">
             <button className="ql-tool-btn" onClick={handleLoraTrain} disabled={isProcessing}>LoRA</button>
             <button className="ql-tool-btn" onClick={handleLoraMerge} disabled={isProcessing}>Merge</button>
             <button className="ql-tool-btn" onClick={handleMoeForward} disabled={isProcessing}>MoE</button>
             <button className="ql-tool-btn" onClick={handleMoeStats} disabled={isProcessing}>MoE-Stats</button>
             <button className="ql-tool-btn" onClick={handleOnnxExport} disabled={isProcessing}>ONNX</button>
           </div>
-          <div className="qianlu-toolbar-row">
+          <div className="duanyan-toolbar-row">
             <button className="ql-tool-btn" onClick={handleSparseAttn} disabled={isProcessing}>Sparse</button>
             <button className="ql-tool-btn" onClick={handleFlashAttn} disabled={isProcessing}>Flash</button>
             <button className="ql-tool-btn" onClick={handleFlashReport} disabled={isProcessing}>Flash-R</button>
             <button className="ql-tool-btn" onClick={handleSpecDecode} disabled={isProcessing}>SpecDec</button>
             <button className="ql-tool-btn" onClick={handleSpecStats} disabled={isProcessing}>Spec-Stat</button>
           </div>
-          <div className="qianlu-toolbar-row">
+          <div className="duanyan-toolbar-row">
             <button className="ql-tool-btn" onClick={handleRoPE} disabled={isProcessing}>RoPE</button>
             <button className="ql-tool-btn" onClick={handleRoPEReport} disabled={isProcessing}>RoPE-R</button>
             <button className="ql-tool-btn" onClick={handleMerge} disabled={isProcessing}>Merge</button>
             <button className="ql-tool-btn" onClick={handleMultimodal} disabled={isProcessing}>Vision</button>
             <button className="ql-tool-btn" onClick={handleMultimodalStats} disabled={isProcessing}>MM-Stat</button>
           </div>
-          <div className="qianlu-toolbar-row">
+          <div className="duanyan-toolbar-row">
             <button className="ql-tool-btn" onClick={handleGQA} disabled={isProcessing}>GQA</button>
             <button className="ql-tool-btn" onClick={handleGQAReport} disabled={isProcessing}>GQA-R</button>
             <button className="ql-tool-btn" onClick={handleActCache} disabled={isProcessing}>ActCache</button>
@@ -4469,27 +4484,33 @@ export default function QianluPanel({ onClose }: Props) {
             <button className="ql-tool-btn" onClick={handleCkptStats} disabled={isProcessing}>CK</button>
           </div>
 
+          <div className="ql-toolbar-row" style={{ borderTop: "1px solid #444", paddingTop: 4, marginTop: 4 }}>
+            <button className="ql-tool-btn" style={{ background: "#2d5a27", color: "#8eff8e" }} onClick={handleCodeGenerate} disabled={isProcessing}>Hardy-Code</button>
+            <input className="ql-tool-input ql-seed-input" value={genSeed} onChange={e => setGenSeed(e.target.value)} placeholder="describe code to generate..." style={{ flex: 1 }} />
+            <input type="number" className="ql-tool-input" value={genLen} onChange={e => setGenLen(Number(e.target.value) || 50)} min={10} max={500} title="Max length" style={{ width: 60 }} />
+          </div>
+
         </div>
       )}
 
-      <div className="qianlu-chat" ref={chatRef}>
+      <div className="duanyan-chat" ref={chatRef}>
         {messages.map((msg, i) => (
-          <div key={i} className={"qianlu-msg " + msg.role}>
-            <div className="msg-role">{msg.role === "user" ? "You" : msg.role === "qianlu" ? "qianlu" : "System"}</div>
+          <div key={i} className={"duanyan-msg " + msg.role}>
+            <div className="msg-role">{msg.role === "user" ? "You" : msg.role === "duanyan" ? "duanyan" : "System"}</div>
             <div className="msg-content">{msg.content}</div>
           </div>
         ))}
         {isProcessing && (
-          <div className="qianlu-msg qianlu">
-            <div className="msg-role">qianlu</div>
+          <div className="duanyan-msg duanyan">
+            <div className="msg-role">duanyan</div>
             <div className="msg-content thinking">Processing...</div>
           </div>
         )}
       </div>
 
-      <div className="qianlu-input-area">
-        <textarea ref={inputRef} className="qianlu-input" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={handleKeyDown} placeholder="Send a prompt to qianlu... (Enter)" rows={2} disabled={isProcessing} />
-        <button className="qianlu-send-btn" onClick={handleSend} disabled={isProcessing || !input.trim()} title="Send (Enter)">
+      <div className="duanyan-input-area">
+        <textarea ref={inputRef} className="duanyan-input" value={input} onChange={(e) => setInput(e.target.value)} onKeyDown={handleKeyDown} placeholder="Send a prompt to duanyan... (Enter)" rows={2} disabled={isProcessing} />
+        <button className="duanyan-send-btn" onClick={handleSend} disabled={isProcessing || !input.trim()} title="Send (Enter)">
           <svg width="16" height="16" viewBox="0 0 16 16"><path d="M2 14L14 8L2 2L2 7L10 8L2 9L2 14Z" fill="currentColor"/></svg>
         </button>
       </div>

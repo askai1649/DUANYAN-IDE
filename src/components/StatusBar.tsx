@@ -10,7 +10,7 @@ export default function StatusBar({ fileName, language, modified, status, target
   return (
     <div className="statusbar">
       <div className="statusbar-left">
-        <span>SNAR IDE v1.2.0</span>
+        <span>DUANYAN IDE v1.2.0</span>
         {status && <span className="statusbar-message">{status}</span>}
       </div>
       <div className="statusbar-right">

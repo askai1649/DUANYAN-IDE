@@ -1,4 +1,4 @@
-// SNAR IDE Template: DC Motor Control
+// DUANYAN IDE Template: DC Motor Control
 // PWM-driven DC motor speed control
 import { PWM, GPIO, Timer } from "snar:hw";
 

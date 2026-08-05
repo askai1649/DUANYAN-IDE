@@ -1,4 +1,4 @@
-// SNAR IDE Template: Servo Motor Control
+// DUANYAN IDE Template: Servo Motor Control
 // PWM-driven servo rotation
 import { PWM, Timer } from "snar:hw";
 

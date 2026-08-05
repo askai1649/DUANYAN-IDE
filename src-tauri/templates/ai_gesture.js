@@ -1,11 +1,11 @@
-// SNAR IDE Template: AI Gesture Light Strip
+// DUANYAN IDE Template: AI Gesture Light Strip
 // QianLu Mini + MPU6050 + WS2812 NeoPixel
 import { GPIO, Timer } from "snar:hw";
 import { Brain } from "snar:ai";
 import { NeoPixel } from "snar:pack/neopixel";
 import { IMU } from "snar:pack/mpu6050";
 
-Brain.init("/sd/qianlu/gesture-10m-int4.qianlu");
+Brain.init("/sd/duanyan/gesture-10m-int4.duanyan");
 
 let strip = NeoPixel.init(12, 30);  // GPIO12, 30 LEDs
 let imu = IMU.init();

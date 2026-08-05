@@ -1,4 +1,4 @@
-// SNAR IDE Template: LED Blink
+// DUANYAN IDE Template: LED Blink
 // Basic GPIO control - toggle LED on/off
 import { GPIO, Timer } from "snar:hw";
 

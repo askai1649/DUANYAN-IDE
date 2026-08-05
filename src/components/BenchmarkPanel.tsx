@@ -9,9 +9,9 @@ interface BenchResult {
 }
 
 interface BenchComparison {
-  snarjs_flash: number;
+  hardyscript_flash: number;
   c_flash: number;
-  snarjs_ram: number;
+  hardyscript_ram: number;
   c_ram: number;
   flash_overhead_pct: number;
   ram_overhead_pct: number;
@@ -105,20 +105,20 @@ export default function BenchmarkPanel({ visible, source, target }: Props) {
           {/* Comparison */}
           {comparison && (
             <div className="bench-comparison">
-              <div className="bench-comp-title">SNARjs vs C Comparison</div>
+              <div className="bench-comp-title">HardyScript vs C Comparison</div>
 
               <div className="bench-comp-row">
                 <span className="bench-comp-label">Flash</span>
                 <div className="bench-comp-bars">
                   <div className="bench-bar-container">
-                    <div className="bench-bar bench-bar-snarjs"
-                      style={{ width: `${Math.min(100, (comparison.snarjs_flash / Math.max(comparison.snarjs_flash, comparison.c_flash)) * 100)}%` }}>
-                      SNARjs {formatKB(comparison.snarjs_flash)}KB
+                    <div className="bench-bar bench-bar-hardyscript"
+                      style={{ width: `${Math.min(100, (comparison.hardyscript_flash / Math.max(comparison.hardyscript_flash, comparison.c_flash)) * 100)}%` }}>
+                      HardyScript {formatKB(comparison.hardyscript_flash)}KB
                     </div>
                   </div>
                   <div className="bench-bar-container">
                     <div className="bench-bar bench-bar-c"
-                      style={{ width: `${Math.min(100, (comparison.c_flash / Math.max(comparison.snarjs_flash, comparison.c_flash)) * 100)}%` }}>
+                      style={{ width: `${Math.min(100, (comparison.c_flash / Math.max(comparison.hardyscript_flash, comparison.c_flash)) * 100)}%` }}>
                       C (est.) {formatKB(comparison.c_flash)}KB
                     </div>
                   </div>
@@ -130,14 +130,14 @@ export default function BenchmarkPanel({ visible, source, target }: Props) {
                 <span className="bench-comp-label">RAM</span>
                 <div className="bench-comp-bars">
                   <div className="bench-bar-container">
-                    <div className="bench-bar bench-bar-snarjs"
-                      style={{ width: `${Math.min(100, (comparison.snarjs_ram / Math.max(comparison.snarjs_ram, comparison.c_ram)) * 100)}%` }}>
-                      SNARjs {formatKB(comparison.snarjs_ram)}KB
+                    <div className="bench-bar bench-bar-hardyscript"
+                      style={{ width: `${Math.min(100, (comparison.hardyscript_ram / Math.max(comparison.hardyscript_ram, comparison.c_ram)) * 100)}%` }}>
+                      HardyScript {formatKB(comparison.hardyscript_ram)}KB
                     </div>
                   </div>
                   <div className="bench-bar-container">
                     <div className="bench-bar bench-bar-c"
-                      style={{ width: `${Math.min(100, (comparison.c_ram / Math.max(comparison.snarjs_ram, comparison.c_ram)) * 100)}%` }}>
+                      style={{ width: `${Math.min(100, (comparison.c_ram / Math.max(comparison.hardyscript_ram, comparison.c_ram)) * 100)}%` }}>
                       C (est.) {formatKB(comparison.c_ram)}KB
                     </div>
                   </div>

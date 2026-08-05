@@ -117,7 +117,7 @@ export default function TFCardManager({ visible, onClose, projectDir, onLog }: P
         <div className="tfcard-models">
           {models.length === 0 && !loading && (
             <div className="tfcard-empty">
-              {tfCardPath.trim() ? "No .qianlu models found" : "Enter TF card path and click Scan"}
+              {tfCardPath.trim() ? "No .duanyan models found" : "Enter TF card path and click Scan"}
             </div>
           )}
           {models.length > 0 && (
@@ -158,7 +158,7 @@ export default function TFCardManager({ visible, onClose, projectDir, onLog }: P
       {activeTab === "deploy" && (
         <div className="tfcard-deploy">
           <div className="tfcard-deploy-desc">
-            Deploy .qianlu model files to TF card for on-device inference.
+            Deploy .duanyan model files to TF card for on-device inference.
           </div>
           {projectDir ? (
             <div className="tfcard-deploy-section">
@@ -167,7 +167,7 @@ export default function TFCardManager({ visible, onClose, projectDir, onLog }: P
                 className="tfcard-path-input"
                 type="text"
                 id="deploy-source-path"
-                placeholder="path/to/model.qianlu"
+                placeholder="path/to/model.duanyan"
               />
               <button
                 className="tfcard-deploy-btn"

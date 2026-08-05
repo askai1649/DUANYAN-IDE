@@ -1,12 +1,12 @@
 [package]
-name = "snar-ide"
+name = "duanyan-ide"
 version = "1.2.0"
 edition = "2021"
 authors = ["Zhujun"]
-description = "SNAR IDE - The Snare Development Environment"
+description = "DUANYAN IDE - The Duanyan Development Environment"
 
 [lib]
-name = "snar_ide_lib"
+name = "duanyan_ide_lib"
 crate-type = ["staticlib", "rlib"]
 
 [build-dependencies]
@@ -19,9 +19,10 @@ tauri-plugin-fs = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 serialport = { version = "4.2", optional = true }
-snarjs = { path = "../../SNARjs" }
-qianlu = { path = "../../qianlu", default-features = false }
+espflash = { version = "4", features = ["serialport"] }
+hardyscript = { path = "../../HardyScript" }
+duanyan = { path = "../../DUANYAN", features = ["std"] }
 
 [features]
-default = []
+default = ["bridge_serial"]
 bridge_serial = ["serialport"]

@@ -277,8 +277,8 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
 .layout-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
 .layout-btn.active { color: #ef6309; }
 
-/* === qianlu AI Panel === */
-.qianlu-container {
+/* === duanyan AI Panel === */
+.duanyan-container {
   background: var(--bg-secondary);
   border-left: 1px solid var(--border);
   display: flex;
@@ -287,13 +287,13 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
   overflow: hidden;
 }
 
-.qianlu-panel {
+.duanyan-panel {
   display: flex;
   flex-direction: column;
   height: 100%;
 }
 
-.qianlu-header {
+.duanyan-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -303,47 +303,47 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
   min-height: 32px;
   user-select: none;
 }
-.qianlu-header-left {
+.duanyan-header-left {
   display: flex;
   align-items: center;
   gap: 8px;
 }
-.qianlu-version {
+.duanyan-version {
   font-size: 10px;
   color: var(--text-tertiary);
   margin-left: 2px;
 }
-.qianlu-brand {
+.duanyan-brand {
   font-weight: 700;
   color: #ef6309;
   font-size: 12px;
   letter-spacing: 0.5px;
 }
-.qianlu-status-dot {
+.duanyan-status-dot {
   width: 7px;
   height: 7px;
   border-radius: 50%;
   background: var(--text-secondary);
 }
-.qianlu-status-dot.idle { background: #4ec9b0; }
-.qianlu-status-dot.thinking { background: #dcdcaa; animation: pulse 1s infinite; }
-.qianlu-status-dot.learning { background: #ef6309; animation: pulse 0.5s infinite; }
+.duanyan-status-dot.idle { background: #4ec9b0; }
+.duanyan-status-dot.thinking { background: #dcdcaa; animation: pulse 1s infinite; }
+.duanyan-status-dot.learning { background: #ef6309; animation: pulse 0.5s infinite; }
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.4; }
 }
-.qianlu-status-text {
+.duanyan-status-text {
   font-size: 10px;
   text-transform: uppercase;
   color: var(--text-secondary);
   letter-spacing: 0.5px;
 }
-.qianlu-header-right {
+.duanyan-header-right {
   display: flex;
   align-items: center;
   gap: 4px;
 }
-.qianlu-header-btn {
+.duanyan-header-btn {
   background: none;
   border: none;
   color: var(--text-secondary);
@@ -354,10 +354,10 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
   display: flex;
   align-items: center;
 }
-.qianlu-header-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+.duanyan-header-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
 
 /* Model Stats */
-.qianlu-stats {
+.duanyan-stats {
   display: flex;
   align-items: center;
   gap: 0;
@@ -366,7 +366,7 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
   border-bottom: 1px solid var(--border);
   font-size: 10px;
 }
-.qianlu-stat {
+.duanyan-stat {
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -374,7 +374,7 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
   padding: 2px 4px;
   border-right: 1px solid var(--border);
 }
-.qianlu-stat:last-child { border-right: none; }
+.duanyan-stat:last-child { border-right: none; }
 .stat-label {
   color: var(--text-secondary);
   font-size: 9px;
@@ -389,30 +389,30 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
 }
 
 /* Chat Area */
-.qianlu-chat {
+.duanyan-chat {
   flex: 1;
   overflow-y: auto;
   padding: 8px 0;
 }
-.qianlu-chat::-webkit-scrollbar { width: 5px; }
-.qianlu-chat::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius: 3px; }
+.duanyan-chat::-webkit-scrollbar { width: 5px; }
+.duanyan-chat::-webkit-scrollbar-thumb { background: var(--scrollbar); border-radius: 3px; }
 
-.qianlu-msg {
+.duanyan-msg {
   padding: 6px 12px;
   margin-bottom: 2px;
 }
-.qianlu-msg .msg-role {
+.duanyan-msg .msg-role {
   font-size: 10px;
   text-transform: uppercase;
   font-weight: 600;
   letter-spacing: 0.3px;
   margin-bottom: 2px;
 }
-.qianlu-msg.user .msg-role { color: var(--accent); }
-.qianlu-msg.qianlu .msg-role { color: #ef6309; }
-.qianlu-msg.system .msg-role { color: var(--text-secondary); }
-.qianlu-msg.user { background: rgba(0, 122, 204, 0.06); }
-.qianlu-msg.qianlu { background: rgba(239, 99, 9, 0.04); }
+.duanyan-msg.user .msg-role { color: var(--accent); }
+.duanyan-msg.duanyan .msg-role { color: #ef6309; }
+.duanyan-msg.system .msg-role { color: var(--text-secondary); }
+.duanyan-msg.user { background: rgba(0, 122, 204, 0.06); }
+.duanyan-msg.duanyan { background: rgba(239, 99, 9, 0.04); }
 
 .msg-content {
   font-size: 12px;
@@ -429,8 +429,8 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
 
 /* Input Area */
 
-/* qianlu toolbar */
-.qianlu-toolbar {
+/* duanyan toolbar */
+.duanyan-toolbar {
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -439,7 +439,7 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
   border-bottom: 1px solid var(--border);
 }
 
-.qianlu-toolbar-row {
+.duanyan-toolbar-row {
   display: flex;
   gap: 4px;
   align-items: center;
@@ -490,12 +490,12 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
   text-align: left;
 }
 
-.qianlu-header-btn.active {
+.duanyan-header-btn.active {
   color: #ef6309;
   border-color: #ef6309;
 }
 
-.qianlu-input-area {
+.duanyan-input-area {
   display: flex;
   align-items: flex-end;
   gap: 6px;
@@ -503,7 +503,7 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
   background: var(--bg-tertiary);
   border-top: 1px solid var(--border);
 }
-.qianlu-input {
+.duanyan-input {
   flex: 1;
   background: var(--bg-primary);
   border: 1px solid var(--border);
@@ -518,14 +518,14 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
   max-height: 100px;
   line-height: 1.4;
 }
-.qianlu-input:focus {
+.duanyan-input:focus {
   border-color: #ef6309;
   box-shadow: 0 0 0 1px rgba(239, 99, 9, 0.2);
 }
-.qianlu-input:disabled {
+.duanyan-input:disabled {
   opacity: 0.6;
 }
-.qianlu-send-btn {
+.duanyan-send-btn {
   width: 36px;
   height: 36px;
   display: flex;
@@ -538,8 +538,8 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
   border-radius: 4px;
   flex-shrink: 0;
 }
-.qianlu-send-btn:hover { background: #d45808; }
-.qianlu-send-btn:disabled { background: var(--bg-hover); color: var(--text-secondary); cursor: default; }
+.duanyan-send-btn:hover { background: #d45808; }
+.duanyan-send-btn:disabled { background: var(--bg-hover); color: var(--text-secondary); cursor: default; }
 
 /* === Editor-Terminal Wrapper === */
 .editor-terminal-wrapper {
@@ -1128,7 +1128,7 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
 .bench-comp-bars { flex: 1; display: flex; flex-direction: column; gap: 3px; }
 .bench-bar-container { height: 16px; }
 .bench-bar { height: 100%; border-radius: 2px; font-size: 10px; color: #fff; padding: 1px 6px; line-height: 16px; white-space: nowrap; }
-.bench-bar-snarjs { background: var(--accent); }
+.bench-bar-hardyscript { background: var(--accent); }
 .bench-bar-c { background: #4ec9b0; }
 .bench-comp-overhead { font-size: 11px; color: var(--text-secondary); min-width: 50px; text-align: right; }
 
