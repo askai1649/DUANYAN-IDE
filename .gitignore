@@ -1,3 +1,13 @@
 node_modules/
 dist/
 target/
+
+# 烧录/编译产物与调试临时文件
+js2bin_out/
+flash_out/
+src-tauri/js2bin_out/
+src-tauri/vid_frames/
+src-tauri/flash_out/
+*_build*.txt
+*_reset*.txt
+*_out.txt
