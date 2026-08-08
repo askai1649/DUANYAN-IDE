@@ -122,7 +122,16 @@ fn main() {
 
     // 模式: 检测 + 可选烧录
     let bin_file = args.get(2).map(|s| s.as_str());
-    let address: u32 = args.get(3).and_then(|s| s.parse().ok()).unwrap_or(0x10000);
+    let address: u32 = args
+        .get(3)
+        .map(|s| {
+            if let Some(hex) = s.strip_prefix("0x").or_else(|| s.strip_prefix("0X")) {
+                u32::from_str_radix(hex, 16).unwrap_or(0x10000)
+            } else {
+                s.parse().unwrap_or(0x10000)
+            }
+        })
+        .unwrap_or(0x10000);
 
     // Step 1: 检测串口
     println!("[1/4] 扫描串口...");

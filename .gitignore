@@ -8,6 +8,20 @@ flash_out/
 src-tauri/js2bin_out/
 src-tauri/vid_frames/
 src-tauri/flash_out/
+src-tauri/yl69_js_out/
 *_build*.txt
 *_reset*.txt
 *_out.txt
+
+# 战役临时监控日志与调试产物
+*_mon*.txt
+*_cap.txt
+*_dry*.txt
+*_wet*.txt
+*.dis
+*.elf
+*.bin
+*.ld
+
+# 敏感: SSH askpass 凭据
+askpass.cmd

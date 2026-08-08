@@ -1,0 +1,484 @@
+warning: unused import: `Duration`
+ --> C:\OPENSNAR\HardyScript\src\hardware_sim.rs:7:26
+  |
+7 | use std::time::{Instant, Duration};
+  |                          ^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `ArrowBody`
+ --> C:\OPENSNAR\HardyScript\src\async_transform.rs:6:65
+  |
+6 | use crate::parser::{Expr, Function, SourceStatement, Statement, ArrowBody};
+  |                                                                 ^^^^^^^^^
+
+warning: unused import: `ArrowBody`
+ --> C:\OPENSNAR\HardyScript\src\escape_analysis.rs:8:65
+  |
+8 | use crate::parser::{Expr, Function, Statement, SourceStatement, ArrowBody};
+  |                                                                 ^^^^^^^^^
+
+warning: unused imports: `BasicBlock` and `BlockKind`
+ --> C:\OPENSNAR\HardyScript\src\wcet.rs:6:36
+  |
+6 | use crate::cfg::{ControlFlowGraph, BasicBlock, BlockKind, build_cfg, estimate_loop_bound};
+  |                                    ^^^^^^^^^^  ^^^^^^^^^
+
+warning: unused import: `std::collections::HashMap`
+ --> C:\OPENSNAR\HardyScript\src\wcet.rs:9:5
+  |
+9 | use std::collections::HashMap;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused variable: `hw_call`
+   --> C:\OPENSNAR\HardyScript\src\compiler\mod.rs:689:21
+    |
+689 |         if let Some(hw_call) = self.try_compile_hw_call(name, args, rd)? {
+    |                     ^^^^^^^ help: if this is intentional, prefix it with an underscore: `_hw_call`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `completed`
+   --> C:\OPENSNAR\HardyScript\src\engine.rs:357:17
+    |
+357 |             let completed = async_scheduler.poll_all();
+    |                 ^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_completed`
+
+warning: value assigned to `result_source` is never read
+   --> C:\OPENSNAR\HardyScript\src\compat.rs:137:29
+    |
+137 |     let mut result_source = source.to_string();
+    |                             ^^^^^^^^^^^^^^^^^^
+    |
+    = help: maybe it is overwritten before being read?
+    = note: `#[warn(unused_assignments)]` (part of `#[warn(unused)]`) on by default
+
+warning: value assigned to `result` is never read
+   --> C:\OPENSNAR\HardyScript\src\compat.rs:207:22
+    |
+207 |     let mut result = source.to_string();
+    |                      ^^^^^^^^^^^^^^^^^^
+    |
+    = help: maybe it is overwritten before being read?
+
+warning: unreachable pattern
+    --> C:\OPENSNAR\HardyScript\src\c_codegen.rs:1369:13
+     |
+1369 |             _ => {} // 鍏朵粬骞冲彴鍚庣画瀹炵幇
+     |             ^ no value can reach this
+     |
+note: multiple earlier patterns match some of the same values
+    --> C:\OPENSNAR\HardyScript\src\c_codegen.rs:1369:13
+     |
+ 725 |             CTarget::Esp32S3Bare => {
+     |             -------------------- matches some of the same values
+...
+ 728 |             CTarget::Esp32 => {
+     |             -------------- matches some of the same values
+...
+1003 |             CTarget::ArduinoAvr => {
+     |             ------------------- matches some of the same values
+...
+1087 |             CTarget::ArduinoArm => {
+     |             ------------------- matches some of the same values
+...
+1369 |             _ => {} // 鍏朵粬骞冲彴鍚庣画瀹炵幇
+     |             ^ ...and 2 other patterns collectively make this unreachable
+     = note: `#[warn(unreachable_patterns)]` (part of `#[warn(unused)]`) on by default
+
+warning: unreachable pattern
+    --> C:\OPENSNAR\HardyScript\src\c_codegen.rs:1866:33
+     |
+1866 | ...                   _ => {
+     |                       ^ no value can reach this
+     |
+note: multiple earlier patterns match some of the same values
+    --> C:\OPENSNAR\HardyScript\src\c_codegen.rs:1866:33
+     |
+1851 | ...                   CTarget::Esp32S3Bare => {
+     |                       -------------------- matches some of the same values
+...
+1854 | ...                   CTarget::Esp32 => {
+     |                       -------------- matches some of the same values
+...
+1857 | ...                   CTarget::ArduinoAvr | CTarget::ArduinoArm => {
+     |                       ----------------------------------------- matches some of the same values
+...
+1860 | ...                   CTarget::Stm32 => {
+     |                       -------------- matches some of the same values
+...
+1866 | ...                   _ => {
+     |                       ^ ...and 1 other patterns collectively make this unreachable
+
+warning: variable does not need to be mutable
+    --> C:\OPENSNAR\HardyScript\src\model.rs:1111:13
+     |
+1111 |         let mut pending_q: Option<(Vec<f32>, u32, u32)> = None;
+     |             ----^^^^^^^^^
+     |             |
+     |             help: remove this `mut`
+     |
+     = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+warning: variable does not need to be mutable
+    --> C:\OPENSNAR\HardyScript\src\model.rs:1112:13
+     |
+1112 |         let mut pending_k: Option<(Vec<f32>, u32, u32)> = None;
+     |             ----^^^^^^^^^
+     |             |
+     |             help: remove this `mut`
+
+warning: variable does not need to be mutable
+    --> C:\OPENSNAR\HardyScript\src\model.rs:1113:13
+     |
+1113 |         let mut pending_v: Option<(Vec<f32>, u32, u32)> = None;
+     |             ----^^^^^^^^^
+     |             |
+     |             help: remove this `mut`
+
+warning: variable `qkv_merged` is assigned to, but never used
+    --> C:\OPENSNAR\HardyScript\src\model.rs:1110:13
+     |
+1110 |         let mut qkv_merged = false;
+     |             ^^^^^^^^^^^^^^
+     |
+     = note: consider using `_qkv_merged` instead
+
+warning: unused variable: `pending_q`
+    --> C:\OPENSNAR\HardyScript\src\model.rs:1111:13
+     |
+1111 |         let mut pending_q: Option<(Vec<f32>, u32, u32)> = None;
+     |             ^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_pending_q`
+
+warning: unused variable: `pending_k`
+    --> C:\OPENSNAR\HardyScript\src\model.rs:1112:13
+     |
+1112 |         let mut pending_k: Option<(Vec<f32>, u32, u32)> = None;
+     |             ^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_pending_k`
+
+warning: unused variable: `pending_v`
+    --> C:\OPENSNAR\HardyScript\src\model.rs:1113:13
+     |
+1113 |         let mut pending_v: Option<(Vec<f32>, u32, u32)> = None;
+     |             ^^^^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_pending_v`
+
+warning: value assigned to `qkv_merged` is never read
+    --> C:\OPENSNAR\HardyScript\src\model.rs:1131:21
+     |
+1131 |                     qkv_merged = true;
+     |                     ^^^^^^^^^^^^^^^^^
+     |
+     = help: maybe it is overwritten before being read?
+
+warning: unused variable: `arch`
+    --> C:\OPENSNAR\HardyScript\src\model.rs:1243:39
+     |
+1243 | fn map_gguf_name_to_layer(name: &str, arch: &str) -> Option<(u32, LayerType)> {
+     |                                       ^^^^ help: if this is intentional, prefix it with an underscore: `_arch`
+
+warning: unused variable: `prefix`
+    --> C:\OPENSNAR\HardyScript\src\model.rs:1253:9
+     |
+1253 |     let prefix = format!("blk.{}.", layer_idx.unwrap_or(0));
+     |         ^^^^^^ help: if this is intentional, prefix it with an underscore: `_prefix`
+
+warning: variable `brace_depth` is assigned to, but never used
+   --> C:\OPENSNAR\HardyScript\src\lint.rs:413:13
+    |
+413 |         let mut brace_depth = 0i32;
+    |             ^^^^^^^^^^^^^^^
+    |
+    = note: consider using `_brace_depth` instead
+
+warning: value assigned to `brace_depth` is never read
+   --> C:\OPENSNAR\HardyScript\src\lint.rs:422:37
+    |
+422 |                 else if ch == '}' { brace_depth -= 1; after_return = false; }
+    |                                     ^^^^^^^^^^^^^^^^
+    |
+    = help: maybe it is overwritten before being read?
+
+warning: value assigned to `brace_depth` is never read
+   --> C:\OPENSNAR\HardyScript\src\lint.rs:421:32
+    |
+421 |                 if ch == '{' { brace_depth += 1; after_return = false; }
+    |                                ^^^^^^^^^^^^^^^^
+    |
+    = help: maybe it is overwritten before being read?
+
+warning: variable `total_bytes` is assigned to, but never used
+   --> C:\OPENSNAR\HardyScript\src\ci.rs:433:9
+    |
+433 |     let mut total_bytes = 0u64;
+    |         ^^^^^^^^^^^^^^^
+    |
+    = note: consider using `_total_bytes` instead
+
+warning: value assigned to `total_bytes` is never read
+   --> C:\OPENSNAR\HardyScript\src\ci.rs:475:9
+    |
+475 |         total_bytes += data.len() as u64;
+    |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    |
+    = help: maybe it is overwritten before being read?
+
+warning: unused variable: `promises`
+   --> C:\OPENSNAR\HardyScript\src\async_transform.rs:320:28
+    |
+320 |         Expr::PromiseAll { promises } | Expr::PromiseRace { promises } => {
+    |                            ^^^^^^^^                         ^^^^^^^^
+    |
+help: try ignoring the field
+    |
+320 |         Expr::PromiseAll { promises: _ } | Expr::PromiseRace { promises: _ } => {
+    |                                    +++                                 +++
+
+warning: unused variable: `body`
+   --> C:\OPENSNAR\HardyScript\src\async_transform.rs:330:5
+    |
+330 |     body: &[SourceStatement],
+    |     ^^^^ help: if this is intentional, prefix it with an underscore: `_body`
+
+warning: unused variable: `values`
+   --> C:\OPENSNAR\HardyScript\src\escape_analysis.rs:275:33
+    |
+275 |         Expr::ObjectLit { keys, values } => {
+    |                                 ^^^^^^ help: try ignoring the field: `values: _`
+
+warning: unused variable: `init`
+   --> C:\OPENSNAR\HardyScript\src\wcet_advanced.rs:298:25
+    |
+298 | pub fn infer_loop_bound(init: &Statement, condition: &Expr, update: &Statement) -> LoopBoundInference {
+    |                         ^^^^ help: if this is intentional, prefix it with an underscore: `_init`
+
+warning: constant `REG_A1` is never used
+  --> C:\OPENSNAR\HardyScript\src\compiler\mod.rs:45:7
+   |
+45 | const REG_A1: u8 = 4;     // 鍙傛暟 a1
+   |       ^^^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: constant `REG_A2` is never used
+  --> C:\OPENSNAR\HardyScript\src\compiler\mod.rs:46:7
+   |
+46 | const REG_A2: u8 = 5;     // 鍙傛暟 a2
+   |       ^^^^^^
+
+warning: constant `REG_A3` is never used
+  --> C:\OPENSNAR\HardyScript\src\compiler\mod.rs:47:7
+   |
+47 | const REG_A3: u8 = 6;     // 鍙傛暟 a3
+   |       ^^^^^^
+
+warning: methods `block_size` and `type_size` are never used
+   --> C:\OPENSNAR\HardyScript\src\model.rs:910:8
+    |
+897 | impl GgufType {
+    | ------------- methods in this implementation
+...
+910 |     fn block_size(&self) -> usize {
+    |        ^^^^^^^^^^
+...
+919 |     fn type_size(&self) -> usize {
+    |        ^^^^^^^^^
+
+warning: field `0` is never read
+   --> C:\OPENSNAR\HardyScript\src\model.rs:935:13
+    |
+935 |     Float32(f32),
+    |     ------- ^^^
+    |     |
+    |     field in this variant
+    |
+    = note: `GgufValue` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+935 -     Float32(f32),
+935 +     Float32(()),
+    |
+
+warning: field `0` is never read
+   --> C:\OPENSNAR\HardyScript\src\model.rs:938:10
+    |
+938 |     Bool(bool),
+    |     ---- ^^^^
+    |     |
+    |     field in this variant
+    |
+    = note: `GgufValue` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+938 -     Bool(bool),
+938 +     Bool(()),
+    |
+
+warning: field `0` is never read
+   --> C:\OPENSNAR\HardyScript\src\model.rs:939:11
+    |
+939 |     Array(Vec<GgufValue>),
+    |     ----- ^^^^^^^^^^^^^^
+    |     |
+    |     field in this variant
+    |
+    = note: `GgufValue` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+help: consider changing the field to be of unit type to suppress this warning while preserving the field numbering, or remove the field
+    |
+939 -     Array(Vec<GgufValue>),
+939 +     Array(()),
+    |
+
+warning: constant `GGUF_TYPE_UINT8` is never used
+   --> C:\OPENSNAR\HardyScript\src\model.rs:962:7
+    |
+962 | const GGUF_TYPE_UINT8: u32 = 0;
+    |       ^^^^^^^^^^^^^^^
+
+warning: constant `GGUF_TYPE_INT8` is never used
+   --> C:\OPENSNAR\HardyScript\src\model.rs:963:7
+    |
+963 | const GGUF_TYPE_INT8: u32 = 1;
+    |       ^^^^^^^^^^^^^^
+
+warning: constant `GGUF_TYPE_UINT16` is never used
+   --> C:\OPENSNAR\HardyScript\src\model.rs:964:7
+    |
+964 | const GGUF_TYPE_UINT16: u32 = 2;
+    |       ^^^^^^^^^^^^^^^^
+
+warning: constant `GGUF_TYPE_INT16` is never used
+   --> C:\OPENSNAR\HardyScript\src\model.rs:965:7
+    |
+965 | const GGUF_TYPE_INT16: u32 = 3;
+    |       ^^^^^^^^^^^^^^^
+
+warning: constant `GGUF_TYPE_FLOAT64` is never used
+   --> C:\OPENSNAR\HardyScript\src\model.rs:974:7
+    |
+974 | const GGUF_TYPE_FLOAT64: u32 = 12;
+    |       ^^^^^^^^^^^^^^^^^
+
+warning: field `timing` is never read
+   --> C:\OPENSNAR\HardyScript\src\wcet_advanced.rs:396:5
+    |
+395 | pub struct AdvancedWcetAnalyzer {
+    |            -------------------- field in this struct
+396 |     timing: TargetTimingModel,
+    |     ^^^^^^
+
+warning: unused import: `alloc::vec`
+  --> C:\OPENSNAR\DUANYAN\src\corpus_v2.rs:12:5
+   |
+12 | use alloc::vec;
+   |     ^^^^^^^^^^
+   |
+   = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused import: `alloc::vec`
+ --> C:\OPENSNAR\DUANYAN\src\model_scale.rs:8:5
+  |
+8 | use alloc::vec;
+  |     ^^^^^^^^^^
+
+warning: unused import: `alloc::vec`
+  --> C:\OPENSNAR\DUANYAN\src\edge_deploy.rs:10:5
+   |
+10 | use alloc::vec;
+   |     ^^^^^^^^^^
+
+warning: unused import: `alloc::vec::Vec`
+  --> C:\OPENSNAR\DUANYAN\src\edge_deploy.rs:11:5
+   |
+11 | use alloc::vec::Vec;
+   |     ^^^^^^^^^^^^^^^
+
+warning: unused imports: `HardyExpr` and `HardyStmt`
+  --> C:\OPENSNAR\DUANYAN\src\e2e_pipeline.rs:18:50
+   |
+18 | use crate::ast_bridge::{AstBridge, HardyProgram, HardyStmt, HardyExpr};
+   |                                                  ^^^^^^^^^  ^^^^^^^^^
+
+warning: unused import: `IntentResult`
+ --> C:\OPENSNAR\DUANYAN\src\smart_gen.rs:9:46
+  |
+9 |     use crate::intent_engine::{IntentEngine, IntentResult, Intent};
+  |                                              ^^^^^^^^^^^^
+
+warning: unused import: `TemplateOutput`
+  --> C:\OPENSNAR\DUANYAN\src\smart_gen.rs:10:48
+   |
+10 |     use crate::code_templates::{CodeTemplates, TemplateOutput};
+   |                                                ^^^^^^^^^^^^^^
+
+warning: unused variable: `freq_mhz`
+   --> C:\OPENSNAR\DUANYAN\src\edge_deploy.rs:158:14
+    |
+158 |         let (freq_mhz, mem_bw) = match platform {
+    |              ^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_freq_mhz`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unnecessary parentheses around block return value
+    --> src\lib.rs:3243:43
+     |
+3243 |     let flash_overhead = if c_flash > 0 { ((hs_flash - c_flash) as f64 / c_flash as f64 * 100.0) } else { 0.0 };
+     |                                           ^                                                    ^
+     |
+     = note: `#[warn(unused_parens)]` (part of `#[warn(unused)]`) on by default
+help: remove these parentheses
+     |
+3243 -     let flash_overhead = if c_flash > 0 { ((hs_flash - c_flash) as f64 / c_flash as f64 * 100.0) } else { 0.0 };
+3243 +     let flash_overhead = if c_flash > 0 { (hs_flash - c_flash) as f64 / c_flash as f64 * 100.0 } else { 0.0 };
+     |
+
+warning: unnecessary parentheses around block return value
+    --> src\lib.rs:3244:39
+     |
+3244 |     let ram_overhead = if c_ram > 0 { ((hs_ram - c_ram) as f64 / c_ram as f64 * 100.0) } else { 0.0 };
+     |                                       ^                                              ^
+     |
+help: remove these parentheses
+     |
+3244 -     let ram_overhead = if c_ram > 0 { ((hs_ram - c_ram) as f64 / c_ram as f64 * 100.0) } else { 0.0 };
+3244 +     let ram_overhead = if c_ram > 0 { (hs_ram - c_ram) as f64 / c_ram as f64 * 100.0 } else { 0.0 };
+     |
+
+warning: unused variable: `target`
+    --> src\lib.rs:3227:34
+     |
+3227 | fn bench_compare(source: String, target: String) -> Result<BenchComparison, String> {
+     |                                  ^^^^^^ help: if this is intentional, prefix it with an underscore: `_target`
+     |
+     = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: fields `name` and `baud` are never read
+  --> src\lib.rs:67:5
+   |
+66 | struct RawSerialPort {
+   |        ------------- fields in this struct
+67 |     name: String,
+   |     ^^^^
+68 |     baud: u32,
+   |     ^^^^
+   |
+   = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variant `Special` is never constructed
+  --> src\board_detect.rs:68:5
+   |
+59 | pub enum PinFunction {
+   |          ----------- variant in this enum
+...
+68 |     Special,
+   |     ^^^^^^^
+   |
+   = note: `PinFunction` has derived impls for the traits `Clone` and `Debug`, but these are intentionally ignored during dead code analysis
+
+=== DUANYAN Flash Test ===
+Port: COM4
+
+[MONITOR] COM4 @ 115200, 22 绉?..
+--- 涓插彛杈撳嚭 ---
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~--- 缁撴潫 ---
+
+鈿?鏈夎緭鍑轰絾鏈尮閰?DUANYAN-OK
