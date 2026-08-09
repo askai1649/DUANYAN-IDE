@@ -20,8 +20,8 @@ serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 serialport = { version = "4.2", optional = true }
 espflash = { version = "4", features = ["serialport"] }
-hardyscript = { path = "../../HardyScript" }
-duanyan = { path = "../../DUANYAN", features = ["std"] }
+hardyscript = { path = "../../HardyScript", features = ["domains"] }  # IDE 的行业分析功能需要垂直域模块
+duanyan = { path = "../../DUANYAN", features = ["std", "full"] }  # IDE 需要 copilot/smart_gen/ide_intelligence 等 full 模块
 
 [features]
 default = ["bridge_serial"]
