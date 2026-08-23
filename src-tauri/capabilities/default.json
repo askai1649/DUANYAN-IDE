@@ -13,6 +13,27 @@
     "core:window:allow-close",
     "core:window:allow-is-maximized",
     "dialog:default",
-    "fs:default"
+    "fs:default",
+    "fs:allow-read-dir",
+    "fs:allow-read-text-file",
+    "fs:allow-write-text-file",
+    "fs:allow-read-file",
+    "fs:allow-write-file",
+    "fs:allow-exists",
+    "fs:allow-stat",
+    "fs:allow-mkdir",
+    "fs:allow-create",
+    "fs:allow-remove",
+    "fs:allow-rename",
+    "fs:allow-copy-file",
+    {
+      "identifier": "fs:scope",
+      "allow": [
+        { "path": "**" },
+        { "path": "**/*" },
+        { "path": "$HOME/**" },
+        { "path": "C:/**" }
+      ]
+    }
   ]
 }

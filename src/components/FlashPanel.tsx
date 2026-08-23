@@ -153,9 +153,9 @@ export default function FlashPanel() {
       const info = await invoke<ToolchainInfo>("flasher_detect_toolchain");
       setToolchain(info);
       if (info.found) {
-        addLog(`✅ 工具链: ${info.version}`);
+        addLog(`[OK] 工具链: ${info.version}`);
       } else {
-        addLog("❌ 未找到 xtensa-esp32s3-elf-gcc");
+        addLog("[FAIL] 未找到 xtensa-esp32s3-elf-gcc");
       }
     } catch (e) {
       addLog(`检测失败: ${e}`);
@@ -215,9 +215,9 @@ export default function FlashPanel() {
         linkerScript: ldFilePath || null,
       });
       setFlashResult(result);
-      addLog(`✅ ${result.message}`);
+      addLog(`[OK] ${result.message}`);
     } catch (e) {
-      addLog(`❌ 失败: ${e}`);
+      addLog(`[FAIL] 失败: ${e}`);
     }
     setBusy(false);
   }, [selectedPort, cFilePath, ldFilePath, address, baud]);
@@ -232,9 +232,9 @@ export default function FlashPanel() {
         target: "esp32",
       });
       setGeneratedC(result.c_source as string);
-      addLog(`✅ C 代码生成成功 (${(result.c_source as string).length} chars)`);
+      addLog(`[OK] C 代码生成成功 (${(result.c_source as string).length} chars)`);
     } catch (e) {
-      addLog(`❌ 编译失败: ${e}`);
+      addLog(`[FAIL] 编译失败: ${e}`);
     }
   }, [jsSource]);
 
@@ -245,7 +245,7 @@ export default function FlashPanel() {
     setFlashResult(null);
     const baudRate = parseInt(baud) || 460800;
     const outDir = "C:\\Users\\askai\\.duanyan\\build";
-    addLog(`🚀 JS → C → gcc → ESP32-S3镜像 → flash 全自动管线`);
+    addLog(`JS → C → gcc → ESP32-S3镜像 → flash 全自动管线`);
     addLog(`  → ${selectedPort} @ 0x10000 (${baudRate} baud)`);
     try {
       const { invoke } = await import("@tauri-apps/api/core");
@@ -255,9 +255,9 @@ export default function FlashPanel() {
         outputDir: outDir,
       });
       setFlashResult(result);
-      addLog(`✅ ${result.message}`);
+      addLog(`[OK] ${result.message}`);
     } catch (e) {
-      addLog(`❌ 失败: ${e}`);
+      addLog(`[FAIL] 失败: ${e}`);
     }
     setBusy(false);
   }, [selectedPort, jsSource, baud]);
@@ -267,7 +267,7 @@ export default function FlashPanel() {
     setBusy(true);
     setFlashResult(null);
     const outDir = "C:\\Users\\askai\\.duanyan\\build";
-    addLog("🔨 HardyScript 编译: JS → C → gcc → ESP32-S3 .bin (裸机后端)");
+    addLog("HardyScript 编译: JS → C → gcc → ESP32-S3 .bin (裸机后端)");
     try {
       const { invoke } = await import("@tauri-apps/api/core");
       const result = await invoke<{ bin_path: string; bin_size: number; message: string }>(
@@ -275,19 +275,19 @@ export default function FlashPanel() {
         { jsSource, outputDir: outDir, target: "esp32s3-bare" },
       );
       setBinPath(result.bin_path);
-      addLog(`✅ ${result.message}`);
+      addLog(`[OK] ${result.message}`);
       addLog(`下一步: 选好串口 → 点上方“烧录”按钮 (地址 0x0 已预设)`);
     } catch (e) {
-      addLog(`❌ 编译失败: ${e}`);
+      addLog(`[FAIL] 编译失败: ${e}`);
     }
     setBusy(false);
   }, [jsSource]);
 
   return (
-    <div style={{ padding: "12px", fontFamily: "monospace", fontSize: "12px", height: "100%", display: "flex", flexDirection: "column", gap: "8px" }}>
-      <div style={{ fontWeight: "bold", fontSize: "13px", color: "#4fc3f7" }}>
+    <div style={{ padding: "12px", fontSize: "12px", color: "#fff", height: "100%", display: "flex", flexDirection: "column", gap: "8px" }}>
+      <div style={{ fontWeight: "bold", fontSize: "13px", color: "#fff" }}>
         DUANYAN Flasher
-        <span style={{ fontSize: "11px", color: "#888", marginLeft: "8px" }}>Native ESP32 Programmer</span>
+        <span style={{ fontSize: "11px", color: "#ccc", marginLeft: "8px" }}>Native ESP32 Programmer</span>
       </div>
 
       {/* Port Selection Row */}
@@ -295,7 +295,7 @@ export default function FlashPanel() {
         <select
           value={selectedPort}
           onChange={e => setSelectedPort(e.target.value)}
-          style={{ flex: 1, background: "#1e1e1e", color: "#eee", border: "1px solid #444", borderRadius: "3px", padding: "4px 8px" }}
+          style={{ flex: 1, background: "#1e1e1e", color: "#fff", border: "1px solid #444", borderRadius: "3px", padding: "4px 8px" }}
         >
           <option value="">-- 选择串口 --</option>
           {ports.map(p => (
@@ -310,7 +310,7 @@ export default function FlashPanel() {
 
       {/* Chip Info */}
       {chipInfo && (
-        <div style={{ background: "#1a2a1a", border: "1px solid #2e7d32", borderRadius: "4px", padding: "8px" }}>
+        <div style={{ background: "#252526", border: "1px solid #555", borderRadius: "4px", padding: "8px" }}>
           <div>芯片: <b>{chipInfo.chip}</b></div>
           <div>MAC: <b>{chipInfo.mac_address}</b></div>
           <div>Flash: <b>{chipInfo.flash_size}</b> | 晶振: {chipInfo.crystal_frequency}</div>
@@ -324,30 +324,28 @@ export default function FlashPanel() {
           value={binPath}
           readOnly
           placeholder="选择固件 .bin 文件..."
-          style={{ flex: 1, background: "#1e1e1e", color: "#eee", border: "1px solid #444", borderRadius: "3px", padding: "4px 8px" }}
+          style={{ flex: 1, background: "#1e1e1e", color: "#fff", border: "1px solid #444", borderRadius: "3px", padding: "4px 8px" }}
         />
         <button onClick={handleSelectBin} disabled={busy} style={btnStyle}>浏览</button>
       </div>
 
       <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
-        <label style={{ color: "#aaa" }}>地址:</label>
+        <label style={{ color: "#fff" }}>地址:</label>
         <input value={address} onChange={e => setAddress(e.target.value)}
-          style={{ width: "80px", background: "#1e1e1e", color: "#eee", border: "1px solid #444", borderRadius: "3px", padding: "4px" }} />
-        <label style={{ color: "#aaa" }}>波特率:</label>
+          style={{ width: "80px", background: "#1e1e1e", color: "#fff", border: "1px solid #444", borderRadius: "3px", padding: "4px" }} />
+        <label style={{ color: "#fff" }}>波特率:</label>
         <select value={baud} onChange={e => setBaud(e.target.value)}
-          style={{ background: "#1e1e1e", color: "#eee", border: "1px solid #444", borderRadius: "3px", padding: "4px" }}>
+          style={{ background: "#1e1e1e", color: "#fff", border: "1px solid #444", borderRadius: "3px", padding: "4px" }}>
           <option value="115200">115200</option>
           <option value="230400">230400</option>
           <option value="460800">460800</option>
           <option value="921600">921600</option>
         </select>
         <div style={{ flex: 1 }} />
-        <button onClick={handleFlash} disabled={busy}
-          style={{ ...btnStyle, background: "#1b5e20", color: "#a5d6a7", fontWeight: "bold", padding: "4px 16px" }}>
+        <button onClick={handleFlash} disabled={busy} style={btnStyle}>
           {busy ? "烧录中..." : "烧录"}
         </button>
-        <button onClick={handleErase} disabled={busy}
-          style={{ ...btnStyle, background: "#4a1010", color: "#ef9a9a" }}>
+        <button onClick={handleErase} disabled={busy} style={btnStyle}>
           擦除
         </button>
       </div>
@@ -355,9 +353,9 @@ export default function FlashPanel() {
       {/* Result */}
       {flashResult && (
         <div style={{
-          background: flashResult.success ? "#1a2a1a" : "#2a1a1a",
-          border: `1px solid ${flashResult.success ? "#2e7d32" : "#c62828"}`,
-          borderRadius: "4px", padding: "6px 8px"
+          background: "#252526",
+          border: "1px solid #555",
+          borderRadius: "4px", padding: "6px 8px", color: "#fff"
         }}>
           {flashResult.success ? "✓ " : "✗ "}{flashResult.message}
         </div>
@@ -366,26 +364,25 @@ export default function FlashPanel() {
       {/* Build & Flash Section */}
       <div style={{ borderTop: "1px solid #333", paddingTop: "8px", marginTop: "4px" }}>
         <div style={{ display: "flex", gap: "6px", alignItems: "center", marginBottom: "6px" }}>
-          <span style={{ color: "#4fc3f7", fontWeight: "bold" }}>编译+烧录</span>
+          <span style={{ color: "#fff", fontWeight: "bold" }}>编译+烧录</span>
           <button onClick={handleDetectToolchain} style={btnStyle}>检测工具链</button>
           {toolchain && (
-            <span style={{ color: toolchain.found ? "#66bb6a" : "#ef5350", fontSize: "11px" }}>
-              {toolchain.found ? `✅ ${toolchain.version}` : "❌ 未找到"}
+            <span style={{ color: "#fff", fontWeight: "bold", fontSize: "11px" }}>
+              {toolchain.found ? `[OK] ${toolchain.version}` : "[FAIL] 未找到"}
             </span>
           )}
         </div>
         <div style={{ display: "flex", gap: "6px", alignItems: "center", marginBottom: "6px" }}>
           <input value={cFilePath} readOnly placeholder="选择 C 源文件..."
-            style={{ flex: 1, background: "#1e1e1e", color: "#eee", border: "1px solid #444", borderRadius: "3px", padding: "4px 8px" }} />
+            style={{ flex: 1, background: "#1e1e1e", color: "#fff", border: "1px solid #444", borderRadius: "3px", padding: "4px 8px" }} />
           <button onClick={handleSelectCFile} style={btnStyle}>浏览</button>
         </div>
         <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
           <input value={ldFilePath} readOnly placeholder="链接脚本 (.ld) 可选"
-            style={{ flex: 1, background: "#1e1e1e", color: "#eee", border: "1px solid #444", borderRadius: "3px", padding: "4px 8px" }} />
+            style={{ flex: 1, background: "#1e1e1e", color: "#fff", border: "1px solid #444", borderRadius: "3px", padding: "4px 8px" }} />
           <button onClick={handleSelectLd} style={btnStyle}>浏览</button>
-          <button onClick={handleBuildAndFlash} disabled={busy}
-            style={{ ...btnStyle, background: "#0d47a1", color: "#90caf9", fontWeight: "bold", padding: "4px 16px" }}>
-            {busy ? "执行中..." : "🚀 编译+烧录"}
+          <button onClick={handleBuildAndFlash} disabled={busy} style={btnStyle}>
+            {busy ? "执行中..." : "编译+烧录"}
           </button>
         </div>
       </div>
@@ -393,15 +390,13 @@ export default function FlashPanel() {
       {/* JS → Flash Section */}
       <div style={{ borderTop: "1px solid #333", paddingTop: "8px", marginTop: "4px" }}>
         <div style={{ display: "flex", gap: "6px", alignItems: "center", marginBottom: "6px" }}>
-          <span style={{ color: "#ffb74d", fontWeight: "bold" }}>HardyScript JS → Flash</span>
+          <span style={{ color: "#fff", fontWeight: "bold" }}>HardyScript JS → Flash</span>
           <button onClick={handleCompileJs} style={btnStyle}>仅编译 (JS→C)</button>
-          <button onClick={handleJsToBin} disabled={busy}
-            style={{ ...btnStyle, background: "#33691e", color: "#c5e1a5", fontWeight: "bold" }}>
-            {busy ? "编译中..." : "🔨 编译成 .bin"}
+          <button onClick={handleJsToBin} disabled={busy} style={btnStyle}>
+            {busy ? "编译中..." : "编译成 .bin"}
           </button>
-          <button onClick={handleJsToFlash} disabled={busy}
-            style={{ ...btnStyle, background: "#e65100", color: "#ffcc80", fontWeight: "bold", padding: "4px 16px" }}>
-            {busy ? "执行中..." : "⚡ JS→Flash"}
+          <button onClick={handleJsToFlash} disabled={busy} style={btnStyle}>
+            {busy ? "执行中..." : "JS→Flash"}
           </button>
         </div>
         <textarea
@@ -409,17 +404,17 @@ export default function FlashPanel() {
           onChange={(e) => setJsSource(e.target.value)}
           placeholder={'// 输入 HardyScript 代码\nimport { GPIO, Timer } from "hardy:hw";\nlet led = GPIO.output(2);\nwhile (true) {\n  led.high();\n  Timer.delay(500);\n  led.low();\n  Timer.delay(500);\n}'}
           style={{
-            width: "100%", height: "80px", background: "#1a1a2e", color: "#e0e0e0",
+            width: "100%", height: "80px", background: "#1a1a2e", color: "#fff",
             border: "1px solid #444", borderRadius: "4px", padding: "6px",
             fontFamily: "monospace", fontSize: "11px", resize: "vertical"
           }}
         />
         {generatedC && (
           <details style={{ marginTop: "4px" }}>
-            <summary style={{ cursor: "pointer", color: "#81c784", fontSize: "11px" }}>查看生成的 C 代码 ({generatedC.length} chars)</summary>
+            <summary style={{ cursor: "pointer", color: "#fff", fontSize: "11px" }}>查看生成的 C 代码 ({generatedC.length} chars)</summary>
             <pre style={{
               background: "#111", padding: "6px", borderRadius: "4px",
-              fontSize: "10px", maxHeight: "120px", overflow: "auto", color: "#aaa"
+              fontSize: "10px", maxHeight: "120px", overflow: "auto", color: "#ddd"
             }}>{generatedC}</pre>
           </details>
         )}
@@ -428,7 +423,7 @@ export default function FlashPanel() {
       {/* Log */}
       <div style={{ flex: 1, overflow: "auto", background: "#111", borderRadius: "4px", padding: "6px", minHeight: "60px" }}>
         {log.map((line, i) => (
-          <div key={i} style={{ color: line.includes("失败") ? "#ef5350" : line.includes("成功") ? "#66bb6a" : "#bbb" }}>
+          <div key={i} style={{ color: "#fff", fontWeight: line.includes("失败") ? "bold" : "normal" }}>
             {line}
           </div>
         ))}
@@ -439,10 +434,14 @@ export default function FlashPanel() {
 
 const btnStyle: React.CSSProperties = {
   background: "#2a2a2a",
-  color: "#ddd",
+  color: "#fff",
   border: "1px solid #555",
   borderRadius: "3px",
-  padding: "4px 10px",
+  height: "26px",
+  padding: "0 12px",
   cursor: "pointer",
   fontSize: "12px",
+  display: "inline-flex",
+  alignItems: "center",
+  boxSizing: "border-box",
 };

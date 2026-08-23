@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import "@vscode/codicons/dist/codicon.css";
 import FileTree from "./components/FileTree";
 import TabBar from "./components/TabBar";
 import EditorPanel from "./components/EditorPanel";
@@ -19,6 +20,12 @@ import LintPanel from "./components/LintPanel";
 import TFCardManager from "./components/TFCardManager";
 import FlashPanel from "./components/FlashPanel";
 import DeterministicPanel from "./components/DeterministicPanel";
+import ActivityBar from "./components/ActivityBar";
+import type { ActivityItem } from "./components/ActivityBar";
+import MenuBar from "./components/MenuBar";
+import type { MenuDef } from "./components/MenuBar";
+import CommandPalette from "./components/CommandPalette";
+import type { PaletteCommand } from "./components/CommandPalette";
 
 export interface FileEntry {
   name: string;
@@ -44,21 +51,47 @@ function App() {
   const [maximized, setMaximized] = useState(false);
   const [showDuanyan, setShowDuanyan] = useState(false);
   const [showBridge, setShowBridge] = useState(false);
-  const [showBoardPanel, setShowBoardPanel] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
   const [showWizard, setShowWizard] = useState(false);
-  const [showPinDiagram, setShowPinDiagram] = useState(false);
   const [showTFCard, setShowTFCard] = useState(false);
   const [selectedTarget, setSelectedTarget] = useState("COUNPRE64-FPGA");
-  const [terminalTab, setTerminalTab] = useState<"output" | "serial" | "bench" | "lint" | "flash" | "rt">("output");
-  const [sidebarTab, setSidebarTab] = useState<"files" | "workspace" | "git" | "lint">("files");
+  const [terminalTab, setTerminalTab] = useState<"output" | "serial" | "bench" | "lint" | "rt">("output");
+  const [sidebarTab, setSidebarTab] = useState<"files" | "workspace" | "git" | "hardware" | "deploy">("files");
   const [diffFile, setDiffFile] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState("就绪");
     const [showSidebar, setShowSidebar] = useState(true);
   const [showTerminal, setShowTerminal] = useState(true);
-  const [sidebarWidth, setSidebarWidth] = useState(240);
+  const [sidebarWidth, setSidebarWidth] = useState(300);
   const [terminalHeight, setTerminalHeight] = useState(150);
   const [duanyanWidth, setDuanyanWidth] = useState(380);
+  const [showPalette, setShowPalette] = useState(false);
+  const [branch, setBranch] = useState<string | undefined>(undefined);
+
+  // 三期: 状态栏 git 分支 — projectDir 变化时查询当前分支
+  useEffect(() => {
+    if (!projectDir) { setBranch(undefined); return; }
+    let cancelled = false;
+    (async () => {
+      try {
+        const { invoke } = await import("@tauri-apps/api/core");
+        const branches = await invoke<{ name: string; is_current: boolean }[]>("git_branches", { dir: projectDir });
+        if (!cancelled) setBranch(branches.find(b => b.is_current)?.name);
+      } catch {
+        if (!cancelled) setBranch(undefined);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [projectDir]);
+
+  // 三期: 状态栏错误/警告计数 — 从输出日志流统计
+  const { errorCount, warningCount } = useMemo(() => {
+    let errors = 0, warnings = 0;
+    for (const line of terminalOutput) {
+      if (/\[error\]|\berror\b/i.test(line)) errors++;
+      else if (/\bwarn(?:ing)?\b/i.test(line)) warnings++;
+    }
+    return { errorCount: errors, warningCount: warnings };
+  }, [terminalOutput]);
 
   // Window control handlers
   const handleMinimize = async () => {
@@ -349,6 +382,9 @@ function App() {
       } else if ((e.ctrlKey || e.metaKey) && e.key === "`") {
         e.preventDefault();
         setShowTerminal(prev => !prev);
+      } else if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === "p") {
+        e.preventDefault();
+        setShowPalette(prev => !prev);
       }
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -357,29 +393,105 @@ function App() {
 
   const currentFile = openFiles.find(f => f.path === activeFile) || null;
 
+  // === 一期: Activity Bar / 菜单瘦身 / 命令面板 ===
+  const showSidebarView = (tab: typeof sidebarTab) => {
+    setSidebarTab(tab);
+    setShowSidebar(true);
+  };
+  const showBottomTab = (tab: typeof terminalTab) => {
+    setTerminalTab(tab);
+    setShowTerminal(true);
+  };
+
+  const activityItems: ActivityItem[] = [
+    { id: "files", icon: "files", title: "资源管理器" },
+    { id: "workspace", icon: "briefcase", title: "工作区" },
+    { id: "git", icon: "source-control", title: "源码管理 (Git)" },
+    { id: "hardware", icon: "circuit-board", title: "硬件 (板卡/引脚/TF卡)" },
+    { id: "deploy", icon: "rocket", title: "部署与烧录" },
+  ];
+
+  const handleActivitySelect = (id: string) => {
+    // VSCode 行为: 点击当前激活图标 = 收起侧栏
+    if (showSidebar && sidebarTab === id) { setShowSidebar(false); return; }
+    showSidebarView(id as typeof sidebarTab);
+  };
+
+  const menus: MenuDef[] = [
+    { title: "File", items: [
+      { label: "新建文件", shortcut: "Ctrl+N", onClick: handleNewFile },
+      { label: "打开文件...", shortcut: "Ctrl+O", onClick: handleOpenFileViaDialog },
+      { label: "新建项目 (模板)...", onClick: handleNewProject },
+      { separator: true },
+      { label: "保存", shortcut: "Ctrl+S", onClick: handleSave },
+    ]},
+    { title: "View", items: [
+      { label: "命令面板...", shortcut: "Ctrl+Shift+P", onClick: () => setShowPalette(true) },
+      { separator: true },
+      { label: "切换资源管理器", shortcut: "Ctrl+\\", onClick: () => setShowSidebar(p => !p) },
+      { label: "切换底部面板", shortcut: "Ctrl+`", onClick: () => setShowTerminal(p => !p) },
+      { label: "切换 duanyan AI 面板", shortcut: "Ctrl+J", onClick: () => setShowDuanyan(p => !p) },
+      { label: "切换 OpenSNAR Bridge", shortcut: "Ctrl+Shift+B", onClick: () => setShowBridge(p => !p) },
+    ]},
+    { title: "Build", items: [
+      { label: "编译", shortcut: "Ctrl+B", onClick: handleBuild },
+      { separator: true },
+      { label: `目标板卡: ${selectedTarget}`, onClick: () => showSidebarView("hardware") },
+    ]},
+    { title: "Run", items: [
+      { label: "编译并运行", shortcut: "Ctrl+R", onClick: handleRun },
+      { label: "烧录到设备", shortcut: "Ctrl+Shift+F", onClick: handleFlash },
+      { separator: true },
+      { label: "串口监视器", onClick: () => showBottomTab("serial") },
+      { label: "性能基准", onClick: () => showBottomTab("bench") },
+      { label: "确定性分析", onClick: () => showBottomTab("rt") },
+    ]},
+    { title: "Tools", items: [
+      { label: "硬件视图 (板卡/引脚)", onClick: () => showSidebarView("hardware") },
+      { label: "TF 卡管理", onClick: () => setShowTFCard(true) },
+      { label: "部署与烧录", onClick: () => showSidebarView("deploy") },
+      { separator: true },
+      { label: "问题 (Lint)", onClick: () => showBottomTab("lint") },
+    ]},
+    { title: "Help", items: [
+      { label: "入门向导", onClick: () => setShowWizard(true) },
+      { label: "关于 DUANYAN IDE", onClick: () => setTerminalOutput(p => [...p, "DUANYAN IDE v1.2.0 — HardyScript + Tauri + Monaco"]) },
+    ]},
+  ];
+
+  const paletteCommands: PaletteCommand[] = [
+    { id: "new-file", label: "文件: 新建文件", shortcut: "Ctrl+N", icon: "new-file", run: handleNewFile },
+    { id: "open-file", label: "文件: 打开文件...", shortcut: "Ctrl+O", icon: "folder-opened", run: handleOpenFileViaDialog },
+    { id: "new-project", label: "项目: 新建项目 (模板)", icon: "new-folder", run: handleNewProject },
+    { id: "save", label: "文件: 保存", shortcut: "Ctrl+S", icon: "save", run: handleSave },
+    { id: "build", label: "构建: 编译", shortcut: "Ctrl+B", icon: "tools", run: handleBuild },
+    { id: "run", label: "运行: 编译并运行", shortcut: "Ctrl+R", icon: "play", run: handleRun },
+    { id: "flash", label: "烧录: 烧录到设备", shortcut: "Ctrl+Shift+F", icon: "rocket", run: handleFlash },
+    { id: "board", label: "硬件: 板卡管理器", icon: "circuit-board", run: () => showSidebarView("hardware") },
+    { id: "pins", label: "硬件: 引脚图", icon: "pin", run: () => showSidebarView("hardware") },
+    { id: "tfcard", label: "硬件: TF 卡管理", icon: "sd-card", run: () => setShowTFCard(true) },
+    { id: "serial", label: "视图: 串口监视器", icon: "plug", run: () => showBottomTab("serial") },
+    { id: "bench", label: "视图: 性能基准", icon: "dashboard", run: () => showBottomTab("bench") },
+    { id: "rt", label: "视图: 确定性分析", icon: "lock", run: () => showBottomTab("rt") },
+    { id: "flash-panel", label: "视图: 部署与烧录", icon: "rocket", run: () => showSidebarView("deploy") },
+    { id: "explorer", label: "视图: 资源管理器", icon: "files", run: () => showSidebarView("files") },
+    { id: "workspace", label: "视图: 工作区", icon: "briefcase", run: () => showSidebarView("workspace") },
+    { id: "git", label: "视图: 源码管理", icon: "source-control", run: () => showSidebarView("git") },
+    { id: "lint", label: "视图: 问题 (Lint)", icon: "warning", run: () => showBottomTab("lint") },
+    { id: "ai", label: "duanyan: 切换 AI 面板", shortcut: "Ctrl+J", icon: "sparkle", run: () => setShowDuanyan(p => !p) },
+    { id: "bridge", label: "duanyan: OpenSNAR Bridge", shortcut: "Ctrl+Shift+B", icon: "broadcast", run: () => setShowBridge(p => !p) },
+    { id: "toggle-sidebar", label: "视图: 切换资源管理器", shortcut: "Ctrl+\\", icon: "layout-sidebar-left", run: () => setShowSidebar(p => !p) },
+    { id: "toggle-panel", label: "视图: 切换底部面板", shortcut: "Ctrl+`", icon: "layout-panel", run: () => setShowTerminal(p => !p) },
+    { id: "wizard", label: "帮助: 入门向导", icon: "lightbulb", run: () => setShowWizard(true) },
+  ];
+
   return (
     <div className={"ide-container" + (!showSidebar ? " sidebar-hidden" : "")}>
       {/* Custom Title Bar */}
       <div className="titlebar" data-tauri-drag-region>
         <div className="titlebar-left" data-tauri-drag-region>
           <span className="brand">DUANYAN IDE</span>
-          <button className="menu-btn" onClick={handleOpenFileViaDialog} title="Ctrl+O">File</button>
-          <button className="menu-btn">Edit</button>
-          <button className="menu-btn">View</button>
-          <button className="menu-btn" onClick={handleBuild} title="Ctrl+B">Build</button>
-          <button className="menu-btn" onClick={handleRun} title="Ctrl+R">Run</button>
-          <button className="menu-btn flash-btn" onClick={handleFlash} title="Ctrl+Shift+F">Flash</button>
-          <button className="menu-btn" onClick={handleSave} title="Ctrl+S">
-            {saving ? "Saving..." : "Save"}
-          </button>
-          <button className="menu-btn" onClick={handleNewProject} title="New Project (Templates)">+ Project</button>
-          <button className="menu-btn" onClick={() => setShowBoardPanel(p => !p)} title="Board Manager">Board</button>
-          <button className="menu-btn" onClick={() => setShowPinDiagram(p => !p)} title="Pin Diagram">Pins</button>
-          <button className="menu-btn" onClick={() => setShowTFCard(p => !p)} title="TF Card Manager">TF Card</button>
-          <button className="menu-btn" onClick={() => setSidebarTab(sidebarTab === "workspace" ? "files" : "workspace")} title="Workspace">WS</button>
-          <button className="menu-btn" onClick={() => setSidebarTab(sidebarTab === "git" ? "files" : "git")} title="Git">Git</button>
-          <button className="menu-btn" onClick={() => setSidebarTab(sidebarTab === "lint" ? "files" : "lint")} title="Lint">Lint</button>
-          <button className="menu-btn" onClick={handleNewFile} title="Ctrl+N">+ New</button>
+          <MenuBar menus={menus} />
         </div>
         <div className="titlebar-right-actions">
           {/* Sidebar toggle */}
@@ -457,31 +569,20 @@ function App() {
 
       {/* Main area */}
       <div className="main-area">
+        <ActivityBar
+          items={activityItems}
+          active={showSidebar ? sidebarTab : null}
+          onSelect={handleActivitySelect}
+        />
         {showSidebar && (
           <div className="sidebar" style={{ width: sidebarWidth }}>
-            {/* Sidebar Tabs */}
-            <div className="sidebar-tabs">
-              <button className={`sidebar-tab ${sidebarTab === "files" ? "active" : ""}`} onClick={() => setSidebarTab("files")}>Files</button>
-              <button className={`sidebar-tab ${sidebarTab === "workspace" ? "active" : ""}`} onClick={() => setSidebarTab("workspace")}>WS</button>
-              <button className={`sidebar-tab ${sidebarTab === "git" ? "active" : ""}`} onClick={() => setSidebarTab("git")}>Git</button>
-              <button className={`sidebar-tab ${sidebarTab === "lint" ? "active" : ""}`} onClick={() => setSidebarTab("lint")}>Lint</button>
-            </div>
 
             {sidebarTab === "files" && (
-              <>
-                <FileTree
-                  projectDir={projectDir}
-                  onOpenFile={handleOpenFile}
-                  onSetProjectDir={setProjectDir}
-                />
-                {showBoardPanel && (
-                  <BoardPanel
-                    selectedTarget={selectedTarget}
-                    onTargetChange={setSelectedTarget}
-                    onClose={() => setShowBoardPanel(false)}
-                  />
-                )}
-              </>
+              <FileTree
+                projectDir={projectDir}
+                onOpenFile={handleOpenFile}
+                onSetProjectDir={setProjectDir}
+              />
             )}
             {sidebarTab === "workspace" && projectDir && (
               <WorkspacePanel projectDir={projectDir} onLog={(m) => setTerminalOutput(p => [...p, m])} />
@@ -493,15 +594,23 @@ function App() {
                 onShowDiff={(f) => setDiffFile(f)}
               />
             )}
-            {sidebarTab === "lint" && projectDir && (
-              <LintPanel
-                projectDir={projectDir}
-                onLog={(m) => setTerminalOutput(p => [...p, m])}
-                onJumpToLine={(_file, line) => {
-                  // Could navigate to specific line in editor
-                  setTerminalOutput(p => [...p, `Jump to line ${line}`]);
-                }}
-              />
+            {sidebarTab === "hardware" && (
+              <div className="hardware-view">
+                <BoardPanel
+                  selectedTarget={selectedTarget}
+                  onTargetChange={setSelectedTarget}
+                  onClose={() => showSidebarView("files")}
+                />
+                <PinDiagram boardName={selectedTarget} />
+                <button className="hardware-tfcard-btn" onClick={() => setShowTFCard(true)}>
+                  <i className="codicon codicon-sd-card" /> TF 卡管理
+                </button>
+              </div>
+            )}
+            {sidebarTab === "deploy" && (
+              <div className="deploy-view">
+                <FlashPanel />
+              </div>
             )}
           </div>
         )}
@@ -543,11 +652,7 @@ function App() {
                 <button
                   className={`terminal-tab ${terminalTab === "lint" ? "active" : ""}`}
                   onClick={() => setTerminalTab("lint")}
-                >Lint</button>
-                <button
-                  className={`terminal-tab ${terminalTab === "flash" ? "active" : ""}`}
-                  onClick={() => setTerminalTab("flash")}
-                >⚡ Flash</button>
+                ><i className="codicon codicon-warning" /> Problems</button>
                 <button
                   className={`terminal-tab ${terminalTab === "rt" ? "active" : ""}`}
                   onClick={() => setTerminalTab("rt")}
@@ -575,9 +680,6 @@ function App() {
                   }}
                 />
               )}
-              {terminalTab === "flash" && (
-                <FlashPanel />
-              )}
               {terminalTab === "rt" && (
                 <DeterministicPanel visible={true} source={currentFile?.content || ""} />
               )}
@@ -595,12 +697,6 @@ function App() {
         {showBridge && (
           <div className="bridge-container">
             <OpenSnarBridge onClose={() => setShowBridge(false)} />
-          </div>
-        )}
-        {showPinDiagram && (
-          <div className="pin-diagram-panel">
-            <PinDiagram boardName={selectedTarget} />
-            <button className="pin-diagram-close" onClick={() => setShowPinDiagram(false)}>x</button>
           </div>
         )}
       </div>
@@ -639,6 +735,13 @@ function App() {
         </div>
       )}
 
+      {/* 命令面板 (一期) */}
+      <CommandPalette
+        open={showPalette}
+        commands={paletteCommands}
+        onClose={() => setShowPalette(false)}
+      />
+
       {/* Status bar */}
       <StatusBar
         fileName={currentFile?.name}
@@ -646,6 +749,9 @@ function App() {
         modified={currentFile?.modified}
         status={statusMessage}
         target={selectedTarget}
+        branch={branch}
+        errors={errorCount}
+        warnings={warningCount}
       />
     </div>
   );

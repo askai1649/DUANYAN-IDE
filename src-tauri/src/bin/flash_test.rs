@@ -3,6 +3,7 @@
 //!   cargo run --bin flash_test -- COM4                          # 检测芯片
 //!   cargo run --bin flash_test -- COM4 test_blink.bin 0x10000  # 烧录 raw bin
 //!   cargo run --bin flash_test -- COM4 --build test_blink.c    # C→ESP镜像→烧录
+//!   cargo run --bin flash_test -- COM4 --build-only foo.c      # 仅生成镜像不烧录 (M6)
 //!   cargo run --bin flash_test -- COM4 --monitor 8             # 监控串口 8 秒
 
 use duanyan_ide_lib::native_flasher;
@@ -72,6 +73,23 @@ fn main() {
                 } else {
                     println!("\n⚠ 有输出但未匹配 DUANYAN-OK");
                 }
+            }
+            Err(e) => {
+                eprintln!("  ERROR: {}", e);
+                std::process::exit(1);
+            }
+        }
+        return;
+    }
+
+    // 模式: --build-only (仅编译包装镜像, 不烧录; M6 端侧自烧录的产线入口)
+    if args.get(2).map(|s| s.as_str()) == Some("--build-only") {
+        let c_file = args.get(3).map(|s| s.as_str()).unwrap_or("test_blink.c");
+        println!("[BUILD ONLY] C → ESP32-S3 Image (不烧录)");
+        match native_flasher::build_esp32s3_bin(c_file, "flash_out") {
+            Ok(build) => {
+                println!("  镜像: {}", build.bin_path);
+                println!("  大小: {} bytes", build.bin_size);
             }
             Err(e) => {
                 eprintln!("  ERROR: {}", e);

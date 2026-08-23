@@ -4,6 +4,8 @@ version = "1.2.0"
 edition = "2021"
 authors = ["Zhujun"]
 description = "DUANYAN IDE - The Duanyan Development Environment"
+# 多 binary 包(flash_test/js2bin/reset_boot 为工具), tauri dev 需指定主程序
+default-run = "duanyan-ide"
 
 [lib]
 name = "duanyan_ide_lib"

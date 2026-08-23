@@ -25,3 +25,6 @@ src-tauri/yl69_js_out/
 
 # 敏感: SSH askpass 凭据
 askpass.cmd
+
+# 工具链归档（55MB+，仅本地留存，下载源见模式B文档 M6 节）
+src-tauri/*.tar.gz

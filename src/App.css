@@ -7,8 +7,8 @@ html, body, #root { height: 100%; width: 100%; overflow: hidden; }
   --bg-tertiary: #2d2d2d;
   --bg-hover: #37373d;
   --bg-active: #094771;
-  --text-primary: #cccccc;
-  --text-secondary: #858585;
+  --text-primary: #ffffff;
+  --text-secondary: #cccccc;
   --text-active: #ffffff;
   --border: #3e3e42;
   --accent: #007acc;
@@ -63,8 +63,8 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
   align-items: center;
 }
 .menu-btn:hover { background: var(--bg-hover); }
-.flash-btn { color: #ef6309; font-weight: 600; }
-.flash-btn:hover { background: #3e2a1f; }
+.flash-btn { color: var(--text-primary); font-weight: 600; }
+.flash-btn:hover { background: var(--bg-hover); }
 
 /* === Window Control Buttons === */
 .titlebar-controls {
@@ -89,7 +89,7 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
   background: var(--bg-hover);
 }
 .win-btn-close:hover {
-  color: #ef6309;
+  color: #ffffff;
 }
 
 /* === Main Area === */
@@ -136,7 +136,17 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
 /* === Status Bar === */
 .statusbar { display: flex; align-items: center; justify-content: space-between; height: 22px; padding: 0 12px; background: #2d2d2d; font-size: 11px; color: var(--text-secondary); border-top: 1px solid var(--border); }
 .statusbar-left, .statusbar-right { display: flex; align-items: center; gap: 12px; }
-.statusbar-message { color: var(--accent); }
+.statusbar-message { color: var(--text-primary); }
+
+/* === 三期: 状态栏增强项 === */
+.statusbar-item { display: inline-flex; align-items: center; gap: 4px; }
+.statusbar-item .codicon { font-size: 13px; }
+.statusbar-branch { color: var(--text-primary); }
+.statusbar-problems { color: var(--text-secondary); }
+.statusbar-problems.has-errors { color: #f48771; }
+.statusbar-problems .codicon-warning { margin-left: 4px; }
+.statusbar-target { display: inline-flex; align-items: center; gap: 4px; }
+.statusbar-target .codicon { font-size: 13px; }
 
 /* === File Tree === */
 .file-tree { padding: 0; display: flex; flex-direction: column; height: 100%; }
@@ -275,7 +285,7 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
   padding: 0;
 }
 .layout-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
-.layout-btn.active { color: #ef6309; }
+.layout-btn.active { color: #ffffff; background: var(--bg-hover); }
 
 /* === duanyan AI Panel === */
 .duanyan-container {
@@ -388,6 +398,29 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
   font-family: "Source Code Pro", "Cascadia Code", "Fira Code", "DejaVu Sans Mono", monospace;
 }
 
+/* === 三期: 模型指标折叠徽章行 === */
+.duanyan-stats-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  padding: 3px 8px;
+  background: var(--bg-primary);
+  border: none;
+  border-bottom: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 10px;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.duanyan-stats-badge:hover { color: var(--text-primary); background: var(--bg-secondary); }
+.duanyan-stats-badge .codicon { font-size: 12px; flex-shrink: 0; }
+.duanyan-stats-badge .badge-item { flex-shrink: 0; }
+.duanyan-stats-badge .badge-sep { color: var(--border); flex-shrink: 0; }
+
 /* Chat Area */
 .duanyan-chat {
   flex: 1;
@@ -408,8 +441,8 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
   letter-spacing: 0.3px;
   margin-bottom: 2px;
 }
-.duanyan-msg.user .msg-role { color: var(--accent); }
-.duanyan-msg.duanyan .msg-role { color: #ef6309; }
+.duanyan-msg.user .msg-role { color: var(--text-primary); }
+.duanyan-msg.duanyan .msg-role { color: var(--text-primary); }
 .duanyan-msg.system .msg-role { color: var(--text-secondary); }
 .duanyan-msg.user { background: rgba(0, 122, 204, 0.06); }
 .duanyan-msg.duanyan { background: rgba(239, 99, 9, 0.04); }
@@ -449,7 +482,7 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
   padding: 3px 8px;
   font-size: 11px;
   background: #2d2d2d;
-  color: var(--text-secondary);
+  color: var(--text-primary);
   border: 1px solid var(--border);
   border-radius: 3px;
   cursor: pointer;
@@ -459,8 +492,8 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
 
 .ql-tool-btn:hover:not(:disabled) {
   background: #3d3d3d;
-  color: #ef6309;
-  border-color: #ef6309;
+  color: #ffffff;
+  border-color: #555;
 }
 
 .ql-tool-btn:disabled {
@@ -481,7 +514,7 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
 
 .ql-tool-input:focus {
   outline: none;
-  border-color: #ef6309;
+  border-color: #ffffff;
 }
 
 .ql-seed-input {
@@ -491,8 +524,8 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
 }
 
 .duanyan-header-btn.active {
-  color: #ef6309;
-  border-color: #ef6309;
+  color: #ffffff;
+  border-color: #ffffff;
 }
 
 .duanyan-input-area {
@@ -519,8 +552,8 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
   line-height: 1.4;
 }
 .duanyan-input:focus {
-  border-color: #ef6309;
-  box-shadow: 0 0 0 1px rgba(239, 99, 9, 0.2);
+  border-color: #ffffff;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.15);
 }
 .duanyan-input:disabled {
   opacity: 0.6;
@@ -531,14 +564,14 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #ef6309;
-  border: none;
-  color: #fff;
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
   cursor: pointer;
   border-radius: 4px;
   flex-shrink: 0;
 }
-.duanyan-send-btn:hover { background: #d45808; }
+.duanyan-send-btn:hover { background: var(--bg-hover); }
 .duanyan-send-btn:disabled { background: var(--bg-hover); color: var(--text-secondary); cursor: default; }
 
 /* === Editor-Terminal Wrapper === */
@@ -603,7 +636,7 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
 
 .bridge-title {
   font-weight: 700;
-  color: #ef6309;
+  color: var(--text-primary);
   font-size: 12px;
   letter-spacing: 0.5px;
 }
@@ -649,10 +682,10 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
 }
 .bridge-btn:hover { background: var(--bg-active); }
 .bridge-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-.bridge-btn-primary { background: var(--accent); border-color: var(--accent); }
-.bridge-btn-primary:hover { background: #006bb3; }
-.bridge-btn-danger { background: #c75450; border-color: #c75450; }
-.bridge-btn-danger:hover { background: #a94442; }
+.bridge-btn-primary { background: var(--bg-tertiary); border-color: var(--border); }
+.bridge-btn-primary:hover { background: var(--bg-hover); }
+.bridge-btn-danger { background: var(--bg-tertiary); border-color: var(--border); }
+.bridge-btn-danger:hover { background: var(--bg-hover); }
 
 .bridge-status {
   font-size: 10px;
@@ -858,7 +891,7 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
 .bridge-cluster-count {
   font-size: 28px;
   font-weight: 700;
-  color: var(--accent);
+  color: var(--text-primary);
   line-height: 1;
   margin-bottom: 4px;
 }
@@ -905,7 +938,7 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
   display: flex; align-items: center; justify-content: space-between;
   padding: 6px 10px; background: var(--bg-tertiary); border-bottom: 1px solid var(--border);
 }
-.board-panel-title { font-weight: 700; font-size: 11px; text-transform: uppercase; color: #ef6309; letter-spacing: 0.5px; }
+.board-panel-title { font-weight: 700; font-size: 11px; text-transform: uppercase; color: var(--text-primary); letter-spacing: 0.5px; }
 .board-close { background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 14px; padding: 2px 6px; border-radius: 3px; }
 .board-close:hover { background: var(--bg-hover); color: var(--text-primary); }
 .board-target-section { padding: 8px 10px; border-bottom: 1px solid var(--border); }
@@ -923,7 +956,7 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
 .board-scan-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .board-detected-list { margin-top: 6px; }
 .board-detected-item { display: flex; gap: 8px; padding: 3px 0; font-size: 11px; }
-.board-port { color: var(--accent); font-family: monospace; }
+.board-port { color: var(--text-primary); font-family: monospace; }
 .board-desc { color: var(--text-primary); }
 .board-no-devices { color: var(--text-secondary); font-size: 11px; font-style: italic; margin-top: 4px; }
 .board-specs { padding: 8px 10px; }
@@ -990,7 +1023,7 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
 .pin-diagram-close:hover { color: var(--text-primary); }
 .pin-diagram { padding: 8px; }
 .pin-diagram-header { margin-bottom: 8px; }
-.pin-diagram-title { font-weight: 700; font-size: 12px; color: #ef6309; }
+.pin-diagram-title { font-weight: 700; font-size: 12px; color: var(--text-primary); }
 .pin-legend { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
 .pin-legend-item { display: flex; align-items: center; gap: 3px; font-size: 10px; color: var(--text-secondary); }
 .pin-legend-dot { width: 8px; height: 8px; border-radius: 50%; }
@@ -1022,7 +1055,7 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
   padding: 12px; cursor: pointer; text-align: center; transition: border-color 0.15s;
 }
 .template-card:hover { border-color: var(--accent); }
-.template-card.selected { border-color: #ef6309; background: rgba(239,99,9,0.06); }
+.template-card.selected { border-color: #ffffff; background: var(--bg-tertiary); }
 .template-icon { font-size: 24px; margin-bottom: 6px; }
 .template-name { font-weight: 600; font-size: 12px; color: var(--text-primary); margin-bottom: 4px; }
 .template-desc { font-size: 10px; color: var(--text-secondary); line-height: 1.3; }
@@ -1034,10 +1067,10 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
 }
 .template-input:focus { border-color: var(--accent); outline: none; }
 .template-create-btn {
-  background: #ef6309; border: none; color: #fff; padding: 8px 20px; font-size: 13px;
+  background: var(--bg-tertiary); border: 1px solid var(--border); color: var(--text-primary); padding: 8px 20px; font-size: 13px;
   border-radius: 4px; cursor: pointer; font-weight: 600;
 }
-.template-create-btn:hover { background: #d45808; }
+.template-create-btn:hover { background: var(--bg-hover); }
 .template-create-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* === Phase G: Onboarding Wizard === */
@@ -1067,25 +1100,25 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
   padding: 10px; cursor: pointer;
 }
 .wizard-board-card:hover { border-color: var(--accent); }
-.wizard-board-card.selected { border-color: #ef6309; background: rgba(239,99,9,0.06); }
+.wizard-board-card.selected { border-color: #ffffff; background: var(--bg-tertiary); }
 .wizard-board-name { font-weight: 600; font-size: 12px; color: var(--text-primary); }
 .wizard-board-mcu { font-size: 10px; color: var(--text-secondary); margin-top: 2px; }
 .wizard-board-specs { font-size: 10px; color: var(--text-secondary); margin-top: 4px; }
 .wizard-create-btn {
-  background: #ef6309; border: none; color: #fff; padding: 10px 24px; font-size: 14px;
+  background: var(--bg-tertiary); border: 1px solid var(--border); color: var(--text-primary); padding: 10px 24px; font-size: 14px;
   border-radius: 6px; cursor: pointer; font-weight: 600; margin-top: 16px;
 }
-.wizard-create-btn:hover { background: #d45808; }
+.wizard-create-btn:hover { background: var(--bg-hover); }
 .wizard-step-hint { font-size: 11px; color: var(--text-secondary); margin-top: 8px; }
 .wizard-instructions { margin-top: 12px; }
 .wizard-instruction { padding: 8px 0; font-size: 13px; color: var(--text-primary); display: flex; align-items: center; gap: 10px; }
 .wizard-key {
   background: var(--bg-tertiary); border: 1px solid var(--border); border-radius: 4px;
-  padding: 2px 8px; font-family: monospace; font-size: 12px; color: var(--accent); min-width: 100px; text-align: center;
+  padding: 2px 8px; font-family: monospace; font-size: 12px; color: var(--text-primary); min-width: 100px; text-align: center;
 }
 .wizard-tips { margin-top: 12px; }
 .wizard-tip { padding: 4px 0; font-size: 12px; color: var(--text-primary); }
-.wizard-tip::before { content: "💡 "; }
+.wizard-tip::before { content: "\ea61"; font-family: "codicon"; margin-right: 4px; color: #ffffff; }
 .wizard-nav { display: flex; align-items: center; margin-top: 20px; padding-top: 12px; border-top: 1px solid var(--border); }
 .wizard-nav-spacer { flex: 1; }
 .wizard-back-btn { background: var(--bg-hover); border: 1px solid var(--border); color: var(--text-primary); padding: 6px 16px; font-size: 13px; border-radius: 4px; cursor: pointer; }
@@ -1133,7 +1166,7 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
 .bench-comp-overhead { font-size: 11px; color: var(--text-secondary); min-width: 50px; text-align: right; }
 
 /* === Phase G: Statusbar target === */
-.statusbar-target { color: #ef6309; font-weight: 600; }
+.statusbar-target { color: var(--text-primary); font-weight: 600; }
 
 /* === Phase H: Sidebar Tabs === */
 .sidebar-tabs {
@@ -1317,3 +1350,85 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
 .tfcard-logs { padding: 8px 0; flex: 1; overflow-y: auto; }
 .tfcard-log-list { font-family: 'Source Code Pro', monospace; font-size: 10px; }
 .tfcard-log-entry { padding: 2px 4px; color: var(--text-secondary); border-bottom: 1px solid rgba(255,255,255,0.03); }
+
+/* === 一期: Activity Bar (VSCode 式竖直图标栏) === */
+.activity-bar {
+  width: 48px; flex-shrink: 0; background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column; align-items: center;
+  padding-top: 4px; gap: 2px;
+}
+.activity-item {
+  width: 48px; height: 44px; border: none; background: none;
+  color: var(--text-secondary); cursor: pointer; position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.activity-item:hover { color: var(--text-primary); }
+.activity-item.active { color: var(--text-active); }
+.activity-item.active::before {
+  content: ""; position: absolute; left: 0; top: 8px; bottom: 8px;
+  width: 2px; background: var(--text-active);
+}
+.activity-item .codicon { font-size: 22px; }
+
+/* === 一期: 下拉菜单栏 === */
+.menubar { display: flex; align-items: center; height: 100%; }
+.menu-root { position: relative; height: 100%; display: flex; align-items: center; }
+.menu-btn.open { background: var(--bg-hover); color: var(--text-active); }
+.menu-dropdown {
+  position: absolute; top: 100%; left: 0; min-width: 230px;
+  background: var(--bg-tertiary); border: 1px solid var(--border);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4); padding: 4px 0; z-index: 1000;
+}
+.menu-item {
+  display: flex; justify-content: space-between; align-items: center; gap: 24px;
+  width: 100%; padding: 4px 12px; border: none; background: none;
+  color: var(--text-primary); font-size: 12.5px; cursor: pointer; text-align: left;
+}
+.menu-item:hover { background: var(--accent); color: #fff; }
+.menu-item-kbd { color: var(--text-secondary); font-size: 11px; }
+.menu-item:hover .menu-item-kbd { color: #eee; }
+.menu-sep { height: 1px; background: var(--border); margin: 4px 8px; }
+
+/* === 一期: 命令面板 (Ctrl+Shift+P) === */
+.cmd-palette-backdrop { position: fixed; inset: 0; z-index: 2000; }
+.cmd-palette {
+  position: absolute; top: 40px; left: 50%; transform: translateX(-50%);
+  width: 560px; max-width: 90vw;
+  background: var(--bg-tertiary); border: 1px solid var(--border);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.5); border-radius: 4px; overflow: hidden;
+}
+.cmd-palette-input {
+  width: 100%; padding: 8px 12px; box-sizing: border-box;
+  background: var(--bg-primary); border: none;
+  border-bottom: 1px solid var(--border); outline: 1px solid var(--accent);
+  color: var(--text-primary); font-size: 13px;
+}
+.cmd-palette-list { max-height: 320px; overflow-y: auto; padding: 4px 0; }
+.cmd-item {
+  display: flex; align-items: center; gap: 8px; width: 100%;
+  padding: 5px 12px; border: none; background: none;
+  color: var(--text-primary); font-size: 12.5px; cursor: pointer; text-align: left;
+}
+.cmd-item.sel { background: var(--bg-hover); }
+.cmd-item-icon { color: var(--text-secondary); }
+.cmd-item-label { flex: 1; }
+.cmd-item-kbd { color: var(--text-secondary); font-size: 11px; }
+.cmd-empty { padding: 10px 12px; color: var(--text-secondary); }
+
+/* === 二期: 硬件/部署 侧栏视图 === */
+.hardware-view { display: flex; flex-direction: column; overflow-x: auto; }
+.hardware-view .board-panel { max-height: none; border-top: none; }
+.hardware-view .pin-svg { max-width: 100%; height: auto; }
+.hardware-tfcard-btn {
+  margin: 8px; padding: 6px 10px; display: flex; align-items: center; gap: 6px;
+  background: var(--bg-tertiary); border: 1px solid var(--border);
+  color: var(--text-primary); font-size: 12px; cursor: pointer; border-radius: 3px;
+}
+.hardware-tfcard-btn:hover { background: var(--bg-hover); }
+/* FlashPanel 根节点 inline height:100%, 父级 auto 时自动展开为内容高 */
+.deploy-view { display: flex; flex-direction: column; }
+.deploy-view button { white-space: nowrap; flex-shrink: 0; }
+.deploy-view select, .deploy-view input { min-width: 0; }
+/* 内联 flex 行在窄侧栏下允许换行, 消除横向滚动条 */
+.deploy-view div[style*="flex"] { flex-wrap: wrap; }

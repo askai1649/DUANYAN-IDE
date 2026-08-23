@@ -20,17 +20,17 @@ export default function EditorPanel({ file, onChange, target }: Props) {
         <div className="editor-empty">
           <div style={{ textAlign: "center" }}>
             <div style={{ fontSize: 48, marginBottom: 16, opacity: 0.3 }}>DUANYAN</div>
-            <div style={{ fontSize: 16, marginBottom: 24, color: "#555" }}>
+            <div style={{ fontSize: 16, marginBottom: 24, color: "#888" }}>
               DUANYAN IDE v0.1.0 — COUNPRE64 JavaScript Compiler
             </div>
-            <div style={{ color: "#666", lineHeight: 2 }}>
+            <div style={{ color: "#777", lineHeight: 2 }}>
               <div><b>Open Folder</b> — browse project files</div>
               <div><b>Ctrl+O</b> — open file</div>
               <div><b>Ctrl+S</b> — save file</div>
               <div><b>Ctrl+B</b> — compile to assembly</div>
               <div><b>Ctrl+R</b> — compile and run</div>
             </div>
-            <div style={{ marginTop: 24, color: "#444", fontSize: 12 }}>
+            <div style={{ marginTop: 24, color: "#666", fontSize: 12 }}>
               Powered by HardyScript + Tauri + Monaco Editor
             </div>
           </div>

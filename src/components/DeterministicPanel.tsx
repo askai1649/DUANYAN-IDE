@@ -53,9 +53,10 @@ export default function DeterministicPanel({ visible, source }: Props) {
               padding: "2px 10px",
               fontSize: 11,
               borderRadius: 3,
-              border: target === t.id ? "1px solid #4fc3f7" : "1px solid #555",
-              background: target === t.id ? "#1a3a4a" : "#2a2a2a",
-              color: target === t.id ? "#4fc3f7" : "#ccc",
+              border: target === t.id ? "1px solid #fff" : "1px solid #555",
+              background: target === t.id ? "#3a3a3a" : "#2a2a2a",
+              color: target === t.id ? "#fff" : "#ccc",
+              fontWeight: target === t.id ? "bold" : "normal",
               cursor: "pointer",
             }}
           >
@@ -70,9 +71,9 @@ export default function DeterministicPanel({ visible, source }: Props) {
             padding: "2px 14px",
             fontSize: 11,
             borderRadius: 3,
-            border: "1px solid #66bb6a",
-            background: analyzing ? "#333" : "#1b3a1b",
-            color: "#66bb6a",
+            border: "1px solid #555",
+            background: analyzing ? "#333" : "#2a2a2a",
+            color: "#fff",
             cursor: analyzing ? "wait" : "pointer",
           }}
         >
@@ -81,13 +82,13 @@ export default function DeterministicPanel({ visible, source }: Props) {
       </div>
 
       {/* Description */}
-      <div style={{ fontSize: 10, color: "#888", marginBottom: 4 }}>
+      <div style={{ fontSize: 10, color: "#ccc", marginBottom: 4 }}>
         {TARGETS.find((t) => t.id === target)?.desc}
       </div>
 
       {/* Error */}
       {error && (
-        <div style={{ color: "#ef5350", fontSize: 11, marginBottom: 4, whiteSpace: "pre-wrap" }}>
+        <div style={{ color: "#fff", fontWeight: "bold", fontSize: 11, marginBottom: 4, whiteSpace: "pre-wrap" }}>
           {error}
         </div>
       )}
@@ -99,7 +100,7 @@ export default function DeterministicPanel({ visible, source }: Props) {
           overflow: "auto",
           fontSize: 11,
           lineHeight: 1.4,
-          color: "#e0e0e0",
+          color: "#fff",
           background: "#1e1e1e",
           borderRadius: 4,
           padding: 8,

@@ -57,6 +57,14 @@ export default function FileTree({ projectDir, onOpenFile, onSetProjectDir }: Pr
     }
   }, [creating]);
 
+  // projectDir 设置/恢复时自动加载根目录子项并展开
+  useEffect(() => {
+    if (!projectDir) { setEntries([]); return; }
+    setExpanded(prev => new Set(prev).add(projectDir));
+    readDirSafe(projectDir).then(items => setEntries(items));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [projectDir]);
+
   const readDirSafe = async (dirPath: string): Promise<TreeNode[]> => {
     try {
       const { readDir } = await import("@tauri-apps/plugin-fs");
@@ -125,7 +133,7 @@ export default function FileTree({ projectDir, onOpenFile, onSetProjectDir }: Pr
     });
     if (isExpanding) {
       const children = await readDirSafe(path);
-      setEntries(prev => injectChildren(prev, path, children));
+      setEntries(prev => (path === projectDir ? children : injectChildren(prev, path, children)));
     }
   };
 
@@ -235,14 +243,13 @@ export default function FileTree({ projectDir, onOpenFile, onSetProjectDir }: Pr
           <button
             className="open-folder-btn"
             onClick={handleNewProject}
-            style={{ background: "#ef6309", borderColor: "#ef6309", color: "#fff", fontWeight: 600 }}
           >
             New Project
           </button>
           <button
             className="open-folder-btn"
             onClick={handleOpenFolder}
-            style={{ fontSize: "11px", color: "var(--text-secondary)" }}
+            style={{ fontSize: "11px", color: "var(--text-primary)" }}
           >
             Open Existing Folder
           </button>
