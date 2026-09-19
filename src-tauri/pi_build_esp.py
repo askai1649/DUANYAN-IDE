@@ -16,7 +16,7 @@ SECTIONS {
     . = 0x3FC88000;
     .rodata : { *(.rodata .rodata.*) }
     .data : { *(.data .data.*) }
-    .bss : { __bss_start = .; *(.bss .bss.* COMMON) __bss_end = .; }
+    .bss : { . = ALIGN(4); __bss_start = .; *(.bss .bss.* COMMON) . = ALIGN(4); __bss_end = .; }
     /DISCARD/ : { *(.comment) *(.xt.lit) *(.xt.prop) *(.eh_frame) }
 }
 """
