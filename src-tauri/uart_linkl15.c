@@ -555,15 +555,12 @@ static void pca_init(void)
     for (unsigned int j = 0; j < JT_COUNT; j++) pca_set(jt_ch[j], jt_ang[j]);
     uart_puts("[L15] joints at 900 hold\r\n");
 }
-/* 周期扫描任务 (L1.5): 每关节 20ms 节拍三角波, 步进 0.5° (=25°/s, 50Hz 更新)。
- * 节拍源 = servo_task_tick(bitd): delta_ticks 单位 = asm_ticks 迭代次数,
- * 与 bitd 同标度 (bitd ≈ 10µs 的迭代数) → 20ms = 2000µs = 2000*bitd 迭代。
- * 历史坑①: 阈值曾写 192*bitd (≈2ms), 扫描活跃时 I²C 占空比 ≈70% →
- * RX 窗必被撞 → 链路全聋 (2026-09-15 COM3 实证后修正)。
- * 历史坑②: 步进曾写 0.2° ≈ 2 LSB 脉宽, 在舵机死区内 → 粘滑走针式卡顿
- * (2026-09-15 J4 roll 用户实证); 0.5° ≈ 5 LSB 超死区。节拍/幅度均用户可调:
- * 20ms=25°/s 为用户定案 (33ms=15°/s 偏慢); 扫描幅度由上位机 sweep lo/hi 下发,
- * J4 roll 头顶无阻挡, ±60°(30..150) 实证可用 (2026-09-15)。
+/* 周期扫描任务 (L1.5): 三角波步进 1.0° (=10 LSB, 远超死区防走针)。
+ * 节拍源 = servo_task_tick(bitd): 主循环自治扫描 2000*bitd(≈200ms) 慢拍保链路;
+ * 速度史: 0.5°/拍=2.5°/s 实测太慢 → 步进改 1.0°; 但主循环快拍 (192*bitd)
+ * +周期扫描实证链路全聋 (2026-09-30, rx_idle 门救不了) → 主循环保持慢拍。
+ * 丝滑快摆走 0x23 序列回放: seq_play 硬编码 192*bitd 免门直驱 (播放期 S3
+ * 主动失聪无帧可撞), 1.0°/拍 × 20ms = 50°/s (daemon `shake` 命令, 140° 单程 2.8s)。
  * 兜底自治环内以 delay_ms 节拍直驱, Pi 掉线不停关节。 */
 static void joints_sweep_tick(void)
 {
@@ -578,27 +575,27 @@ static void joints_sweep_tick(void)
     for (unsigned int j = 0; j < JT_COUNT; j++) {
         if (!(jt_lo[j] < jt_hi[j])) continue;
         if (jt_dir[j] == 0) {
-            if (jt_ang[j] + 5u >= jt_hi[j]) {
+            if (jt_ang[j] + 10u >= jt_hi[j]) {
                 jt_ang[j] = jt_hi[j];
                 if (jt_os[j]) { jt_os[j] = 0u; jt_lo[j] = jt_hi[j]; }  /* glide 到位自停 */
                 else jt_dir[j] = 1;
             }
-            else jt_ang[j] += 5u;
+            else jt_ang[j] += 10u;
         } else {
-            if (jt_ang[j] <= jt_lo[j] + 5u) {
+            if (jt_ang[j] <= jt_lo[j] + 10u) {
                 jt_ang[j] = jt_lo[j];
                 if (jt_os[j]) { jt_os[j] = 0u; jt_hi[j] = jt_lo[j]; }  /* glide 到位自停 */
                 else jt_dir[j] = 0;
             }
-            else jt_ang[j] -= 5u;
+            else jt_ang[j] -= 10u;
         }
         pca_set(jt_ch[j], jt_ang[j]);
     }
 }
 static void servo_task_tick(unsigned int delta_ticks)
 {
-    /* delta = 本次等待块已耗 ticks; 20ms ≈ 192 个位啜时长 (位啜≈104us@9600,
-     * bitd 随实测校准 → 任务节拍自跟随真实时钟, 不依赖任何标称值) */
+    /* delta = 本次等待块已耗 ticks; 主循环自治扫描用 2000*bitd(≈200ms) 慢拍:
+     * 192*bitd 快拍+周期扫描实证链路全聋 (2026-09-30), 快摆一律走 0x23 回放。 */
     static unsigned int acc = 0;
     if (jt_bitd == 0) return;
     acc += delta_ticks;
