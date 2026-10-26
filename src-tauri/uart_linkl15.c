@@ -555,12 +555,15 @@ static void pca_init(void)
     for (unsigned int j = 0; j < JT_COUNT; j++) pca_set(jt_ch[j], jt_ang[j]);
     uart_puts("[L15] joints at 900 hold\r\n");
 }
-/* 周期扫描任务 (L1.5): 三角波步进 1.0° (=10 LSB, 远超死区防走针)。
- * 节拍源 = servo_task_tick(bitd): 主循环自治扫描 2000*bitd(≈200ms) 慢拍保链路;
- * 速度史: 0.5°/拍=2.5°/s 实测太慢 → 步进改 1.0°; 但主循环快拍 (192*bitd)
- * +周期扫描实证链路全聋 (2026-09-30, rx_idle 门救不了) → 主循环保持慢拍。
- * 丝滑快摆走 0x23 序列回放: seq_play 硬编码 192*bitd 免门直驱 (播放期 S3
- * 主动失聪无帧可撞), 1.0°/拍 × 20ms = 50°/s (daemon `shake` 命令, 140° 单程 2.8s)。
+/* 周期扫描任务 (L1.5): 每关节 20ms 节拍三角波, 步进 1.0° (=50°/s, 50Hz 更新)。
+ * 节拍源 = servo_task_tick(bitd): delta_ticks 单位 = asm_ticks 迭代次数,
+ * 与 bitd 同标度 (1 迭代≈1µs, bitd≈100 迭代/位) → 20ms = 192*bitd 迭代。
+ * 速度史: 2000*bitd(≈200ms 拍, 0.5°/拍=2.5°/s) 实测太慢, 用户 2026-09-30
+ * 要求「丝滑又快速」→ 192*bitd + 1.0°/拍 = 50°/s (140° 满摆单程 2.8s)。
+ * 链路保护: 拍快后 I²C 占空比 ≈0.8ms/20ms=4%, 靠下方 rx_idle 门让路 RX;
+ * 历史坑①(200ms 拍前的全聋)系无门时代, 有门后快拍实证 ACK 干净。
+ * 历史坑②: 步进曾写 0.2° ≈ 2 LSB 脉宽, 在舵机死区内 → 粘滑走针式卡顿;
+ * 1.0° ≈ 10 LSB 远超死区, 50Hz 更新目视连续。扫描幅度由上位机 sweep lo/hi 下发。
  * 兜底自治环内以 delay_ms 节拍直驱, Pi 掉线不停关节。 */
 static void joints_sweep_tick(void)
 {
@@ -594,12 +597,14 @@ static void joints_sweep_tick(void)
 }
 static void servo_task_tick(unsigned int delta_ticks)
 {
-    /* delta = 本次等待块已耗 ticks; 主循环自治扫描用 2000*bitd(≈200ms) 慢拍:
-     * 192*bitd 快拍+周期扫描实证链路全聋 (2026-09-30), 快摆一律走 0x23 回放。 */
+    /* delta = 本次等待块已耗 ticks; 20ms ≈ 192 个位啜时长 (位啜≈104us@9600,
+     * bitd 随实测校准 → 任务节拍自跟随真实时钟, 不依赖任何标称值)。
+     * 2026-09-30: 2000*bitd(≈200ms) 实测仅 2.5°/s 太慢, 改 192*bitd(≈20ms)
+     * 配合 1.0°/拍 = 50°/s 丝滑快摆; 链路靠 joints_sweep_tick 内 rx_idle 门保护。 */
     static unsigned int acc = 0;
     if (jt_bitd == 0) return;
     acc += delta_ticks;
-    if (acc >= 2000u * jt_bitd) { acc = 0; joints_sweep_tick(); }
+    if (acc >= 192u * jt_bitd) { acc = 0; joints_sweep_tick(); }
 }
 
 /* ==== 0x23 序列回放: 装载一步 + 阻塞式播完整段 ====

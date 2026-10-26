@@ -1,6 +1,6 @@
 // DUANYAN IDE Template: I2C Sensor Reading
 // Read temperature and humidity from I2C sensor
-import { I2C, Timer } from "snar:hw";
+import { I2C, Timer } from "hardy:hw";
 
 let sensor = I2C.init(0, 0x27);  // I2C0, address 0x27
 

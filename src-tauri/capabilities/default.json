@@ -1,6 +1,6 @@
 {
   "identifier": "default",
-  "description": "SNAR IDE full permissions",
+  "description": "HardyScript IDE full permissions",
   "local": true,
   "windows": [
     "main"

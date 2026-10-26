@@ -1,6 +1,6 @@
 // DUANYAN IDE Template: LED Blink
 // Basic GPIO control - toggle LED on/off
-import { GPIO, Timer } from "snar:hw";
+import { GPIO, Timer } from "hardy:hw";
 
 let led = GPIO.output(2);  // GPIO2 (onboard LED)
 

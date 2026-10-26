@@ -1,6 +1,6 @@
 // DUANYAN IDE Template: DC Motor Control
 // PWM-driven DC motor speed control
-import { PWM, GPIO, Timer } from "snar:hw";
+import { PWM, GPIO, Timer } from "hardy:hw";
 
 let motor = PWM.init(2, 1000);   // GPIO2, 1kHz
 let dir = GPIO.output(4);         // Direction pin

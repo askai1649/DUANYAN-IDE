@@ -28,3 +28,4 @@ askpass.cmd
 
 # 工具链归档（55MB+，仅本地留存，下载源见模式B文档 M6 节）
 src-tauri/*.tar.gz
+src-tauri/__pycache__/

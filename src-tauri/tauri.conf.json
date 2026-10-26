@@ -1,7 +1,7 @@
 {
-  "productName": "SNAR IDE",
+  "productName": "HardyScript IDE",
   "version": "1.2.0",
-  "identifier": "com.askai.snar-ide",
+  "identifier": "com.askai.hardyscript-ide",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:1420",
@@ -11,7 +11,7 @@
   "app": {
     "windows": [
       {
-        "title": "SNAR IDE",
+        "title": "HardyScript IDE",
         "width": 1280,
         "height": 800,
         "minWidth": 800,
