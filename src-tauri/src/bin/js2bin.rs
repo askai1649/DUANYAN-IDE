@@ -16,11 +16,11 @@ fn main() {
     let out_dir = args.get(2).cloned().unwrap_or_else(|| "js2bin_out".to_string());
 
     let js = std::fs::read_to_string(js_path).expect("读取 JS 失败");
-    let tokens = hardyscript::lexer::tokenize(&js).expect("词法分析失败");
-    let ast = hardyscript::parser::parse(&tokens).expect("语法解析失败");
-    let c_result = hardyscript::c_codegen::generate_c_source(
+    let tokens = duanyan::lexer::tokenize(&js).expect("词法分析失败");
+    let ast = duanyan::parser::parse(&tokens).expect("语法解析失败");
+    let c_result = duanyan::c_codegen::generate_c_source(
         &ast,
-        &hardyscript::c_codegen::CTarget::Esp32S3Bare,
+        &duanyan::c_codegen::CTarget::Esp32S3Bare,
     )
     .expect("C 代码生成失败");
 

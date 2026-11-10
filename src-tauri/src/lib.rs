@@ -19,13 +19,13 @@ use cluster_serial::ClusterSerial;
 
 /// Persistent duanyan model state
 struct DuanyanState {
-    model: duanyan::DuanyanModel,
+    model: duanyanx::DuanyanModel,
 }
 
 impl DuanyanState {
     fn new() -> Self {
         Self {
-            model: duanyan::DuanyanModel::new(),
+            model: duanyanx::DuanyanModel::new(),
         }
     }
 }
@@ -147,12 +147,12 @@ fn rename_path(from: String, to: String) -> Result<String, String> {
 /// Compile JavaScript source to COUNPRE64 assembly
 #[tauri::command]
 fn compile_source(source: &str) -> Result<String, String> {
-    let tokens = hardyscript::lexer::tokenize(source)
+    let tokens = duanyan::lexer::tokenize(source)
         .map_err(|e| format!("Lexer error: {}", e))?;
-    let ast = hardyscript::parser::parse(&tokens)
+    let ast = duanyan::parser::parse(&tokens)
         .map_err(|e| format!("Parser error: {}", e))?;
-    let optimized = hardyscript::optimizer::optimize(&ast);
-    let instructions = hardyscript::compiler::compile(&optimized)
+    let optimized = duanyan::optimizer::optimize(&ast);
+    let instructions = duanyan::compiler::compile(&optimized)
         .map_err(|e| format!("Compile error: {}", e))?;
 
     let mut asm_lines = Vec::new();
@@ -172,16 +172,16 @@ fn compile_source(source: &str) -> Result<String, String> {
 /// Compile and execute JavaScript source
 #[tauri::command]
 fn compile_and_run(source: &str) -> Result<String, String> {
-    let tokens = hardyscript::lexer::tokenize(source)
+    let tokens = duanyan::lexer::tokenize(source)
         .map_err(|e| format!("Lexer error: {}", e))?;
-    let ast = hardyscript::parser::parse(&tokens)
+    let ast = duanyan::parser::parse(&tokens)
         .map_err(|e| format!("Parser error: {}", e))?;
-    let optimized = hardyscript::optimizer::optimize(&ast);
-    let instructions = hardyscript::compiler::compile(&optimized)
+    let optimized = duanyan::optimizer::optimize(&ast);
+    let instructions = duanyan::compiler::compile(&optimized)
         .map_err(|e| format!("Compile error: {}", e))?;
     let machine_code: Vec<u32> = instructions.iter().map(|i| i.encode()).collect();
 
-    let mut engine = hardyscript::engine::Engine::new(machine_code);
+    let mut engine = duanyan::engine::Engine::new(machine_code);
     match engine.run() {
         Ok((output, cycles)) => Ok(format!(
             "=== Compiled: {} instructions ===\n{}\n=== Done ({} cycles) ===",
@@ -324,7 +324,7 @@ fn cluster_split_model(layers_json: String) -> Result<serde_json::Value, String>
 fn create_snar_project(project_dir: String, name: String) -> Result<String, String> {
     let base = std::path::Path::new(&project_dir);
     std::fs::create_dir_all(base).map_err(|e| format!("Create project dir failed: {}", e))?;
-    let mut cfg = hardyscript::config::ProjectConfig::default();
+    let mut cfg = duanyan::config::ProjectConfig::default();
     cfg.name = name;
     let config_path = base.join("hardy.config.json");
     std::fs::write(&config_path, cfg.to_json())
@@ -347,9 +347,9 @@ fn build_and_flash(
 ) -> Result<String, String> {
     let base = std::path::Path::new(&project_dir);
     std::fs::create_dir_all(base).map_err(|e| format!("Create project dir failed: {}", e))?;
-    let cfg = hardyscript::config::ProjectConfig::load(base)?;
+    let cfg = duanyan::config::ProjectConfig::load(base)?;
     let effective_target = if target.is_empty() { cfg.target.platform.clone() } else { target };
-    hardyscript::flash_source(&source, base, &stem, &effective_target)
+    duanyan::flash_source(&source, base, &stem, &effective_target)
 }
 
 // ========== DUANYAN Native Flasher Commands ==========
@@ -433,12 +433,12 @@ fn flasher_build_and_flash(
 #[tauri::command]
 fn flasher_compile_js(js_source: String, target: Option<String>) -> Result<serde_json::Value, String> {
     let target_str = target.unwrap_or_else(|| "esp32".to_string());
-    let c_target = hardyscript::c_codegen::CTarget::from_str(&target_str)
+    let c_target = duanyan::c_codegen::CTarget::from_str(&target_str)
         .ok_or_else(|| format!("不支持的目标平台: {}", target_str))?;
 
-    let tokens = hardyscript::lexer::tokenize(&js_source)?;
-    let ast = hardyscript::parser::parse(&tokens)?;
-    let result = hardyscript::c_codegen::generate_c_source(&ast, &c_target)?;
+    let tokens = duanyan::lexer::tokenize(&js_source)?;
+    let ast = duanyan::parser::parse(&tokens)?;
+    let result = duanyan::c_codegen::generate_c_source(&ast, &c_target)?;
 
     Ok(serde_json::json!({
         "c_source": result.source,
@@ -462,11 +462,11 @@ fn flasher_js_to_flash(
     let baud = baud.unwrap_or(460_800);
 
     // Step 1: JS → C (HardyScript 编译器)
-    let tokens = hardyscript::lexer::tokenize(&js_source)?;
-    let ast = hardyscript::parser::parse(&tokens)?;
-    let c_result = hardyscript::c_codegen::generate_c_source(
+    let tokens = duanyan::lexer::tokenize(&js_source)?;
+    let ast = duanyan::parser::parse(&tokens)?;
+    let c_result = duanyan::c_codegen::generate_c_source(
         &ast,
-        &hardyscript::c_codegen::CTarget::Esp32,
+        &duanyan::c_codegen::CTarget::Esp32,
     )?;
 
     // Step 2: 写入临时 C 文件
@@ -498,11 +498,11 @@ fn flasher_full_pipeline(
     output_dir: String,
 ) -> Result<native_flasher::FlashResult, String> {
     // Step 1: JS → C (HardyScript 编译器)
-    let tokens = hardyscript::lexer::tokenize(&js_source)?;
-    let ast = hardyscript::parser::parse(&tokens)?;
-    let c_result = hardyscript::c_codegen::generate_c_source(
+    let tokens = duanyan::lexer::tokenize(&js_source)?;
+    let ast = duanyan::parser::parse(&tokens)?;
+    let c_result = duanyan::c_codegen::generate_c_source(
         &ast,
-        &hardyscript::c_codegen::CTarget::Esp32,
+        &duanyan::c_codegen::CTarget::Esp32,
     )?;
 
     // Step 2: 写入临时 C 文件
@@ -531,13 +531,13 @@ fn flasher_compile_to_bin(
     target: Option<String>,
 ) -> Result<native_flasher::BuildResult, String> {
     let target_str = target.unwrap_or_else(|| "esp32s3-bare".to_string());
-    let c_target = hardyscript::c_codegen::CTarget::from_str(&target_str)
+    let c_target = duanyan::c_codegen::CTarget::from_str(&target_str)
         .ok_or_else(|| format!("不支持的目标平台: {}", target_str))?;
 
     // Step 1: JS → C
-    let tokens = hardyscript::lexer::tokenize(&js_source)?;
-    let ast = hardyscript::parser::parse(&tokens)?;
-    let c_result = hardyscript::c_codegen::generate_c_source(&ast, &c_target)?;
+    let tokens = duanyan::lexer::tokenize(&js_source)?;
+    let ast = duanyan::parser::parse(&tokens)?;
+    let c_result = duanyan::c_codegen::generate_c_source(&ast, &c_target)?;
 
     // Step 2: 写入 C 文件
     let out_dir = std::path::Path::new(&output_dir);
@@ -608,7 +608,7 @@ fn serial_list_ports() -> Vec<serde_json::Value> {
     }
     #[cfg(not(feature = "bridge_serial"))]
     {
-        let ports = hardyscript::board::scan_serial_ports();
+        let ports = duanyan::board::scan_serial_ports();
         ports.iter().map(|p| serde_json::json!({
             "name": p.name,
             "description": p.description,
@@ -749,7 +749,7 @@ fn template_create(template_id: String, project_dir: String) -> Result<String, S
     fs::write(&main_path, &content).map_err(|e| format!("Write failed: {}", e))?;
 
     // Create hardy.config.json
-    let mut cfg = hardyscript::config::ProjectConfig::default();
+    let mut cfg = duanyan::config::ProjectConfig::default();
     cfg.name = template_id.clone();
     fs::write(base.join("hardy.config.json"), cfg.to_json())
         .map_err(|e| format!("Config write failed: {}", e))?;
@@ -847,12 +847,12 @@ struct BenchComparison {
 /// Run benchmark on current source
 #[tauri::command]
 fn bench_run(source: String, target: String) -> Result<BenchResult, String> {
-    let tokens = hardyscript::lexer::tokenize(&source)
+    let tokens = duanyan::lexer::tokenize(&source)
         .map_err(|e| format!("Lexer error: {}", e))?;
-    let ast = hardyscript::parser::parse(&tokens)
+    let ast = duanyan::parser::parse(&tokens)
         .map_err(|e| format!("Parser error: {}", e))?;
-    let optimized = hardyscript::optimizer::optimize(&ast);
-    let instructions = hardyscript::compiler::compile(&optimized)
+    let optimized = duanyan::optimizer::optimize(&ast);
+    let instructions = duanyan::compiler::compile(&optimized)
         .map_err(|e| format!("Compile error: {}", e))?;
 
     let instr_count = instructions.len() as u32;
@@ -882,12 +882,12 @@ fn bench_run(source: String, target: String) -> Result<BenchResult, String> {
 /// Compare HardyScript output vs estimated equivalent C code
 #[tauri::command]
 fn bench_compare(source: String, target: String) -> Result<BenchComparison, String> {
-    let tokens = hardyscript::lexer::tokenize(&source)
+    let tokens = duanyan::lexer::tokenize(&source)
         .map_err(|e| format!("Lexer error: {}", e))?;
-    let ast = hardyscript::parser::parse(&tokens)
+    let ast = duanyan::parser::parse(&tokens)
         .map_err(|e| format!("Parser error: {}", e))?;
-    let optimized = hardyscript::optimizer::optimize(&ast);
-    let instructions = hardyscript::compiler::compile(&optimized)
+    let optimized = duanyan::optimizer::optimize(&ast);
+    let instructions = duanyan::compiler::compile(&optimized)
         .map_err(|e| format!("Compile error: {}", e))?;
 
     let hs_flash = (instructions.len() as u32) * 4;
@@ -920,7 +920,7 @@ fn bench_compare(source: String, target: String) -> Result<BenchComparison, Stri
 #[tauri::command]
 fn workspace_init(dir: String, name: String, monorepo: bool) -> Result<serde_json::Value, String> {
     let path = std::path::Path::new(&dir);
-    let ws = hardyscript::workspace::workspace_init(path, &name, monorepo)?;
+    let ws = duanyan::workspace::workspace_init(path, &name, monorepo)?;
     Ok(serde_json::json!({
         "name": ws.name,
         "version": ws.version,
@@ -935,7 +935,7 @@ fn workspace_init(dir: String, name: String, monorepo: bool) -> Result<serde_jso
 #[tauri::command]
 fn workspace_load(dir: String) -> Result<serde_json::Value, String> {
     let path = std::path::Path::new(&dir);
-    let ws = hardyscript::workspace::WorkspaceConfig::load(path)?;
+    let ws = duanyan::workspace::WorkspaceConfig::load(path)?;
     Ok(serde_json::json!({
         "name": ws.name,
         "version": ws.version,
@@ -951,7 +951,7 @@ fn workspace_load(dir: String) -> Result<serde_json::Value, String> {
 #[tauri::command]
 fn workspace_status(dir: String) -> Result<Vec<serde_json::Value>, String> {
     let path = std::path::Path::new(&dir);
-    let ws = hardyscript::workspace::WorkspaceConfig::load(path)?;
+    let ws = duanyan::workspace::WorkspaceConfig::load(path)?;
     let statuses = ws.status(path);
     Ok(statuses.iter().map(|s| serde_json::json!({
         "name": s.name, "path": s.path, "target": s.target,
@@ -962,7 +962,7 @@ fn workspace_status(dir: String) -> Result<Vec<serde_json::Value>, String> {
 #[tauri::command]
 fn workspace_build_all(dir: String) -> Result<String, String> {
     let path = std::path::Path::new(&dir);
-    let mut ws = hardyscript::workspace::WorkspaceConfig::load(path)?;
+    let mut ws = duanyan::workspace::WorkspaceConfig::load(path)?;
     let order = ws.resolve_build_order()?;
     Ok(format!("Build order: {}", order.join(" -> ")))
 }
@@ -970,8 +970,8 @@ fn workspace_build_all(dir: String) -> Result<String, String> {
 #[tauri::command]
 fn workspace_add_package(dir: String, name: String, path: String, target: Option<String>) -> Result<(), String> {
     let ws_dir = std::path::Path::new(&dir);
-    let mut ws = hardyscript::workspace::WorkspaceConfig::load(ws_dir)?;
-    ws.add_package(hardyscript::workspace::PackageRef {
+    let mut ws = duanyan::workspace::WorkspaceConfig::load(ws_dir)?;
+    ws.add_package(duanyan::workspace::PackageRef {
         name, path, target, dependencies: Vec::new(),
     });
     ws.save(ws_dir)
@@ -984,7 +984,7 @@ fn workspace_add_package(dir: String, name: String, path: String, target: Option
 #[tauri::command]
 fn git_status(dir: String) -> Result<serde_json::Value, String> {
     let path = std::path::Path::new(&dir);
-    let status = hardyscript::git_ops::git_status(path)?;
+    let status = duanyan::git_ops::git_status(path)?;
     Ok(serde_json::json!({
         "branch": status.branch,
         "staged": status.staged.iter().map(|f| serde_json::json!({
@@ -1002,7 +1002,7 @@ fn git_status(dir: String) -> Result<serde_json::Value, String> {
 #[tauri::command]
 fn git_log(dir: String, n: usize) -> Result<Vec<serde_json::Value>, String> {
     let path = std::path::Path::new(&dir);
-    let entries = hardyscript::git_ops::git_log(path, n)?;
+    let entries = duanyan::git_ops::git_log(path, n)?;
     Ok(entries.iter().map(|e| serde_json::json!({
         "hash": e.hash, "author": e.author, "date": e.date, "message": e.message
     })).collect())
@@ -1011,7 +1011,7 @@ fn git_log(dir: String, n: usize) -> Result<Vec<serde_json::Value>, String> {
 #[tauri::command]
 fn git_diff(dir: String, file: Option<String>) -> Result<Vec<serde_json::Value>, String> {
     let path = std::path::Path::new(&dir);
-    let diffs = hardyscript::git_ops::git_diff(path, file.as_deref())?;
+    let diffs = duanyan::git_ops::git_diff(path, file.as_deref())?;
     Ok(diffs.iter().map(|d| serde_json::json!({
         "path": d.path,
         "hunks": d.hunks.iter().map(|h| serde_json::json!({
@@ -1019,10 +1019,10 @@ fn git_diff(dir: String, file: Option<String>) -> Result<Vec<serde_json::Value>,
             "new_start": h.new_start, "new_count": h.new_count,
             "lines": h.lines.iter().map(|l| serde_json::json!({
                 "kind": match l.kind {
-                    hardyscript::git_ops::DiffLineKind::Added => "Added",
-                    hardyscript::git_ops::DiffLineKind::Removed => "Removed",
-                    hardyscript::git_ops::DiffLineKind::Context => "Context",
-                    hardyscript::git_ops::DiffLineKind::Header => "Header",
+                    duanyan::git_ops::DiffLineKind::Added => "Added",
+                    duanyan::git_ops::DiffLineKind::Removed => "Removed",
+                    duanyan::git_ops::DiffLineKind::Context => "Context",
+                    duanyan::git_ops::DiffLineKind::Header => "Header",
                 },
                 "content": l.content, "old_lineno": l.old_lineno, "new_lineno": l.new_lineno
             })).collect::<Vec<_>>()
@@ -1033,7 +1033,7 @@ fn git_diff(dir: String, file: Option<String>) -> Result<Vec<serde_json::Value>,
 #[tauri::command]
 fn git_staged_diff(dir: String) -> Result<Vec<serde_json::Value>, String> {
     let path = std::path::Path::new(&dir);
-    let diffs = hardyscript::git_ops::git_staged_diff(path)?;
+    let diffs = duanyan::git_ops::git_staged_diff(path)?;
     Ok(diffs.iter().map(|d| serde_json::json!({
         "path": d.path,
         "hunks": d.hunks.iter().map(|h| serde_json::json!({
@@ -1041,10 +1041,10 @@ fn git_staged_diff(dir: String) -> Result<Vec<serde_json::Value>, String> {
             "new_start": h.new_start, "new_count": h.new_count,
             "lines": h.lines.iter().map(|l| serde_json::json!({
                 "kind": match l.kind {
-                    hardyscript::git_ops::DiffLineKind::Added => "Added",
-                    hardyscript::git_ops::DiffLineKind::Removed => "Removed",
-                    hardyscript::git_ops::DiffLineKind::Context => "Context",
-                    hardyscript::git_ops::DiffLineKind::Header => "Header",
+                    duanyan::git_ops::DiffLineKind::Added => "Added",
+                    duanyan::git_ops::DiffLineKind::Removed => "Removed",
+                    duanyan::git_ops::DiffLineKind::Context => "Context",
+                    duanyan::git_ops::DiffLineKind::Header => "Header",
                 },
                 "content": l.content, "old_lineno": l.old_lineno, "new_lineno": l.new_lineno
             })).collect::<Vec<_>>()
@@ -1054,37 +1054,37 @@ fn git_staged_diff(dir: String) -> Result<Vec<serde_json::Value>, String> {
 
 #[tauri::command]
 fn git_add(dir: String, files: Vec<String>) -> Result<(), String> {
-    hardyscript::git_ops::git_add(std::path::Path::new(&dir), &files)
+    duanyan::git_ops::git_add(std::path::Path::new(&dir), &files)
 }
 
 #[tauri::command]
 fn git_add_all(dir: String) -> Result<(), String> {
-    hardyscript::git_ops::git_add_all(std::path::Path::new(&dir))
+    duanyan::git_ops::git_add_all(std::path::Path::new(&dir))
 }
 
 #[tauri::command]
 fn git_unstage(dir: String, files: Vec<String>) -> Result<(), String> {
-    hardyscript::git_ops::git_unstage(std::path::Path::new(&dir), &files)
+    duanyan::git_ops::git_unstage(std::path::Path::new(&dir), &files)
 }
 
 #[tauri::command]
 fn git_commit(dir: String, message: String) -> Result<String, String> {
-    hardyscript::git_ops::git_commit(std::path::Path::new(&dir), &message)
+    duanyan::git_ops::git_commit(std::path::Path::new(&dir), &message)
 }
 
 #[tauri::command]
 fn git_push(dir: String, remote: Option<String>, branch: Option<String>) -> Result<String, String> {
-    hardyscript::git_ops::git_push(std::path::Path::new(&dir), remote.as_deref(), branch.as_deref())
+    duanyan::git_ops::git_push(std::path::Path::new(&dir), remote.as_deref(), branch.as_deref())
 }
 
 #[tauri::command]
 fn git_pull(dir: String) -> Result<String, String> {
-    hardyscript::git_ops::git_pull(std::path::Path::new(&dir))
+    duanyan::git_ops::git_pull(std::path::Path::new(&dir))
 }
 
 #[tauri::command]
 fn git_branches(dir: String) -> Result<Vec<serde_json::Value>, String> {
-    let branches = hardyscript::git_ops::git_branches(std::path::Path::new(&dir))?;
+    let branches = duanyan::git_ops::git_branches(std::path::Path::new(&dir))?;
     Ok(branches.iter().map(|b| serde_json::json!({
         "name": b.name, "is_current": b.is_current, "is_remote": b.is_remote
     })).collect())
@@ -1092,22 +1092,22 @@ fn git_branches(dir: String) -> Result<Vec<serde_json::Value>, String> {
 
 #[tauri::command]
 fn git_checkout(dir: String, branch: String) -> Result<String, String> {
-    hardyscript::git_ops::git_checkout(std::path::Path::new(&dir), &branch)
+    duanyan::git_ops::git_checkout(std::path::Path::new(&dir), &branch)
 }
 
 #[tauri::command]
 fn git_create_branch(dir: String, name: String) -> Result<String, String> {
-    hardyscript::git_ops::git_create_branch(std::path::Path::new(&dir), &name)
+    duanyan::git_ops::git_create_branch(std::path::Path::new(&dir), &name)
 }
 
 #[tauri::command]
 fn git_init(dir: String) -> Result<String, String> {
-    hardyscript::git_ops::git_init(std::path::Path::new(&dir))
+    duanyan::git_ops::git_init(std::path::Path::new(&dir))
 }
 
 #[tauri::command]
 fn git_install_hooks(dir: String) -> Result<(), String> {
-    hardyscript::git_ops::git_install_hooks(std::path::Path::new(&dir))
+    duanyan::git_ops::git_install_hooks(std::path::Path::new(&dir))
 }
 
 // =============================================================================
@@ -1117,8 +1117,8 @@ fn git_install_hooks(dir: String) -> Result<(), String> {
 #[tauri::command]
 fn lint_project(dir: String) -> Result<serde_json::Value, String> {
     let path = std::path::Path::new(&dir);
-    let config = hardyscript::lint::LintConfig::load(path);
-    let result = hardyscript::lint::lint_project(path, &config);
+    let config = duanyan::lint::LintConfig::load(path);
+    let result = duanyan::lint::lint_project(path, &config);
     Ok(serde_json::json!({
         "diagnostics": result.diagnostics.iter().map(|d| serde_json::json!({
             "rule_id": d.rule_id, "severity": d.severity.label(),
@@ -1134,8 +1134,8 @@ fn lint_project(dir: String) -> Result<serde_json::Value, String> {
 
 #[tauri::command]
 fn lint_file_content(source: String, file_path: String) -> Result<serde_json::Value, String> {
-    let config = hardyscript::lint::LintConfig::default_config();
-    let result = hardyscript::lint::lint_file(std::path::Path::new(&file_path), &source, &config);
+    let config = duanyan::lint::LintConfig::default_config();
+    let result = duanyan::lint::lint_file(std::path::Path::new(&file_path), &source, &config);
     Ok(serde_json::json!({
         "diagnostics": result.diagnostics.iter().map(|d| serde_json::json!({
             "rule_id": d.rule_id, "severity": d.severity.label(),
@@ -1152,12 +1152,12 @@ fn lint_file_content(source: String, file_path: String) -> Result<serde_json::Va
 #[tauri::command]
 fn lint_fix(dir: String) -> Result<String, String> {
     let path = std::path::Path::new(&dir);
-    let config = hardyscript::lint::LintConfig::load(path);
+    let config = duanyan::lint::LintConfig::load(path);
     let js_files = find_js_files_for_lint(path);
     let mut fixed_count = 0;
     for file in &js_files {
         if let Ok(source) = std::fs::read_to_string(file) {
-            if let Ok(fixed) = hardyscript::lint::lint_fix(file, &source, &config) {
+            if let Ok(fixed) = duanyan::lint::lint_fix(file, &source, &config) {
                 if fixed != source {
                     std::fs::write(file, &fixed).ok();
                     fixed_count += 1;
@@ -1170,7 +1170,7 @@ fn lint_fix(dir: String) -> Result<String, String> {
 
 #[tauri::command]
 fn lint_rules() -> Result<Vec<serde_json::Value>, String> {
-    let rules = hardyscript::lint::builtin_rules();
+    let rules = duanyan::lint::builtin_rules();
     Ok(rules.iter().map(|r| serde_json::json!({
         "id": r.id, "description": r.description,
         "severity": r.severity.label(), "fixable": r.fixable
@@ -1206,8 +1206,8 @@ fn find_js_files_for_lint(dir: &std::path::Path) -> Vec<std::path::PathBuf> {
 #[tauri::command]
 fn ci_build(dir: String) -> Result<serde_json::Value, String> {
     let path = std::path::Path::new(&dir);
-    let config = hardyscript::ci::CiConfig::default();
-    let result = hardyscript::ci::ci_build_all(path, &config);
+    let config = duanyan::ci::CiConfig::default();
+    let result = duanyan::ci::ci_build_all(path, &config);
     Ok(serde_json::json!({
         "success": result.success,
         "targets_built": result.targets_built,
@@ -1221,7 +1221,7 @@ fn ci_build(dir: String) -> Result<serde_json::Value, String> {
 #[tauri::command]
 fn ci_release(dir: String, version: String) -> Result<serde_json::Value, String> {
     let path = std::path::Path::new(&dir);
-    let info = hardyscript::ci::ci_release(path, &version)?;
+    let info = duanyan::ci::ci_release(path, &version)?;
     Ok(serde_json::json!({
         "version": info.version,
         "artifacts": info.artifacts.iter().map(|a| serde_json::json!({
@@ -1237,11 +1237,11 @@ fn ci_release(dir: String, version: String) -> Result<serde_json::Value, String>
 fn ci_generate_template(dir: String, github: bool, gitlab: bool) -> Result<String, String> {
     let path = std::path::Path::new(&dir);
     if github {
-        hardyscript::ci::ci_generate_github_action(path)?;
+        duanyan::ci::ci_generate_github_action(path)?;
         return Ok("GitHub Actions template generated".to_string());
     }
     if gitlab {
-        hardyscript::ci::ci_generate_gitlab_ci(path)?;
+        duanyan::ci::ci_generate_gitlab_ci(path)?;
         return Ok("GitLab CI template generated".to_string());
     }
     Err("Specify --github or --gitlab".to_string())
@@ -1249,7 +1249,7 @@ fn ci_generate_template(dir: String, github: bool, gitlab: bool) -> Result<Strin
 
 #[tauri::command]
 fn ci_archive(dir: String, version: String) -> Result<String, String> {
-    hardyscript::ci::ci_archive(std::path::Path::new(&dir), &version)
+    duanyan::ci::ci_archive(std::path::Path::new(&dir), &version)
 }
 
 // ========== DUANYAN Language Intelligence ==========
@@ -1257,7 +1257,7 @@ fn ci_archive(dir: String, version: String) -> Result<String, String> {
 /// 实时诊断: 返回 JSON 格式诊断列表
 #[tauri::command]
 fn hardy_diagnose(source: String, target: Option<String>) -> Result<String, String> {
-    use hardyscript::language_intelligence::*;
+    use duanyan::language_intelligence::*;
     let mut diags = diagnose(&source);
     if let Some(t) = &target {
         diags.extend(check_industry_rules(&source, t));
@@ -1274,7 +1274,7 @@ fn hardy_diagnose(source: String, target: Option<String>) -> Result<String, Stri
 /// 上下文补全: 返回 JSON 格式补全列表
 #[tauri::command]
 fn hardy_complete(source: String, line: usize, col: usize, target: Option<String>) -> Result<String, String> {
-    use hardyscript::language_intelligence::*;
+    use duanyan::language_intelligence::*;
     let items = complete(&source, line, col, target.as_deref());
     let json: Vec<String> = items.iter().map(|i| {
         format!(r#"{{"label":"{}","kind":"{:?}","detail":"{}","insertText":"{}"}}"#,
@@ -1289,7 +1289,7 @@ fn hardy_complete(source: String, line: usize, col: usize, target: Option<String
 /// 悬停信息: 返回 JSON 格式悬停内容
 #[tauri::command]
 fn hardy_hover(source: String, line: usize, col: usize) -> Result<String, String> {
-    use hardyscript::language_intelligence::*;
+    use duanyan::language_intelligence::*;
     match hover(&source, line, col) {
         Some(info) => {
             let wcet = info.wcet_hint.unwrap_or_default();
@@ -1307,9 +1307,9 @@ fn hardy_hover(source: String, line: usize, col: usize) -> Result<String, String
 
 #[tauri::command]
 fn deterministic_analyze(source: String, target: String) -> Result<String, String> {
-    let tokens = hardyscript::lexer::tokenize(&source)
+    let tokens = duanyan::lexer::tokenize(&source)
         .map_err(|e| format!("Lexer error: {}", e))?;
-    let ast = hardyscript::parser::parse(&tokens)
+    let ast = duanyan::parser::parse(&tokens)
         .map_err(|e| format!("Parser error: {}", e))?;
 
     let mut report = String::new();
@@ -1317,7 +1317,7 @@ fn deterministic_analyze(source: String, target: String) -> Result<String, Strin
 
     match target.as_str() {
         "ic" => {
-            use hardyscript::industrial_control::*;
+            use duanyan::industrial_control::*;
             report.push_str("=== 工业控制分析 (IEC 61131-3 / EtherCAT / SIL-3) ===\n\n");
             report.push_str(&format!("函数: {}\n", func_count));
 
@@ -1338,7 +1338,7 @@ fn deterministic_analyze(source: String, target: String) -> Result<String, Strin
             }
         }
         "ad" => {
-            use hardyscript::automotive::*;
+            use duanyan::automotive::*;
             report.push_str("=== 自动驾驶分析 (CAN FD / AUTOSAR / Fail-Op) ===\n\n");
             report.push_str(&format!("函数: {}\n", func_count));
 
@@ -1354,7 +1354,7 @@ fn deterministic_analyze(source: String, target: String) -> Result<String, Strin
             report.push_str(&format!("\nFail-Operational:\n{}", code));
         }
         "rt" => {
-            use hardyscript::hardy_rtos::*;
+            use duanyan::hardy_rtos::*;
             report.push_str("=== 嵌入式 RTOS 分析 (微内核 / BSP / TLA+) ===\n\n");
 
             let tasks: Vec<RtosTask> = ast.functions.iter().enumerate().map(|(i, sf)| {
@@ -1371,7 +1371,7 @@ fn deterministic_analyze(source: String, target: String) -> Result<String, Strin
             }
         }
         "av" => {
-            use hardyscript::avionics::*;
+            use duanyan::avionics::*;
             report.push_str("=== 航空电子分析 (DO-178C / ARINC 653 / TMR) ===\n\n");
 
             let dal = DalLevel::DalA;

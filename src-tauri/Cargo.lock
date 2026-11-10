@@ -1262,12 +1262,10 @@ checksum = "f678cf4a922c215c63e0de95eb1ff08a958a81d47e485cf9da1e27bf6305cfa5"
 
 [[package]]
 name = "duanyan"
-version = "2.0.0"
+version = "1.6.0"
 dependencies = [
- "embedded-hal",
- "hardyscript",
- "heapless",
- "libm",
+ "espflash",
+ "serialport",
 ]
 
 [[package]]
@@ -1275,8 +1273,8 @@ name = "duanyan-ide"
 version = "1.2.0"
 dependencies = [
  "duanyan",
+ "duanyanx",
  "espflash",
- "hardyscript",
  "serde",
  "serde_json",
  "serialport",
@@ -1284,6 +1282,16 @@ dependencies = [
  "tauri-build",
  "tauri-plugin-dialog",
  "tauri-plugin-fs",
+]
+
+[[package]]
+name = "duanyanx"
+version = "2.0.0"
+dependencies = [
+ "duanyan",
+ "embedded-hal",
+ "heapless",
+ "libm",
 ]
 
 [[package]]
@@ -1955,14 +1963,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.117",
-]
-
-[[package]]
-name = "hardyscript"
-version = "1.5.2"
-dependencies = [
- "espflash",
- "serialport",
 ]
 
 [[package]]

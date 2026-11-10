@@ -159,9 +159,9 @@ pub fn duanyan_generate_code(
     max_len: usize,
     verify: bool,
 ) -> Result<serde_json::Value, String> {
-    use duanyan::copilot::{CopilotEngine, CopilotConfig, GenerationMode};
+    use duanyanx::copilot::{CopilotEngine, CopilotConfig, GenerationMode};
 
-    let tokenizer = duanyan::tokenizer::Tokenizer::new();
+    let tokenizer = duanyanx::tokenizer::Tokenizer::new();
     let mut config = CopilotConfig::small(tokenizer.vocab_size);
     config.use_preln = true;
     config.use_rope = true;
@@ -170,7 +170,7 @@ pub fn duanyan_generate_code(
     copilot.generation_mode = GenerationMode::Sample { temperature: 0.7, top_p: 0.9 };
 
     // Load HardyScript corpus for better code generation
-    let corpus = duanyan::hardyscript_corpus::HardyscriptCorpusGen::new();
+    let corpus = duanyanx::hardyscript_corpus::HardyscriptCorpusGen::new();
     for (p, c) in corpus.to_training_pairs() {
         let text = format!("{}{}", p, c);
         copilot.load_code(&text);
@@ -186,11 +186,11 @@ pub fn duanyan_generate_code(
     let mut compile_ok = false;
     let mut compile_msg = String::from("skipped");
     if verify {
-        match hardyscript::lexer::tokenize(&generated) {
+        match duanyan::lexer::tokenize(&generated) {
             Ok(tokens) => {
-                match hardyscript::parser::parse(&tokens) {
+                match duanyan::parser::parse(&tokens) {
                     Ok(ast) => {
-                        match hardyscript::compiler::compile(&ast) {
+                        match duanyan::compiler::compile(&ast) {
                             Ok(instrs) => {
                                 compile_ok = true;
                                 compile_msg = format!("✓ {} instructions", instrs.len());
@@ -226,7 +226,7 @@ pub fn duanyan_quant_report(
 /// 锻言智能代码生成: 自然语言 → 可编译的 HardyScript 代码
 #[tauri::command]
 pub fn duanyan_smart_gen(user_input: String) -> Result<serde_json::Value, String> {
-    let mut gen = duanyan::smart_gen::SmartGenerator::new();
+    let mut gen = duanyanx::smart_gen::SmartGenerator::new();
     let result = gen.generate(&user_input);
     Ok(serde_json::json!({
         "code": result.code,
@@ -1106,109 +1106,109 @@ pub fn duanyan_dist_stats(state: tauri::State<'_, Mutex<DuanyanState>>) -> Resul
 
 
 #[tauri::command]
-pub fn duanyan_reward_demo(state: tauri::State<'_, Mutex<duanyan::DuanyanModel>>, text: String) -> Result<String, String> {
+pub fn duanyan_reward_demo(state: tauri::State<'_, Mutex<duanyanx::DuanyanModel>>, text: String) -> Result<String, String> {
     let mut model = state.lock().map_err(|e| e.to_string())?;
     Ok(model.reward_demo(&text))
 }
 
 #[tauri::command]
-pub fn duanyan_reward_stats(state: tauri::State<'_, Mutex<duanyan::DuanyanModel>>) -> Result<String, String> {
+pub fn duanyan_reward_stats(state: tauri::State<'_, Mutex<duanyanx::DuanyanModel>>) -> Result<String, String> {
     let model = state.lock().map_err(|e| e.to_string())?;
     Ok(model.reward_stats())
 }
 
 #[tauri::command]
-pub fn duanyan_adv_train_demo(state: tauri::State<'_, Mutex<duanyan::DuanyanModel>>, text: String) -> Result<String, String> {
+pub fn duanyan_adv_train_demo(state: tauri::State<'_, Mutex<duanyanx::DuanyanModel>>, text: String) -> Result<String, String> {
     let mut model = state.lock().map_err(|e| e.to_string())?;
     Ok(model.adv_train_demo(&text))
 }
 
 #[tauri::command]
-pub fn duanyan_adv_train_stats(state: tauri::State<'_, Mutex<duanyan::DuanyanModel>>) -> Result<String, String> {
+pub fn duanyan_adv_train_stats(state: tauri::State<'_, Mutex<duanyanx::DuanyanModel>>) -> Result<String, String> {
     let model = state.lock().map_err(|e| e.to_string())?;
     Ok(model.adv_train_stats())
 }
 
 #[tauri::command]
-pub fn duanyan_nas_demo(state: tauri::State<'_, Mutex<duanyan::DuanyanModel>>, text: String) -> Result<String, String> {
+pub fn duanyan_nas_demo(state: tauri::State<'_, Mutex<duanyanx::DuanyanModel>>, text: String) -> Result<String, String> {
     let mut model = state.lock().map_err(|e| e.to_string())?;
     Ok(model.nas_demo(&text))
 }
 
 #[tauri::command]
-pub fn duanyan_nas_stats(state: tauri::State<'_, Mutex<duanyan::DuanyanModel>>) -> Result<String, String> {
+pub fn duanyan_nas_stats(state: tauri::State<'_, Mutex<duanyanx::DuanyanModel>>) -> Result<String, String> {
     let model = state.lock().map_err(|e| e.to_string())?;
     Ok(model.nas_stats())
 }
 
 #[tauri::command]
-pub fn duanyan_data_aug_demo(state: tauri::State<'_, Mutex<duanyan::DuanyanModel>>, text: String) -> Result<String, String> {
+pub fn duanyan_data_aug_demo(state: tauri::State<'_, Mutex<duanyanx::DuanyanModel>>, text: String) -> Result<String, String> {
     let mut model = state.lock().map_err(|e| e.to_string())?;
     Ok(model.data_aug_demo(&text))
 }
 
 #[tauri::command]
-pub fn duanyan_data_aug_stats(state: tauri::State<'_, Mutex<duanyan::DuanyanModel>>) -> Result<String, String> {
+pub fn duanyan_data_aug_stats(state: tauri::State<'_, Mutex<duanyanx::DuanyanModel>>) -> Result<String, String> {
     let model = state.lock().map_err(|e| e.to_string())?;
     Ok(model.data_aug_stats())
 }
 
 #[tauri::command]
-pub fn duanyan_curriculum_demo(state: tauri::State<'_, Mutex<duanyan::DuanyanModel>>, text: String) -> Result<String, String> {
+pub fn duanyan_curriculum_demo(state: tauri::State<'_, Mutex<duanyanx::DuanyanModel>>, text: String) -> Result<String, String> {
     let mut model = state.lock().map_err(|e| e.to_string())?;
     Ok(model.curriculum_demo(&text))
 }
 
 #[tauri::command]
-pub fn duanyan_curriculum_stats(state: tauri::State<'_, Mutex<duanyan::DuanyanModel>>) -> Result<String, String> {
+pub fn duanyan_curriculum_stats(state: tauri::State<'_, Mutex<duanyanx::DuanyanModel>>) -> Result<String, String> {
     let model = state.lock().map_err(|e| e.to_string())?;
     Ok(model.curriculum_stats())
 }
 
 #[tauri::command]
-pub fn duanyan_watermark_demo(state: tauri::State<'_, Mutex<duanyan::DuanyanModel>>, text: String) -> Result<String, String> {
+pub fn duanyan_watermark_demo(state: tauri::State<'_, Mutex<duanyanx::DuanyanModel>>, text: String) -> Result<String, String> {
     let mut model = state.lock().map_err(|e| e.to_string())?;
     Ok(model.watermark_demo(&text))
 }
 
 #[tauri::command]
-pub fn duanyan_watermark_stats(state: tauri::State<'_, Mutex<duanyan::DuanyanModel>>) -> Result<String, String> {
+pub fn duanyan_watermark_stats(state: tauri::State<'_, Mutex<duanyanx::DuanyanModel>>) -> Result<String, String> {
     let model = state.lock().map_err(|e| e.to_string())?;
     Ok(model.watermark_stats())
 }
 
 #[tauri::command]
-pub fn duanyan_group_norm_demo(state: tauri::State<'_, Mutex<duanyan::DuanyanModel>>, text: String) -> Result<String, String> {
+pub fn duanyan_group_norm_demo(state: tauri::State<'_, Mutex<duanyanx::DuanyanModel>>, text: String) -> Result<String, String> {
     let mut model = state.lock().map_err(|e| e.to_string())?;
     Ok(model.group_norm_demo(&text))
 }
 
 #[tauri::command]
-pub fn duanyan_group_norm_stats(state: tauri::State<'_, Mutex<duanyan::DuanyanModel>>) -> Result<String, String> {
+pub fn duanyan_group_norm_stats(state: tauri::State<'_, Mutex<duanyanx::DuanyanModel>>) -> Result<String, String> {
     let model = state.lock().map_err(|e| e.to_string())?;
     Ok(model.group_norm_stats())
 }
 
 #[tauri::command]
-pub fn duanyan_kv_eviction_demo(state: tauri::State<'_, Mutex<duanyan::DuanyanModel>>, text: String) -> Result<String, String> {
+pub fn duanyan_kv_eviction_demo(state: tauri::State<'_, Mutex<duanyanx::DuanyanModel>>, text: String) -> Result<String, String> {
     let mut model = state.lock().map_err(|e| e.to_string())?;
     Ok(model.kv_eviction_demo(&text))
 }
 
 #[tauri::command]
-pub fn duanyan_kv_eviction_stats(state: tauri::State<'_, Mutex<duanyan::DuanyanModel>>) -> Result<String, String> {
+pub fn duanyan_kv_eviction_stats(state: tauri::State<'_, Mutex<duanyanx::DuanyanModel>>) -> Result<String, String> {
     let model = state.lock().map_err(|e| e.to_string())?;
     Ok(model.kv_eviction_stats())
 }
 
 #[tauri::command]
-pub fn duanyan_bench_demo(state: tauri::State<'_, Mutex<duanyan::DuanyanModel>>, text: String) -> Result<String, String> {
+pub fn duanyan_bench_demo(state: tauri::State<'_, Mutex<duanyanx::DuanyanModel>>, text: String) -> Result<String, String> {
     let mut model = state.lock().map_err(|e| e.to_string())?;
     Ok(model.bench_demo(&text))
 }
 
 #[tauri::command]
-pub fn duanyan_bench_stats(state: tauri::State<'_, Mutex<duanyan::DuanyanModel>>) -> Result<String, String> {
+pub fn duanyan_bench_stats(state: tauri::State<'_, Mutex<duanyanx::DuanyanModel>>) -> Result<String, String> {
     let model = state.lock().map_err(|e| e.to_string())?;
     Ok(model.bench_stats())
 }

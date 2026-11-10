@@ -23,8 +23,8 @@ pub struct BoardInfoDto {
     pub usb_vid: Option<u16>,
 }
 
-impl From<&hardyscript::board::BoardInfo> for BoardInfoDto {
-    fn from(b: &hardyscript::board::BoardInfo) -> Self {
+impl From<&duanyan::board::BoardInfo> for BoardInfoDto {
+    fn from(b: &duanyan::board::BoardInfo) -> Self {
         Self {
             name: b.name.clone(),
             description: b.description.clone(),
@@ -80,7 +80,7 @@ pub struct PinInfo {
 
 /// Get all known boards as DTOs
 pub fn get_all_boards() -> Vec<BoardInfoDto> {
-    hardyscript::board::get_known_boards()
+    duanyan::board::get_known_boards()
         .iter()
         .map(BoardInfoDto::from)
         .collect()
@@ -88,7 +88,7 @@ pub fn get_all_boards() -> Vec<BoardInfoDto> {
 
 /// Scan USB ports and try to identify connected boards
 pub fn scan_boards() -> Vec<DetectedBoard> {
-    let known = hardyscript::board::get_known_boards();
+    let known = duanyan::board::get_known_boards();
 
     // Real detection via the `serialport` crate (enabled by the `bridge_serial` feature).
     #[cfg(feature = "bridge_serial")]
@@ -145,7 +145,7 @@ pub fn scan_boards() -> Vec<DetectedBoard> {
     #[cfg(not(feature = "bridge_serial"))]
     {
         let _ = known;
-        hardyscript::board::scan_serial_ports()
+        duanyan::board::scan_serial_ports()
             .into_iter()
             .map(|p| DetectedBoard {
                 port: p.name.clone(),
