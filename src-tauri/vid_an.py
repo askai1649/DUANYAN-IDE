@@ -1,7 +1,7 @@
 import os, glob
 from PIL import Image
 
-files = sorted(glob.glob(r"c:\OPENSNAR\DUANYAN-IDE\src-tauri\vid_frames\f_*.png"))
+files = sorted(glob.glob(r"c:\DuanYanOS\DUANYAN-IDE\src-tauri\vid_frames\f_*.png"))
 print("frames:", len(files))
 rows = []
 for fn in files:

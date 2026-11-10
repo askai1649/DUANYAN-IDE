@@ -1,7 +1,7 @@
 import glob
 from PIL import Image
 
-files = sorted(glob.glob(r"c:\OPENSNAR\DUANYAN-IDE\src-tauri\vid_frames\f_*.png"))
+files = sorted(glob.glob(r"c:\DuanYanOS\DUANYAN-IDE\src-tauri\vid_frames\f_*.png"))
 rows = []
 for fn in files:
     im = Image.open(fn).convert("RGB").resize((136, 240))
