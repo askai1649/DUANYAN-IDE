@@ -152,7 +152,7 @@ pub fn duanyan_export_json(
     Ok(state.model.export_architecture_json())
 }
 
-/// duanyan generate HardyScript code from prompt (with compile verification)
+/// duanyan generate DUANYAN code from prompt (with compile verification)
 #[tauri::command]
 pub fn duanyan_generate_code(
     prompt: String,
@@ -169,8 +169,8 @@ pub fn duanyan_generate_code(
     let mut copilot = CopilotEngine::new(config);
     copilot.generation_mode = GenerationMode::Sample { temperature: 0.7, top_p: 0.9 };
 
-    // Load HardyScript corpus for better code generation
-    let corpus = duanyanx::hardyscript_corpus::HardyscriptCorpusGen::new();
+    // Load DUANYAN corpus for better code generation
+    let corpus = duanyanx::duanyan_corpus::DuanyanCorpusGen::new();
     for (p, c) in corpus.to_training_pairs() {
         let text = format!("{}{}", p, c);
         copilot.load_code(&text);
@@ -182,7 +182,7 @@ pub fn duanyan_generate_code(
     // Generate
     let generated = copilot.complete_code(&prompt, max_len.max(20));
 
-    // Optionally verify with HardyScript compiler
+    // Optionally verify with DUANYAN compiler
     let mut compile_ok = false;
     let mut compile_msg = String::from("skipped");
     if verify {
@@ -223,7 +223,7 @@ pub fn duanyan_quant_report(
     Ok(state.model.full_quantization_report())
 }
 
-/// 锻言智能代码生成: 自然语言 → 可编译的 HardyScript 代码
+/// 锻言智能代码生成: 自然语言 → 可编译的 DUANYAN 代码
 #[tauri::command]
 pub fn duanyan_smart_gen(user_input: String) -> Result<serde_json::Value, String> {
     let mut gen = duanyanx::smart_gen::SmartGenerator::new();

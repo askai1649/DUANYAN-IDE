@@ -2,7 +2,7 @@
 // 每 83 步打印一次 tick (标称 12ms/步 时约每秒 1 次)
 // 数 10 秒内 tick 个数即可得到真实速度
 
-import { RGB, Timer } from "hardy:hw";
+import { RGB, Timer } from "duanyan:hw";
 
 let hue = 0;
 let n = 0;

@@ -1,7 +1,7 @@
 /**
  * DUANYAN 语言智能集成
  * 
- * 将 HardyScript 编译器的语义知识注入 Monaco Editor:
+ * 将 DUANYAN 编译器的语义知识注入 Monaco Editor:
  * - 实时诊断 (红色/黄色波浪线)
  * - 上下文补全 (Ctrl+Space)
  * - 悬停信息 (WCET 提示)
@@ -32,7 +32,7 @@ interface HoverResult {
 
 let registered = false;
 
-export function useHardyIntelligence(
+export function useDuanyanIntelligence(
   editorRef: React.MutableRefObject<any>,
   monacoRef: React.MutableRefObject<any>,
   target?: string
@@ -52,7 +52,7 @@ export function useHardyIntelligence(
       const source = model.getValue();
       try {
         const { invoke } = await import("@tauri-apps/api/core");
-        const json = await invoke<string>("hardy_diagnose", {
+        const json = await invoke<string>("duanyan_diagnose", {
           source,
           target: target || null,
         });
@@ -73,7 +73,7 @@ export function useHardyIntelligence(
           message: `[${d.code}] ${d.message}`,
           source: "DUANYAN",
         }));
-        monaco.editor.setModelMarkers(model, "hardy", markers);
+        monaco.editor.setModelMarkers(model, "duanyan", markers);
       } catch {
         // Tauri not available (dev mode without backend)
       }
@@ -100,7 +100,7 @@ export function useHardyIntelligence(
           const col = position.column - 1;
           try {
             const { invoke } = await import("@tauri-apps/api/core");
-            const json = await invoke<string>("hardy_complete", {
+            const json = await invoke<string>("duanyan_complete", {
               source,
               line,
               col,
@@ -139,7 +139,7 @@ export function useHardyIntelligence(
           const col = position.column;
           try {
             const { invoke } = await import("@tauri-apps/api/core");
-            const json = await invoke<string>("hardy_hover", {
+            const json = await invoke<string>("duanyan_hover", {
               source,
               line,
               col,

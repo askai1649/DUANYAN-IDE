@@ -1,6 +1,6 @@
 {
   "identifier": "default",
-  "description": "HardyScript IDE full permissions",
+  "description": "DUANYAN IDE full permissions",
   "local": true,
   "windows": [
     "main"

@@ -1,4 +1,4 @@
-import { RGB, Timer } from "hardy:hw";
+import { RGB, Timer } from "duanyan:hw";
 let phase = 0;
 let n = 0;
 let hue = 0;

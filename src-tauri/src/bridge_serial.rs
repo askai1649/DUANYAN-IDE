@@ -1,4 +1,4 @@
-//! OpenSNAR Bridge Serial Backend
+//! DUANYAN Bridge Serial Backend
 //!
 //! Wraps the `serialport` crate to provide framed read/write for BridgeFrames.
 //!

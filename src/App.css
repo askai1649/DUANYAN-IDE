@@ -602,7 +602,7 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
   background: transparent;
 }
 
-/* === OpenSNAR Bridge Panel === */
+/* === DUANYAN Bridge Panel === */
 .bridge-container {
   background: var(--bg-secondary);
   border-left: 1px solid var(--border);
@@ -1161,7 +1161,7 @@ body { font-family: "Source Han Sans SC", "Noto Sans CJK SC", sans-serif; font-s
 .bench-comp-bars { flex: 1; display: flex; flex-direction: column; gap: 3px; }
 .bench-bar-container { height: 16px; }
 .bench-bar { height: 100%; border-radius: 2px; font-size: 10px; color: #fff; padding: 1px 6px; line-height: 16px; white-space: nowrap; }
-.bench-bar-hardyscript { background: var(--accent); }
+.bench-bar-duanyan { background: var(--accent); }
 .bench-bar-c { background: #4ec9b0; }
 .bench-comp-overhead { font-size: 11px; color: var(--text-secondary); min-width: 50px; text-align: right; }
 

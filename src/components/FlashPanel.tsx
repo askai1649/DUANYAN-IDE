@@ -224,7 +224,7 @@ export default function FlashPanel() {
 
   const handleCompileJs = useCallback(async () => {
     if (!jsSource.trim()) { addLog("请输入 JS 源码"); return; }
-    addLog("HardyScript 编译: JS → C...");
+    addLog("DUANYAN 编译: JS → C...");
     try {
       const { invoke } = await import("@tauri-apps/api/core");
       const result = await invoke<Record<string, unknown>>("flasher_compile_js", {
@@ -267,7 +267,7 @@ export default function FlashPanel() {
     setBusy(true);
     setFlashResult(null);
     const outDir = "C:\\Users\\askai\\.duanyan\\build";
-    addLog("HardyScript 编译: JS → C → gcc → ESP32-S3 .bin (裸机后端)");
+    addLog("DUANYAN 编译: JS → C → gcc → ESP32-S3 .bin (裸机后端)");
     try {
       const { invoke } = await import("@tauri-apps/api/core");
       const result = await invoke<{ bin_path: string; bin_size: number; message: string }>(
@@ -390,7 +390,7 @@ export default function FlashPanel() {
       {/* JS → Flash Section */}
       <div style={{ borderTop: "1px solid #333", paddingTop: "8px", marginTop: "4px" }}>
         <div style={{ display: "flex", gap: "6px", alignItems: "center", marginBottom: "6px" }}>
-          <span style={{ color: "#fff", fontWeight: "bold" }}>HardyScript JS → Flash</span>
+          <span style={{ color: "#fff", fontWeight: "bold" }}>DUANYAN JS → Flash</span>
           <button onClick={handleCompileJs} style={btnStyle}>仅编译 (JS→C)</button>
           <button onClick={handleJsToBin} disabled={busy} style={btnStyle}>
             {busy ? "编译中..." : "编译成 .bin"}
@@ -402,7 +402,7 @@ export default function FlashPanel() {
         <textarea
           value={jsSource}
           onChange={(e) => setJsSource(e.target.value)}
-          placeholder={'// 输入 HardyScript 代码\nimport { GPIO, Timer } from "hardy:hw";\nlet led = GPIO.output(2);\nwhile (true) {\n  led.high();\n  Timer.delay(500);\n  led.low();\n  Timer.delay(500);\n}'}
+          placeholder={'// 输入 DUANYAN 代码\nimport { GPIO, Timer } from "duanyan:hw";\nlet led = GPIO.output(2);\nwhile (true) {\n  led.high();\n  Timer.delay(500);\n  led.low();\n  Timer.delay(500);\n}'}
           style={{
             width: "100%", height: "80px", background: "#1a1a2e", color: "#fff",
             border: "1px solid #444", borderRadius: "4px", padding: "6px",

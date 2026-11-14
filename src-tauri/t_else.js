@@ -1,4 +1,4 @@
-import { Timer } from "hardy:hw";
+import { Timer } from "duanyan:hw";
 let x = 0;
 while (true) {
     if (x == 0) {

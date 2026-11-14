@@ -1,7 +1,7 @@
 {
-  "productName": "HardyScript IDE",
+  "productName": "DUANYAN IDE",
   "version": "1.2.0",
-  "identifier": "com.askai.hardyscript-ide",
+  "identifier": "com.askai.duanyan-ide",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:1420",
@@ -11,7 +11,7 @@
   "app": {
     "windows": [
       {
-        "title": "HardyScript IDE",
+        "title": "DUANYAN IDE",
         "width": 1280,
         "height": 800,
         "minWidth": 800,

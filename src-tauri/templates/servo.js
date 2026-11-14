@@ -1,6 +1,6 @@
 // DUANYAN IDE Template: Servo Motor Control
 // PWM-driven servo rotation
-import { PWM, Timer } from "hardy:hw";
+import { PWM, Timer } from "duanyan:hw";
 
 let servo = PWM.init(5, 50);  // GPIO5, 50Hz (servo standard)
 

@@ -1,6 +1,6 @@
 //! 端到端验证: DUANYAN-IDE/examples 下的 JS 示例 → ESP32-S3 可烧录 .bin
 //! 管线与 IDE 的"编译成 .bin"按钮完全一致:
-//!   JS → (hardyscript lexer/parser/c_codegen Esp32S3Bare) → C → xtensa-gcc → ESP 镜像
+//!   JS → (DUANYAN lexer/parser/c_codegen Esp32S3Bare) → C → xtensa-gcc → ESP 镜像
 
 use duanyan_ide_lib::native_flasher;
 

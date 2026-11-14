@@ -61,7 +61,7 @@ export default function OnboardingWizard({ visible, onClose, onTargetChange, onP
       const baseDir = await open({ directory: true, multiple: false, title: "Select project directory" });
       if (!baseDir) return;
 
-      const projectDir = `${baseDir}/my-first-hardy-project`;
+      const projectDir = `${baseDir}/my-first-duanyan-project`;
       await invoke("template_create", { templateId: "blink", projectDir });
 
       const mainPath = `${projectDir}/main.js`;
@@ -177,7 +177,7 @@ export default function OnboardingWizard({ visible, onClose, onTargetChange, onP
               </p>
               <div className="wizard-tips">
                 <div className="wizard-tip">Press Ctrl+J to open the QianLu AI assistant</div>
-                <div className="wizard-tip">Press Ctrl+Shift+B to open the OpenSNAR Bridge panel</div>
+                <div className="wizard-tip">Press Ctrl+Shift+B to open the DUANYAN Bridge panel</div>
                 <div className="wizard-tip">Explore project templates from the +Project button</div>
               </div>
             </div>

@@ -141,7 +141,7 @@ pub fn scan_boards() -> Vec<DetectedBoard> {
         }
     }
 
-    // Fallback when serialport is disabled: use the HardyScript stub scanner.
+    // Fallback when serialport is disabled: use the DUANYAN stub scanner.
     #[cfg(not(feature = "bridge_serial"))]
     {
         let _ = known;

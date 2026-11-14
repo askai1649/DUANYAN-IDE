@@ -1,7 +1,7 @@
 //! Daisy-Chain FPGA Cluster Serial Manager
 //!
 //! In the daisy-chain model only the captain board (shard_id = 0) is connected
-//! to the PC. This module manages that single serial link and uses the OpenSNAR
+//! to the PC. This module manages that single serial link and uses the DUANYAN
 //! Bridge connection to forward ClusterFrames to downstream members through the
 //! captain's SPI/UART chain.
 

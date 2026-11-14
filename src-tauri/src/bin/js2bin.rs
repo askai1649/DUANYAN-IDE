@@ -1,6 +1,6 @@
 //! js2bin — JS 示例 → ESP32-S3 可烧录 .bin 的命令行工具
 //! 管线与 IDE 的"编译成 .bin"按钮完全一致:
-//!   JS → (HardyScript Esp32S3Bare 后端) → C → xtensa-gcc → ESP 镜像
+//!   JS → (DUANYAN Esp32S3Bare 后端) → C → xtensa-gcc → ESP 镜像
 //!
 //! 用法: js2bin <file.js> [输出目录]
 

@@ -1,6 +1,6 @@
 // DUANYAN IDE Template: UART Serial Communication
 // Send and receive data over UART
-import { UART } from "hardy:hw";
+import { UART } from "duanyan:hw";
 
 let serial = UART.init(1, 115200);  // UART1 @ 115200 baud
 
@@ -9,4 +9,4 @@ serial.onData((data) => {
     serial.write("Echo: " + data);
 });
 
-serial.write("Hello from HardyScript!\n");
+serial.write("Hello from DUANYAN!\n");

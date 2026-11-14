@@ -1,5 +1,5 @@
 // 调试版彩虹: 带串口打印, 用于确认固件真实运行
-import { RGB, Timer } from "hardy:hw";
+import { RGB, Timer } from "duanyan:hw";
 
 console.log("[DUANYAN-OK] js rainbow boot");
 

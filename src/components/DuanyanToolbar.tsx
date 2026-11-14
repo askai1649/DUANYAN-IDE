@@ -66,7 +66,7 @@ export default function DuanyanToolbar({ isProcessing, setIsProcessing, addMessa
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke("duanyan_save_weights", { path: "C:\\OPENSNAR\\duanyan\\weights.bin" });
+      const result = await invoke("duanyan_save_weights", { path: "C:\\DuanYanOS\\duanyan\\weights.bin" });
       addMessage("duanyan", result);
     } catch (e) {
       addMessage("duanyan", "[error] Save failed: " + String(e));
@@ -78,7 +78,7 @@ export default function DuanyanToolbar({ isProcessing, setIsProcessing, addMessa
     if (isProcessing) return;
     setIsProcessing(true);
     try {
-      const result = await invoke("duanyan_load_weights", { path: "C:\\OPENSNAR\\duanyan\\weights.bin" });
+      const result = await invoke("duanyan_load_weights", { path: "C:\\DuanYanOS\\duanyan\\weights.bin" });
       addMessage("duanyan", result);
     } catch (e) {
       addMessage("duanyan", "[error] Load failed: " + String(e));
@@ -101,12 +101,12 @@ export default function DuanyanToolbar({ isProcessing, setIsProcessing, addMessa
   const handleCodeGenerate = async () => {
     if (isProcessing) return;
     setIsProcessing(true);
-    addMessage("system", "DUANYAN generating HardyScript code for: '" + genSeed + "' (max " + genLen + " chars)...");
+    addMessage("system", "DUANYAN generating DUANYAN code for: '" + genSeed + "' (max " + genLen + " chars)...");
     try {
       const result = await invoke("duanyan_generate_code", { prompt: genSeed, maxLen: genLen, verify: true });
       const data = result as unknown as { generated: string; compile_ok: boolean; compile_msg: string };
       const status = data.compile_ok ? "✓ Compile OK" : "✗ Compile Failed";
-      addMessage("duanyan", "// Generated HardyScript Code\n" + data.generated + "\n\n// " + status + ": " + data.compile_msg);
+      addMessage("duanyan", "// Generated DUANYAN Code\n" + data.generated + "\n\n// " + status + ": " + data.compile_msg);
     } catch (e) {
       addMessage("duanyan", "[error] Code generation failed: " + String(e));
     }
@@ -4390,7 +4390,7 @@ export default function DuanyanToolbar({ isProcessing, setIsProcessing, addMessa
           </div>
 
           <div className="ql-toolbar-row" style={{ borderTop: "1px solid #444", paddingTop: 4, marginTop: 4 }}>
-            <button className="ql-tool-btn" onClick={handleCodeGenerate} disabled={isProcessing}>Hardy-Code</button>
+            <button className="ql-tool-btn" onClick={handleCodeGenerate} disabled={isProcessing}>Duanyan-Code</button>
             <input className="ql-tool-input ql-seed-input" value={genSeed} onChange={e => setGenSeed(e.target.value)} placeholder="describe code to generate..." style={{ flex: 1 }} />
             <input type="number" className="ql-tool-input" value={genLen} onChange={e => setGenLen(Number(e.target.value) || 50)} min={10} max={500} title="Max length" style={{ width: 60 }} />
           </div>

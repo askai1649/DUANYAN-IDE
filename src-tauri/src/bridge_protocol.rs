@@ -1,6 +1,6 @@
-//! OpenSNAR Bridge Protocol
+//! DUANYAN Bridge Protocol
 //!
-//! Lightweight binary framing for IDE <-> OpenSNAR OS communication.
+//! Lightweight binary framing for IDE <-> DuanYanOS communication.
 //! Header: 8 bytes (big-endian)
 //!   magic(2) + pkt_type(1) + seq(2) + len(2) + checksum(1) + payload(len)
 
@@ -122,7 +122,7 @@ impl BridgeLog {
     }
 }
 
-/// Parsed OpenSNAR message beyond raw UTF-8 text.
+/// Parsed DUANYAN message beyond raw UTF-8 text.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(tag = "kind")]
 pub enum BridgeMessage {

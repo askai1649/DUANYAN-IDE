@@ -1,6 +1,6 @@
 //! DUANYAN IDE - Rust Backend
 //!
-//! Integrates HardyScript compiler, execution engine, debugger, and duanyan AI
+//! Integrates DUANYAN compiler, execution engine, debugger, and duanyan AI
 
 use std::fs;
 use std::path::Path;
@@ -30,7 +30,7 @@ impl DuanyanState {
     }
 }
 
-/// OpenSNAR Bridge state: one active serial connection + ring log buffer.
+/// DUANYAN Bridge state: one active serial connection + ring log buffer.
 struct BridgeState {
     serial: Mutex<BridgeSerial>,
     logs: Mutex<Vec<BridgeLog>>,
@@ -197,13 +197,13 @@ fn compile_and_run(source: &str) -> Result<String, String> {
     }
 }
 
-/// Get HardyScript version info
+/// Get DUANYAN version info
 #[tauri::command]
 fn get_version() -> String {
-    format!("HardyScript v{} | COUNPRE64 ISA", env!("CARGO_PKG_VERSION"))
+    format!("DUANYAN v{} | COUNPRE64 ISA", env!("CARGO_PKG_VERSION"))
 }
 
-// ========== OpenSNAR Bridge Commands ==========
+// ========== DUANYAN Bridge Commands ==========
 
 #[tauri::command]
 fn bridge_list_ports() -> Result<Vec<String>, String> {
@@ -319,25 +319,25 @@ fn cluster_split_model(layers_json: String) -> Result<serde_json::Value, String>
     }))
 }
 
-/// Create a new HardyScript project directory with hardy.config.json and main.js.
+/// Create a new DUANYAN project directory with duanyan.config.json and main.js.
 #[tauri::command]
-fn create_snar_project(project_dir: String, name: String) -> Result<String, String> {
+fn create_duanyan_project(project_dir: String, name: String) -> Result<String, String> {
     let base = std::path::Path::new(&project_dir);
     std::fs::create_dir_all(base).map_err(|e| format!("Create project dir failed: {}", e))?;
     let mut cfg = duanyan::config::ProjectConfig::default();
     cfg.name = name;
-    let config_path = base.join("hardy.config.json");
+    let config_path = base.join("duanyan.config.json");
     std::fs::write(&config_path, cfg.to_json())
-        .map_err(|e| format!("Write hardy.config.json failed: {}", e))?;
+        .map_err(|e| format!("Write duanyan.config.json failed: {}", e))?;
     let main_path = base.join("main.js");
     if !main_path.exists() {
-        std::fs::write(&main_path, "// New HardyScript project\nlet x = 42;\nconsole.log(x);\n")
+        std::fs::write(&main_path, "// New DUANYAN project\nlet x = 42;\nconsole.log(x);\n")
             .map_err(|e| format!("Write main.js failed: {}", e))?;
     }
     Ok(format!("Project created at {}", base.display()))
 }
 
-/// Compile current source and flash to hardware via HardyScript.
+/// Compile current source and flash to hardware via DUANYAN.
 #[tauri::command]
 fn build_and_flash(
     source: String,
@@ -429,7 +429,7 @@ fn flasher_build_and_flash(
     )
 }
 
-/// JS → C 代码生成（HardyScript 编译器）
+/// JS → C 代码生成（DUANYAN 编译器）
 #[tauri::command]
 fn flasher_compile_js(js_source: String, target: Option<String>) -> Result<serde_json::Value, String> {
     let target_str = target.unwrap_or_else(|| "esp32".to_string());
@@ -461,7 +461,7 @@ fn flasher_js_to_flash(
 ) -> Result<native_flasher::FlashResult, String> {
     let baud = baud.unwrap_or(460_800);
 
-    // Step 1: JS → C (HardyScript 编译器)
+    // Step 1: JS → C (DUANYAN 编译器)
     let tokens = duanyan::lexer::tokenize(&js_source)?;
     let ast = duanyan::parser::parse(&tokens)?;
     let c_result = duanyan::c_codegen::generate_c_source(
@@ -497,7 +497,7 @@ fn flasher_full_pipeline(
     port: String,
     output_dir: String,
 ) -> Result<native_flasher::FlashResult, String> {
-    // Step 1: JS → C (HardyScript 编译器)
+    // Step 1: JS → C (DUANYAN 编译器)
     let tokens = duanyan::lexer::tokenize(&js_source)?;
     let ast = duanyan::parser::parse(&tokens)?;
     let c_result = duanyan::c_codegen::generate_c_source(
@@ -748,10 +748,10 @@ fn template_create(template_id: String, project_dir: String) -> Result<String, S
     let main_path = base.join("main.js");
     fs::write(&main_path, &content).map_err(|e| format!("Write failed: {}", e))?;
 
-    // Create hardy.config.json
+    // Create duanyan.config.json
     let mut cfg = duanyan::config::ProjectConfig::default();
     cfg.name = template_id.clone();
-    fs::write(base.join("hardy.config.json"), cfg.to_json())
+    fs::write(base.join("duanyan.config.json"), cfg.to_json())
         .map_err(|e| format!("Config write failed: {}", e))?;
 
     Ok(format!("Project created from '{}' at {}", template_id, base.display()))
@@ -835,9 +835,9 @@ struct BenchResult {
 
 #[derive(Serialize)]
 struct BenchComparison {
-    hardyscript_flash: u32,
+    duanyan_flash: u32,
     c_flash: u32,
-    hardyscript_ram: u32,
+    duanyan_ram: u32,
     c_ram: u32,
     flash_overhead_pct: f64,
     ram_overhead_pct: f64,
@@ -879,7 +879,7 @@ fn bench_run(source: String, target: String) -> Result<BenchResult, String> {
     })
 }
 
-/// Compare HardyScript output vs estimated equivalent C code
+/// Compare DUANYAN output vs estimated equivalent C code
 #[tauri::command]
 fn bench_compare(source: String, target: String) -> Result<BenchComparison, String> {
     let tokens = duanyan::lexer::tokenize(&source)
@@ -903,9 +903,9 @@ fn bench_compare(source: String, target: String) -> Result<BenchComparison, Stri
     let grade = if flash_overhead < 20.0 { "A" } else if flash_overhead < 40.0 { "B" } else if flash_overhead < 80.0 { "C" } else { "D" };
 
     Ok(BenchComparison {
-        hardyscript_flash: hs_flash,
+        duanyan_flash: hs_flash,
         c_flash,
-        hardyscript_ram: hs_ram,
+        duanyan_ram: hs_ram,
         c_ram,
         flash_overhead_pct: flash_overhead,
         ram_overhead_pct: ram_overhead,
@@ -1256,7 +1256,7 @@ fn ci_archive(dir: String, version: String) -> Result<String, String> {
 
 /// 实时诊断: 返回 JSON 格式诊断列表
 #[tauri::command]
-fn hardy_diagnose(source: String, target: Option<String>) -> Result<String, String> {
+fn duanyan_diagnose(source: String, target: Option<String>) -> Result<String, String> {
     use duanyan::language_intelligence::*;
     let mut diags = diagnose(&source);
     if let Some(t) = &target {
@@ -1273,7 +1273,7 @@ fn hardy_diagnose(source: String, target: Option<String>) -> Result<String, Stri
 
 /// 上下文补全: 返回 JSON 格式补全列表
 #[tauri::command]
-fn hardy_complete(source: String, line: usize, col: usize, target: Option<String>) -> Result<String, String> {
+fn duanyan_complete(source: String, line: usize, col: usize, target: Option<String>) -> Result<String, String> {
     use duanyan::language_intelligence::*;
     let items = complete(&source, line, col, target.as_deref());
     let json: Vec<String> = items.iter().map(|i| {
@@ -1288,7 +1288,7 @@ fn hardy_complete(source: String, line: usize, col: usize, target: Option<String
 
 /// 悬停信息: 返回 JSON 格式悬停内容
 #[tauri::command]
-fn hardy_hover(source: String, line: usize, col: usize) -> Result<String, String> {
+fn duanyan_hover(source: String, line: usize, col: usize) -> Result<String, String> {
     use duanyan::language_intelligence::*;
     match hover(&source, line, col) {
         Some(info) => {
@@ -1354,7 +1354,7 @@ fn deterministic_analyze(source: String, target: String) -> Result<String, Strin
             report.push_str(&format!("\nFail-Operational:\n{}", code));
         }
         "rt" => {
-            use duanyan::hardy_rtos::*;
+            use duanyan::rtos::*;
             report.push_str("=== 嵌入式 RTOS 分析 (微内核 / BSP / TLA+) ===\n\n");
 
             let tasks: Vec<RtosTask> = ast.functions.iter().enumerate().map(|(i, sf)| {
@@ -1415,7 +1415,7 @@ pub fn run() {
             bridge_read_logs,
             bridge_send_command,
             build_and_flash,
-            create_snar_project,
+            create_duanyan_project,
             cluster_connect_captain,
             cluster_disconnect,
             cluster_status,
@@ -1869,7 +1869,7 @@ pub fn run() {
             flasher_compile_js, flasher_js_to_flash,
                         duanyan_smart_gen,
             deterministic_analyze,
-            hardy_diagnose, hardy_complete, hardy_hover,
+            duanyan_diagnose, duanyan_complete, duanyan_hover,
             flasher_full_pipeline,
             flasher_compile_to_bin,
         ])

@@ -29,7 +29,7 @@ const TYPE_NAMES: Record<number, string> = {
   0x11: "BEAT",
 };
 
-export default function OpenSnarBridge({ onClose }: Props) {
+export default function DuanyanBridge({ onClose }: Props) {
   const [ports, setPorts] = useState<string[]>([]);
   const [selectedPort, setSelectedPort] = useState("");
   const [baud, setBaud] = useState(115200);
@@ -190,7 +190,7 @@ export default function OpenSnarBridge({ onClose }: Props) {
     <div className="bridge-panel">
       <div className="bridge-header">
         <div className="bridge-title-row">
-          <span className="bridge-title">OpenSNAR Bridge</span>
+          <span className="bridge-title">DUANYAN Bridge</span>
           <button className="bridge-close" onClick={onClose}>x</button>
         </div>
         <div className="bridge-toolbar">

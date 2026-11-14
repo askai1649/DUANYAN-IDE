@@ -1,6 +1,6 @@
 // DUANYAN IDE Template: OLED Display
 // I2C OLED screen text display
-import { I2C, Timer } from "hardy:hw";
+import { I2C, Timer } from "duanyan:hw";
 
 let oled = I2C.init(0, 0x3C);  // I2C0, SSD1306 address
 

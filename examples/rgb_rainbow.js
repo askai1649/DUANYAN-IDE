@@ -17,7 +17,7 @@
 //       (80 = 一轮约 30.7 秒; 20 = 一轮约 7.7 秒)
 // ============================================================
 
-import { RGB, Timer } from "hardy:hw";
+import { RGB, Timer } from "duanyan:hw";
 
 // 三原色查表 (下标 0=红 1=绿 2=蓝)
 function palR(i) {

@@ -6,7 +6,7 @@ import EditorPanel from "./components/EditorPanel";
 import TerminalPanel from "./components/TerminalPanel";
 import StatusBar from "./components/StatusBar";
 import DuanyanPanel from "./components/DuanyanPanel";
-import OpenSnarBridge from "./components/OpenSnarBridge";
+import DuanyanBridge from "./components/DuanyanBridge";
 import BoardPanel from "./components/BoardPanel";
 import SerialMonitor from "./components/SerialMonitor";
 import PinDiagram from "./components/PinDiagram";
@@ -128,7 +128,7 @@ function App() {
       js: "javascript", ts: "typescript", jsx: "javascript", tsx: "typescript",
       rs: "rust", py: "python", v: "verilog", sv: "systemverilog",
       json: "json", md: "markdown", css: "css", html: "html",
-      hardy: "javascript",
+      duanyan: "javascript",
     };
     const newFile: OpenFile = {
       path, name, content,
@@ -146,7 +146,7 @@ function App() {
       const selected = await open({
         multiple: false,
         filters: [
-          { name: "Code", extensions: ["js", "ts", "jsx", "tsx", "rs", "py", "v", "hardy"] },
+          { name: "Code", extensions: ["js", "ts", "jsx", "tsx", "rs", "py", "v", "duanyan"] },
           { name: "All", extensions: ["*"] },
         ],
       });
@@ -197,7 +197,7 @@ function App() {
     const file = openFiles.find(f => f.path === activeFile);
     if (!file) return;
     setStatusMessage("Running...");
-    setTerminalOutput(prev => [...prev, `> hardy run ${file.name}`]);
+    setTerminalOutput(prev => [...prev, `> duanyan run ${file.name}`]);
     try {
       const { invoke } = await import("@tauri-apps/api/core");
       const result = await invoke<string>("compile_and_run", { source: file.content });
@@ -223,7 +223,7 @@ function App() {
     const file = openFiles.find(f => f.path === activeFile);
     if (!file) return;
     setStatusMessage("Building...");
-    setTerminalOutput(prev => [...prev, `> hardy build ${file.name} --target ${selectedTarget}`]);
+    setTerminalOutput(prev => [...prev, `> duanyan build ${file.name} --target ${selectedTarget}`]);
     try {
       const { invoke } = await import("@tauri-apps/api/core");
       const result = await invoke<string>("compile_source", { source: file.content });
@@ -240,12 +240,12 @@ function App() {
     const file = openFiles.find(f => f.path === activeFile);
     if (!file) return;
     setStatusMessage("Flashing...");
-    setTerminalOutput(prev => [...prev, `> hardy flash ${file.name} --target ${selectedTarget}`]);
+    setTerminalOutput(prev => [...prev, `> duanyan flash ${file.name} --target ${selectedTarget}`]);
     try {
       const { invoke } = await import("@tauri-apps/api/core");
       const projectDir = file.path.includes("\\") || file.path.includes("/")
         ? file.path.replace(/\\[^\\]*$/, "").replace(/\/[^/]*$/, "")
-        : ".hardy-build";
+        : ".duanyan-build";
       const stem = file.name.replace(/\.(js|ts)$/i, "");
       const targetMap: Record<string, string> = {
         "COUNPRE64-FPGA": "gowin",
@@ -431,7 +431,7 @@ function App() {
       { label: "切换资源管理器", shortcut: "Ctrl+\\", onClick: () => setShowSidebar(p => !p) },
       { label: "切换底部面板", shortcut: "Ctrl+`", onClick: () => setShowTerminal(p => !p) },
       { label: "切换 duanyan AI 面板", shortcut: "Ctrl+J", onClick: () => setShowDuanyan(p => !p) },
-      { label: "切换 OpenSNAR Bridge", shortcut: "Ctrl+Shift+B", onClick: () => setShowBridge(p => !p) },
+      { label: "切换 DUANYAN Bridge", shortcut: "Ctrl+Shift+B", onClick: () => setShowBridge(p => !p) },
     ]},
     { title: "Build", items: [
       { label: "编译", shortcut: "Ctrl+B", onClick: handleBuild },
@@ -455,7 +455,7 @@ function App() {
     ]},
     { title: "Help", items: [
       { label: "入门向导", onClick: () => setShowWizard(true) },
-      { label: "关于 DUANYAN IDE", onClick: () => setTerminalOutput(p => [...p, "DUANYAN IDE v1.2.0 — HardyScript + Tauri + Monaco"]) },
+      { label: "关于 DUANYAN IDE", onClick: () => setTerminalOutput(p => [...p, "DUANYAN IDE v1.2.0 — DUANYAN + Tauri + Monaco"]) },
     ]},
   ];
 
@@ -479,7 +479,7 @@ function App() {
     { id: "git", label: "视图: 源码管理", icon: "source-control", run: () => showSidebarView("git") },
     { id: "lint", label: "视图: 问题 (Lint)", icon: "warning", run: () => showBottomTab("lint") },
     { id: "ai", label: "duanyan: 切换 AI 面板", shortcut: "Ctrl+J", icon: "sparkle", run: () => setShowDuanyan(p => !p) },
-    { id: "bridge", label: "duanyan: OpenSNAR Bridge", shortcut: "Ctrl+Shift+B", icon: "broadcast", run: () => setShowBridge(p => !p) },
+    { id: "bridge", label: "duanyan: DUANYAN Bridge", shortcut: "Ctrl+Shift+B", icon: "broadcast", run: () => setShowBridge(p => !p) },
     { id: "toggle-sidebar", label: "视图: 切换资源管理器", shortcut: "Ctrl+\\", icon: "layout-sidebar-left", run: () => setShowSidebar(p => !p) },
     { id: "toggle-panel", label: "视图: 切换底部面板", shortcut: "Ctrl+`", icon: "layout-panel", run: () => setShowTerminal(p => !p) },
     { id: "wizard", label: "帮助: 入门向导", icon: "lightbulb", run: () => setShowWizard(true) },
@@ -529,11 +529,11 @@ function App() {
             </svg>
           </button>
 
-          {/* OpenSNAR Bridge panel toggle */}
+          {/* DUANYAN Bridge panel toggle */}
           <button
             className={"layout-btn" + (showBridge ? " active" : "")}
             onClick={() => setShowBridge(prev => !prev)}
-            title="Toggle OpenSNAR Bridge (Ctrl+Shift+B)"
+            title="Toggle DUANYAN Bridge (Ctrl+Shift+B)"
           >
             <svg width="16" height="16" viewBox="0 0 16 16">
               <rect x="1" y="1" width="14" height="14" rx="1" fill="none" stroke="currentColor" strokeWidth="1.2"/>
@@ -696,7 +696,7 @@ function App() {
         )}
         {showBridge && (
           <div className="bridge-container">
-            <OpenSnarBridge onClose={() => setShowBridge(false)} />
+            <DuanyanBridge onClose={() => setShowBridge(false)} />
           </div>
         )}
       </div>

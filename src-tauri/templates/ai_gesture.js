@@ -1,9 +1,9 @@
 // DUANYAN IDE Template: AI Gesture Light Strip
 // QianLu Mini + MPU6050 + WS2812 NeoPixel
-import { GPIO, Timer } from "hardy:hw";
-import { Brain } from "hardy:ai";
-import { NeoPixel } from "hardy:pack/neopixel";
-import { IMU } from "hardy:pack/mpu6050";
+import { GPIO, Timer } from "duanyan:hw";
+import { Brain } from "duanyan:ai";
+import { NeoPixel } from "duanyan:pack/neopixel";
+import { IMU } from "duanyan:pack/mpu6050";
 
 Brain.init("/sd/duanyan/gesture-10m-int4.duanyan");
 

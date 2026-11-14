@@ -1,7 +1,7 @@
 import Editor from "@monaco-editor/react";
 import { useRef } from "react";
 import type { OpenFile } from "../App";
-import { useHardyIntelligence } from "./useHardyIntelligence";
+import { useDuanyanIntelligence } from "./useDuanyanIntelligence";
 
 interface Props {
   file: OpenFile | null;
@@ -13,7 +13,7 @@ export default function EditorPanel({ file, onChange, target }: Props) {
   const editorRef = useRef<any>(null);
   const monacoRef = useRef<any>(null);
 
-  useHardyIntelligence(editorRef, monacoRef, target);
+  useDuanyanIntelligence(editorRef, monacoRef, target);
   if (!file) {
     return (
       <div className="editor-container">
@@ -31,7 +31,7 @@ export default function EditorPanel({ file, onChange, target }: Props) {
               <div><b>Ctrl+R</b> — compile and run</div>
             </div>
             <div style={{ marginTop: 24, color: "#666", fontSize: 12 }}>
-              Powered by HardyScript + Tauri + Monaco Editor
+              Powered by DUANYAN + Tauri + Monaco Editor
             </div>
           </div>
         </div>

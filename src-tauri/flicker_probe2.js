@@ -1,5 +1,5 @@
 // flicker_probe2.js - 判决性对照 (无限循环): 分离"刷新"与"数值变化"
-import { RGB, Timer } from "hardy:hw";
+import { RGB, Timer } from "duanyan:hw";
 
 let i = 0;
 let hue = 0;
